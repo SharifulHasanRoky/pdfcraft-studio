@@ -2,17 +2,19 @@
 
 import { useEffect, useRef, useState, useCallback } from "react";
 import { usePdfStore } from "@/lib/pdf-store";
-import { renderPageToCanvas } from "@/lib/pdf-utils";
+import { renderPageToCanvas, extractTextItems } from "@/lib/pdf-utils";
+import type { PdfTextItem } from "@/lib/pdf-utils";
 import type {
   Annotation,
   TextAnnotation,
+  TextReplaceAnnotation,
   ShapeAnnotation,
   HighlightAnnotation,
   DrawingAnnotation,
   ImageAnnotation,
 } from "@/lib/pdf-types";
 import { motion } from "framer-motion";
-import { Trash2, Loader2 } from "lucide-react";
+import { Trash2, Loader2, Check, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface DragState {
@@ -62,6 +64,16 @@ export function CanvasEditor() {
     w: 0,
     h: 0,
   });
+  // Existing-PDF text items shown when "edit-text" tool is active
+  const [textItems, setTextItems] = useState<PdfTextItem[]>([]);
+  const [textItemsLoading, setTextItemsLoading] = useState(false);
+  const [hoveredItem, setHoveredItem] = useState<number | null>(null);
+  // The text item the user is currently editing (becomes a textarea)
+  const [editingItem, setEditingItem] = useState<{
+    index: number;
+    text: string;
+    fontSizePx: number;
+  } | null>(null);
 
   const startDrag = (d: DragState | null) => {
     dragRef.current = d;
@@ -117,6 +129,32 @@ export function CanvasEditor() {
     window.addEventListener("place-signature", handler);
     return () => window.removeEventListener("place-signature", handler);
   }, [page, currentPageIndex, addAnnotation, selectAnnotation, setPendingSignatureSrc]);
+
+  // Extract existing PDF text items when the "edit-text" tool is active
+  useEffect(() => {
+    if (!doc || !page) return;
+    if (activeTool !== "edit-text") {
+      setTextItems([]);
+      return;
+    }
+    let cancelled = false;
+    setTextItemsLoading(true);
+    (async () => {
+      try {
+        const items = await extractTextItems(doc, currentPageIndex);
+        if (!cancelled) {
+          setTextItems(items);
+        }
+      } catch (e) {
+        console.error("Failed to extract text items:", e);
+      } finally {
+        if (!cancelled) setTextItemsLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [doc, page, activeTool, currentPageIndex]);
 
   // Render the PDF page to canvas whenever page or zoom changes
   useEffect(() => {
@@ -510,6 +548,129 @@ export function CanvasEditor() {
             />
           )}
 
+          {/* Existing PDF text items (edit-text mode) */}
+          {activeTool === "edit-text" &&
+            textItems.map((item, idx) => {
+              const isEditing = editingItem?.index === idx;
+              const isHovered = hoveredItem === idx;
+              return (
+                <div
+                  key={`ti-${idx}`}
+                  onPointerEnter={() => setHoveredItem(idx)}
+                  onPointerLeave={() =>
+                    setHoveredItem((cur) => (cur === idx ? null : cur))
+                  }
+                  onPointerDown={(e) => {
+                    if (isEditing) return;
+                    e.stopPropagation();
+                    setEditingItem({
+                      index: idx,
+                      text: item.text,
+                      fontSizePx: item.fontSizePx,
+                    });
+                  }}
+                  className="absolute transition-colors"
+                  style={{
+                    left: `${item.x * 100}%`,
+                    top: `${item.y * 100}%`,
+                    width: `${item.width * 100}%`,
+                    minHeight: `${item.height * 100}%`,
+                    cursor: isEditing ? "text" : "pointer",
+                    backgroundColor: isEditing
+                      ? "rgba(255,255,255,0.95)"
+                      : isHovered
+                      ? "rgba(99, 102, 241, 0.15)"
+                      : "rgba(99, 102, 241, 0.05)",
+                    border: `1px dashed ${
+                      isEditing
+                        ? "#6366f1"
+                        : isHovered
+                        ? "#6366f1"
+                        : "rgba(99, 102, 241, 0.4)"
+                    }`,
+                    zIndex: isEditing || isHovered ? 5 : 2,
+                  }}
+                >
+                  {isEditing ? (
+                    <EditTextItem
+                      item={item}
+                      initialText={editingItem!.text}
+                      fontSizePx={editingItem!.fontSizePx}
+                      onSave={(newText) => {
+                        const id = `ann-${Date.now()}-${Math.random()
+                          .toString(36)
+                          .slice(2, 7)}`;
+                        const ann: TextReplaceAnnotation = {
+                          id,
+                          page: currentPageIndex,
+                          type: "text-replace",
+                          x: item.x,
+                          y: item.y,
+                          width: Math.max(item.width, 0.05),
+                          height: item.height,
+                          color: activeColor,
+                          rotation: 0,
+                          text: newText,
+                          // Use the toolbar font size if user changed it; otherwise
+                          // preserve the original font size from the PDF.
+                          fontSize:
+                            activeFontSize !== 16
+                              ? activeFontSize / 100
+                              : item.fontSizeRel,
+                          fontFamily: activeFontFamily,
+                          bold: false,
+                          italic: false,
+                          underline: false,
+                          originalText: item.text,
+                          coverColor: "#FFFFFF",
+                        };
+                        addAnnotation(ann);
+                        selectAnnotation(id);
+                        setEditingItem(null);
+                        // Remove this text item from the list so it doesn't show as
+                        // still-editable; the new TextReplaceAnnotation is on top.
+                        setTextItems((prev) => prev.filter((_, i) => i !== idx));
+                      }}
+                      onCancel={() => setEditingItem(null)}
+                    />
+                  ) : (
+                    <span
+                      className="block whitespace-pre"
+                      style={{
+                        fontSize: `${item.fontSizePx}px`,
+                        lineHeight: 1.2,
+                        color: "transparent",
+                      }}
+                    >
+                      {item.text}
+                    </span>
+                  )}
+                </div>
+              );
+            })}
+
+          {/* Edit-text mode loading indicator */}
+          {activeTool === "edit-text" && textItemsLoading && (
+            <div className="absolute top-2 left-1/2 -translate-x-1/2 px-3 py-1.5 rounded-full bg-card/90 backdrop-blur-sm border text-xs text-muted-foreground flex items-center gap-2 shadow">
+              <Loader2 className="h-3 w-3 animate-spin" />
+              Scanning page for text…
+            </div>
+          )}
+
+          {/* Edit-text mode empty hint */}
+          {activeTool === "edit-text" &&
+            !textItemsLoading &&
+            textItems.length === 0 && (
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 px-4 py-3 rounded-xl bg-card/90 backdrop-blur-sm border text-center text-sm text-muted-foreground shadow max-w-xs">
+                No selectable text found on this page.
+                <br />
+                <span className="text-xs">
+                  (Scanned PDFs without a text layer can't be edited this way —
+                  use the Text tool instead.)
+                </span>
+              </div>
+            )}
+
           {/* Live drawing preview */}
           {drawingPoints && drawingPoints.length > 1 && (
             <svg className="absolute inset-0 w-full h-full pointer-events-none">
@@ -654,8 +815,8 @@ function AnnotationView(props: AnnotationViewProps) {
 
   let content: React.ReactNode = null;
 
-  if (a.type === "text") {
-    const t = a as TextAnnotation;
+  if (a.type === "text" || a.type === "text-replace") {
+    const t = a as TextAnnotation | TextReplaceAnnotation;
     content = editing ? (
       <textarea
         autoFocus
@@ -694,6 +855,10 @@ function AnnotationView(props: AnnotationViewProps) {
           textDecoration: t.underline ? "underline" : "none",
           lineHeight: 1.2,
           cursor: "move",
+          backgroundColor:
+            a.type === "text-replace"
+              ? (a as TextReplaceAnnotation).coverColor
+              : undefined,
         }}
       >
         {t.text || <span style={{ opacity: 0.4 }}>Double-click to edit</span>}
@@ -829,6 +994,92 @@ function AnnotationView(props: AnnotationViewProps) {
       {isSelected && (
         <SelectionBox onDelete={props.onDelete} onResize={props.onResize} />
       )}
+    </div>
+  );
+}
+
+// Inline editor for an existing PDF text item.
+// Shows a textarea with the original text, plus save/cancel buttons.
+interface EditTextItemProps {
+  item: PdfTextItem;
+  initialText: string;
+  fontSizePx: number;
+  onSave: (newText: string) => void;
+  onCancel: () => void;
+}
+
+function EditTextItem({
+  item,
+  initialText,
+  fontSizePx,
+  onSave,
+  onCancel,
+}: EditTextItemProps) {
+  const [text, setText] = useState(initialText);
+  const taRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    taRef.current?.focus();
+    taRef.current?.select();
+  }, []);
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
+      e.preventDefault();
+      onSave(text);
+    } else if (e.key === "Escape") {
+      e.preventDefault();
+      onCancel();
+    }
+  };
+
+  return (
+    <div className="flex flex-col h-full">
+      <textarea
+        ref={taRef}
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        onKeyDown={handleKeyDown}
+        onBlur={() => {
+          // Save on blur if text changed; otherwise cancel
+          if (text !== initialText) onSave(text);
+          else onCancel();
+        }}
+        className="w-full flex-1 bg-white text-black outline-none resize-none p-0 m-0 border-0"
+        style={{
+          fontSize: `${fontSizePx}px`,
+          lineHeight: 1.2,
+          fontFamily: "Helvetica, Arial, sans-serif",
+        }}
+      />
+      <div className="flex items-center justify-end gap-1 mt-1 px-1">
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onCancel();
+          }}
+          onPointerDown={(e) => {
+            e.stopPropagation();
+          }}
+          className="h-5 w-5 rounded-full bg-destructive text-white flex items-center justify-center hover:bg-destructive/90"
+          title="Cancel (Esc)"
+        >
+          <X className="h-3 w-3" />
+        </button>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onSave(text);
+          }}
+          onPointerDown={(e) => {
+            e.stopPropagation();
+          }}
+          className="h-5 w-5 rounded-full bg-primary text-primary-foreground flex items-center justify-center hover:bg-primary/90"
+          title="Save (Ctrl+Enter)"
+        >
+          <Check className="h-3 w-3" />
+        </button>
+      </div>
     </div>
   );
 }

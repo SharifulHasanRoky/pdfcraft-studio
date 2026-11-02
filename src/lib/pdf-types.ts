@@ -3,6 +3,7 @@
 export type ToolType =
   | "select"
   | "text"
+  | "edit-text"
   | "rectangle"
   | "circle"
   | "line"
@@ -14,6 +15,7 @@ export type ToolType =
 
 export type AnnotationType =
   | "text"
+  | "text-replace"
   | "rectangle"
   | "circle"
   | "line"
@@ -46,6 +48,21 @@ export interface TextAnnotation extends BaseAnnotation {
   underline: boolean;
 }
 
+// For editing existing PDF text: records the original text's position+size
+// so we can cover it with a rectangle and draw new text on top during export.
+export interface TextReplaceAnnotation extends BaseAnnotation {
+  type: "text-replace";
+  text: string; // new text
+  fontSize: number; // relative to page height (0-1)
+  fontFamily: string;
+  bold: boolean;
+  italic: boolean;
+  underline: boolean;
+  originalText: string;
+  // The cover color used to hide the original text (typically white)
+  coverColor: string;
+}
+
 export interface ShapeAnnotation extends BaseAnnotation {
   type: "rectangle" | "circle" | "line";
   strokeWidth: number; // relative to page width
@@ -73,6 +90,7 @@ export interface ImageAnnotation extends BaseAnnotation {
 
 export type Annotation =
   | TextAnnotation
+  | TextReplaceAnnotation
   | ShapeAnnotation
   | HighlightAnnotation
   | DrawingAnnotation

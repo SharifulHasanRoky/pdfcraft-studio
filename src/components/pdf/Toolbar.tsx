@@ -15,6 +15,7 @@ import {
 import {
   MousePointer2,
   Type,
+  PencilLine,
   Square,
   Circle,
   Minus,
@@ -81,6 +82,7 @@ export function Toolbar() {
   const tools = [
     { id: "select", icon: MousePointer2, label: "Select / Move" },
     { id: "text", icon: Type, label: "Add Text" },
+    { id: "edit-text", icon: PencilLine, label: "Edit Existing Text" },
     { id: "rectangle", icon: Square, label: "Rectangle" },
     { id: "circle", icon: Circle, label: "Circle" },
     { id: "line", icon: Minus, label: "Line" },
@@ -138,7 +140,7 @@ export function Toolbar() {
     activeTool === "circle" ||
     activeTool === "line" ||
     activeTool === "draw";
-  const showTextOptions = activeTool === "text";
+  const showTextOptions = activeTool === "text" || activeTool === "edit-text";
   const showHighlightOptions = activeTool === "highlight";
 
   return (
@@ -351,6 +353,13 @@ export function Toolbar() {
             {showHighlightOptions && (
               <p className="text-xs text-muted-foreground">
                 Click and drag to highlight. Use color picker to change color.
+              </p>
+            )}
+
+            {activeTool === "edit-text" && (
+              <p className="text-xs text-muted-foreground">
+                Click any existing text in the PDF to edit it. The original text
+                is covered, and your new text is drawn on top when you export.
               </p>
             )}
 

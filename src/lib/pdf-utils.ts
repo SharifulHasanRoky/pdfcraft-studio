@@ -7,11 +7,26 @@ import type {
   PdfDocument,
   PdfPageData,
   TextAnnotation,
+  TextReplaceAnnotation,
   ShapeAnnotation,
   HighlightAnnotation,
   DrawingAnnotation,
   ImageAnnotation,
 } from "./pdf-types";
+
+// A text item extracted from the PDF — used to make existing PDF text editable.
+export interface PdfTextItem {
+  text: string;
+  // Position as percentage of page (0-1, top-left origin)
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  // Font size in PDF points (relative to page height as 0-1)
+  fontSizeRel: number;
+  fontSizePx: number; // approximate size at scale 1.5
+  fontName?: string;
+}
 
 // pdf.js is loaded lazily on the client only
 let pdfjsLib: typeof import("pdfjs-dist") | null = null;
@@ -110,6 +125,56 @@ export async function renderPageThumbnail(
   return dataUrl;
 }
 
+// Extract existing text items from a page so they can be made editable.
+// Returns positions in percentage coordinates (0-1, top-left origin).
+export async function extractTextItems(
+  doc: PdfDocument,
+  pageIndex: number
+): Promise<PdfTextItem[]> {
+  const pdfDoc = await getPdfDoc(doc.data);
+  const page = await pdfDoc.getPage(doc.pages[pageIndex].pageNumber);
+  const viewport = page.getViewport({ scale: 1 });
+  const pageW = viewport.width;
+  const pageH = viewport.height;
+  const textContent = await page.getTextContent();
+  const items: PdfTextItem[] = [];
+  for (const raw of textContent.items) {
+    if (!("str" in raw)) continue;
+    const str = (raw as any).str as string;
+    if (!str || !str.trim()) continue;
+    const tr = (raw as any).transform as number[];
+    if (!tr || tr.length < 6) continue;
+    // transform = [a, b, c, d, e, f]
+    // a = horizontal scale, d = vertical scale (= font size for horizontal text)
+    // e, f = x, y position in PDF (bottom-left origin)
+    const a = tr[0];
+    const d = tr[3];
+    const pdfX = tr[4];
+    const pdfY = tr[5];
+    const fontSize = Math.abs(d) || Math.abs(a) || 10;
+    const itemWidth = (raw as any).width as number;
+    const itemHeight = (raw as any).height as number || fontSize;
+    // Convert to top-left origin percentage
+    const xPct = pdfX / pageW;
+    const yPct = (pageH - pdfY) / pageH;
+    // Width and height as percentage of page
+    const wPct = (itemWidth > 0 ? itemWidth : fontSize * str.length * 0.5) / pageW;
+    const hPct = fontSize / pageH;
+    if (xPct < 0 || xPct > 1 || yPct < 0 || yPct > 1) continue;
+    items.push({
+      text: str,
+      x: xPct,
+      y: yPct - hPct, // adjust so the box top is at the text top
+      width: wPct,
+      height: hPct,
+      fontSizeRel: fontSize / pageH,
+      fontSizePx: fontSize * 1.5, // approximate pixel size at our default render scale of 1.5
+      fontName: (raw as any).fontName,
+    });
+  }
+  return items;
+}
+
 // ============================================================
 // Export logic — uses pdf-lib to overlay annotations on the
 // original PDF, preserving all original quality.
@@ -141,7 +206,7 @@ export async function exportAnnotatedPdf(
     return rgb(r, g, b);
   }
 
-  function getFont(ann: TextAnnotation) {
+  function getFont(ann: TextAnnotation | TextReplaceAnnotation) {
     const wantBold = ann.bold;
     const wantItalic = ann.italic;
     if (ann.fontFamily === "Times") return timesFont;
@@ -189,6 +254,37 @@ export async function exportAnnotatedPdf(
               color: hexToRgb(t.color),
             });
           });
+          break;
+        }
+        case "text-replace": {
+          // Edit existing PDF text: cover original with a rectangle in the
+          // cover color (typically white), then draw new text on top.
+          const t = ann as TextReplaceAnnotation;
+          // 1. Cover the original text area
+          p.drawRectangle({
+            x: ax,
+            y: py,
+            width: aw,
+            height: ah,
+            color: hexToRgb(t.coverColor || "#FFFFFF"),
+            opacity: 1,
+          });
+          // 2. Draw the new text on top
+          if (t.text.trim()) {
+            const font = getFont(t);
+            const fontSize = t.fontSize * h;
+            const lines = t.text.split("\n");
+            lines.forEach((line, idx) => {
+              const textHeightOffset = idx * fontSize * 1.2;
+              p.drawText(line, {
+                x: ax,
+                y: py + ah - fontSize + textHeightOffset * -1 + fontSize * 0.2,
+                size: fontSize,
+                font,
+                color: hexToRgb(t.color),
+              });
+            });
+          }
           break;
         }
         case "rectangle": {

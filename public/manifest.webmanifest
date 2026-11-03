@@ -1,0 +1,28 @@
+{
+  "name": "PDFCraft Studio — Free Online PDF Editor",
+  "short_name": "PDFCraft",
+  "description": "Edit existing PDF text, images, shapes and signatures right in your browser. Free, no sign-up, lossless export.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ec4899",
+  "orientation": "any",
+  "categories": ["productivity", "utilities"],
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any",
+      "purpose": "any"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/og.png",
+      "type": "image/png",
+      "sizes": "1200x630",
+      "form_factor": "wide",
+      "label": "PDFCraft Studio editor in action"
+    }
+  ]
+}

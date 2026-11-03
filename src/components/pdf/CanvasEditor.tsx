@@ -46,6 +46,9 @@ export function CanvasEditor() {
     setPendingImageSrc,
     setPendingSignatureSrc,
     pendingImageSrc,
+    activeBold,
+    activeItalic,
+    activeUnderline,
   } = usePdfStore();
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -240,9 +243,9 @@ export function CanvasEditor() {
         text: "",
         fontSize: activeFontSize / 100,
         fontFamily: activeFontFamily,
-        bold: false,
-        italic: false,
-        underline: false,
+        bold: activeBold,
+        italic: activeItalic,
+        underline: activeUnderline,
       };
       addAnnotation(ann);
       selectAnnotation(id);
@@ -618,9 +621,9 @@ export function CanvasEditor() {
                               ? activeFontSize / 100
                               : item.fontSizeRel,
                           fontFamily: activeFontFamily,
-                          bold: false,
-                          italic: false,
-                          underline: false,
+                          bold: activeBold,
+                          italic: activeItalic,
+                          underline: activeUnderline,
                           originalText: item.text,
                           coverColor: "#FFFFFF",
                         };

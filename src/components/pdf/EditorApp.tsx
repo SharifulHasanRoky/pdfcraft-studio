@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { usePdfStore } from "@/lib/pdf-store";
 import { useTheme } from "next-themes";
-import { PdfUploader } from "./PdfUploader";
+import { PremiumLanding } from "./PremiumLanding";
 import { Toolbar } from "./Toolbar";
 import { PageThumbnails } from "./PageThumbnails";
 import { CanvasEditor } from "./CanvasEditor";
@@ -16,6 +16,9 @@ export function EditorApp() {
   const { document: doc, activeView, reset, theme } = usePdfStore();
   const { setTheme } = useTheme();
   const [sigOpen, setSigOpen] = useState(false);
+  // `entered` is set ONLY by the landing's onOpenEditor callback after a
+  // successful upload — no effect needed, no cascading render.
+  const [entered, setEntered] = useState(false);
 
   // Sync store theme with next-themes
   useEffect(() => {
@@ -29,16 +32,14 @@ export function EditorApp() {
     return () => window.removeEventListener("open-signature-pad", handler);
   }, []);
 
-  if (!doc) {
+  if (!doc || !entered) {
     return (
-      <div className="min-h-screen flex flex-col bg-background text-foreground">
-        <main className="flex-1 flex flex-col items-center justify-center py-12">
-          <PdfUploader />
-        </main>
-        <footer className="mt-auto border-t py-6 text-center text-xs text-muted-foreground">
-          PDFCraft Studio • 100% client-side • Your PDFs never leave your browser
-        </footer>
-      </div>
+      <PremiumLanding
+        onOpenEditor={() => {
+          // PremiumLanding uploads and triggers this callback once the doc is ready
+          setEntered(true);
+        }}
+      />
     );
   }
 
@@ -68,6 +69,7 @@ export function EditorApp() {
               )
             ) {
               reset();
+              setEntered(false);
             }
           }}
           className="gap-1.5 text-xs h-7"

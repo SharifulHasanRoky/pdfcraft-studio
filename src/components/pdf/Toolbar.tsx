@@ -32,6 +32,9 @@ import {
   Sun,
   Moon,
   FileText,
+  Bold,
+  Italic,
+  Underline,
 } from "lucide-react";
 import { exportAnnotatedPdf } from "@/lib/pdf-utils";
 import { useState, useRef } from "react";
@@ -64,6 +67,12 @@ export function Toolbar() {
     setActiveFontFamily,
     fillShape,
     setFillShape,
+    activeBold,
+    setActiveBold,
+    activeItalic,
+    setActiveItalic,
+    activeUnderline,
+    setActiveUnderline,
     document: pdfDoc,
     annotations,
     zoom,
@@ -321,7 +330,7 @@ export function Toolbar() {
             )}
 
             {showTextOptions && (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-wrap">
                 <Separator orientation="vertical" className="h-6" />
                 <select
                   value={activeFontFamily}
@@ -335,7 +344,7 @@ export function Toolbar() {
                 <Label className="text-xs text-muted-foreground hidden sm:inline">
                   Size
                 </Label>
-                <div className="w-24">
+                <div className="w-20 sm:w-24">
                   <Slider
                     value={[activeFontSize]}
                     min={8}
@@ -347,6 +356,50 @@ export function Toolbar() {
                 <span className="text-xs w-6 tabular-nums">
                   {activeFontSize}
                 </span>
+                <Separator orientation="vertical" className="h-6" />
+                <div className="flex items-center gap-0.5">
+                  <TooltipProvider delayDuration={200}>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant={activeBold ? "default" : "ghost"}
+                          size="icon"
+                          onClick={() => setActiveBold(!activeBold)}
+                          className="h-7 w-7"
+                        >
+                          <Bold className="h-3.5 w-3.5" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent side="bottom">Bold</TooltipContent>
+                    </Tooltip>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant={activeItalic ? "default" : "ghost"}
+                          size="icon"
+                          onClick={() => setActiveItalic(!activeItalic)}
+                          className="h-7 w-7"
+                        >
+                          <Italic className="h-3.5 w-3.5" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent side="bottom">Italic</TooltipContent>
+                    </Tooltip>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant={activeUnderline ? "default" : "ghost"}
+                          size="icon"
+                          onClick={() => setActiveUnderline(!activeUnderline)}
+                          className="h-7 w-7"
+                        >
+                          <Underline className="h-3.5 w-3.5" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent side="bottom">Underline</TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
               </div>
             )}
 

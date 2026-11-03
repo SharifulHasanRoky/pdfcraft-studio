@@ -25,6 +25,9 @@ interface PdfEditorState {
   activeFontSize: number;
   activeFontFamily: string;
   fillShape: boolean;
+  activeBold: boolean;
+  activeItalic: boolean;
+  activeUnderline: boolean;
 
   // Annotations
   annotations: Annotation[];
@@ -50,6 +53,9 @@ interface PdfEditorState {
   setActiveFontSize: (s: number) => void;
   setActiveFontFamily: (f: string) => void;
   setFillShape: (f: boolean) => void;
+  setActiveBold: (b: boolean) => void;
+  setActiveItalic: (b: boolean) => void;
+  setActiveUnderline: (b: boolean) => void;
   addAnnotation: (ann: Annotation) => void;
   updateAnnotation: (id: string, patch: Partial<Annotation>) => void;
   removeAnnotation: (id: string) => void;
@@ -83,6 +89,9 @@ export const usePdfStore = create<PdfEditorState>((set, get) => ({
   activeFontSize: DEFAULT_FONT_SIZE,
   activeFontFamily: DEFAULT_FONT_FAMILY,
   fillShape: false,
+  activeBold: false,
+  activeItalic: false,
+  activeUnderline: false,
   annotations: [],
   selectedAnnotationId: null,
   zoom: 1,
@@ -102,6 +111,9 @@ export const usePdfStore = create<PdfEditorState>((set, get) => ({
   setActiveFontSize: (activeFontSize) => set({ activeFontSize }),
   setActiveFontFamily: (activeFontFamily) => set({ activeFontFamily }),
   setFillShape: (fillShape) => set({ fillShape }),
+  setActiveBold: (activeBold) => set({ activeBold }),
+  setActiveItalic: (activeItalic) => set({ activeItalic }),
+  setActiveUnderline: (activeUnderline) => set({ activeUnderline }),
   addAnnotation: (ann) => set({ annotations: [...get().annotations, ann] }),
   updateAnnotation: (id, patch) =>
     set({

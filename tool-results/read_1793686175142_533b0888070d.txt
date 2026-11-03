@@ -1,0 +1,738 @@
+     1→// PDF utilities - load, render, and export PDFs
+     2→// All operations preserve original quality: original PDF bytes are never re-encoded,
+     3→// we only overlay new annotations on top using pdf-lib.
+     4→
+     5→import type {
+     6→  Annotation,
+     7→  PdfDocument,
+     8→  PdfPageData,
+     9→  TextAnnotation,
+    10→  TextReplaceAnnotation,
+    11→  ShapeAnnotation,
+    12→  HighlightAnnotation,
+    13→  DrawingAnnotation,
+    14→  ImageAnnotation,
+    15→} from "./pdf-types";
+    16→
+    17→// A text item extracted from the PDF — used to make existing PDF text editable.
+    18→export interface PdfTextItem {
+    19→  text: string;
+    20→  // Position as percentage of page (0-1, top-left origin)
+    21→  x: number;
+    22→  y: number;
+    23→  width: number;
+    24→  height: number;
+    25→  // Font size in PDF points (relative to page height as 0-1)
+    26→  fontSizeRel: number;
+    27→  fontSizePx: number; // approximate size at scale 1.5
+    28→  fontName?: string;
+    29→}
+    30→
+    31→// An image element extracted from the PDF.
+    32→export interface PdfImageItem {
+    33→  // Position as percentage of page (0-1, top-left origin)
+    34→  x: number;
+    35→  y: number;
+    36→  width: number;
+    37→  height: number;
+    38→  objId: string;
+    39→  // Rendered data URL preview (JPEG)
+    40→  src?: string;
+    41→}
+    42→
+    43→// pdf.js is loaded lazily on the client only
+    44→let pdfjsLib: typeof import("pdfjs-dist") | null = null;
+    45→
+    46→async function getPdfjs() {
+    47→  if (pdfjsLib) return pdfjsLib;
+    48→  const mod = await import("pdfjs-dist");
+    49→  mod.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
+    50→  pdfjsLib = mod;
+    51→  return mod;
+    52→}
+    53→
+    54→// Cache PDFDocumentProxy per ArrayBuffer reference (one per loaded PDF).
+    55→// This avoids re-parsing the PDF on every render, which is expensive.
+    56→const docCache = new WeakMap<ArrayBuffer, import("pdfjs-dist").PDFDocumentProxy>();
+    57→
+    58→async function getPdfDoc(data: ArrayBuffer) {
+    59→  const existing = docCache.get(data);
+    60→  if (existing) return existing;
+    61→  const pdfjs = await getPdfjs();
+    62→  // Copy buffer — pdf.js transfers ownership of typed arrays to the worker
+    63→  const loadingTask = pdfjs.getDocument({ data: new Uint8Array(data.slice(0)) });
+    64→  const pdfDoc = await loadingTask.promise;
+    65→  docCache.set(data, pdfDoc);
+    66→  return pdfDoc;
+    67→}
+    68→
+    69→export async function loadPdfFromFile(file: File): Promise<PdfDocument> {
+    70→  const buf = await file.arrayBuffer();
+    71→  const pdfDoc = await getPdfDoc(buf);
+    72→  const pages: PdfPageData[] = [];
+    73→  for (let i = 1; i <= pdfDoc.numPages; i++) {
+    74→    const page = await pdfDoc.getPage(i);
+    75→    const viewport = page.getViewport({ scale: 1 });
+    76→    pages.push({
+    77→      id: `page-${i}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+    78→      pageNumber: i,
+    79→      rotation: 0,
+    80→      width: viewport.width,
+    81→      height: viewport.height,
+    82→    });
+    83→    page.cleanup();
+    84→  }
+    85→  return {
+    86→    file,
+    87→    data: buf,
+    88→    numPages: pdfDoc.numPages,
+    89→    pages,
+    90→    fileName: file.name,
+    91→  };
+    92→}
+    93→
+    94→// Render a single page to a canvas at given scale
+    95→export async function renderPageToCanvas(
+    96→  doc: PdfDocument,
+    97→  pageIndex: number,
+    98→  canvas: HTMLCanvasElement,
+    99→  scale: number,
+   100→  rotation: number = 0
+   101→): Promise<void> {
+   102→  const pdfDoc = await getPdfDoc(doc.data);
+   103→  const page = await pdfDoc.getPage(doc.pages[pageIndex].pageNumber);
+   104→  const viewport = page.getViewport({ scale, rotation });
+   105→  const ctx = canvas.getContext("2d");
+   106→  if (!ctx) return;
+   107→  canvas.width = viewport.width;
+   108→  canvas.height = viewport.height;
+   109→  canvas.style.width = `${viewport.width}px`;
+   110→  canvas.style.height = `${viewport.height}px`;
+   111→  await page.render({
+   112→    canvasContext: ctx,
+   113→    viewport,
+   114→  } as any).promise;
+   115→  page.cleanup();
+   116→}
+   117→
+   118→// Render a thumbnail of a page
+   119→export async function renderPageThumbnail(
+   120→  doc: PdfDocument,
+   121→  pageIndex: number,
+   122→  maxWidth = 160
+   123→): Promise<string> {
+   124→  const pdfDoc = await getPdfDoc(doc.data);
+   125→  const page = await pdfDoc.getPage(doc.pages[pageIndex].pageNumber);
+   126→  const baseViewport = page.getViewport({ scale: 1 });
+   127→  const scale = maxWidth / baseViewport.width;
+   128→  const viewport = page.getViewport({ scale });
+   129→  const canvas = document.createElement("canvas");
+   130→  canvas.width = viewport.width;
+   131→  canvas.height = viewport.height;
+   132→  const ctx = canvas.getContext("2d");
+   133→  if (!ctx) return "";
+   134→  await page.render({ canvasContext: ctx, viewport } as any).promise;
+   135→  const dataUrl = canvas.toDataURL("image/jpeg", 0.7);
+   136→  page.cleanup();
+   137→  return dataUrl;
+   138→}
+   139→
+   140→// Extract existing text items from a page so they can be made editable.
+   141→// Returns positions in percentage coordinates (0-1, top-left origin).
+   142→// ADJACENT ITEMS ARE MERGED INTO LINES so each editable unit is a natural
+   143→// piece of text (e.g. one paragraph, one heading) rather than tiny chunks.
+   144→export async function extractTextItems(
+   145→  doc: PdfDocument,
+   146→  pageIndex: number
+   147→): Promise<PdfTextItem[]> {
+   148→  const pdfDoc = await getPdfDoc(doc.data);
+   149→  const page = await pdfDoc.getPage(doc.pages[pageIndex].pageNumber);
+   150→  const viewport = page.getViewport({ scale: 1 });
+   151→  const pageW = viewport.width;
+   152→  const pageH = viewport.height;
+   153→  const textContent = await page.getTextContent();
+   154→
+   155→  // First pass: build raw items in page coordinates with proper metrics
+   156→  interface RawItem {
+   157→    text: string;
+   158→    pdfX: number; // bottom-left origin x in pdf points
+   159→    pdfYTop: number; // top-left origin y (in pdf points, from top)
+   160→    width: number;
+   161→    height: number;
+   162→    fontSize: number;
+   163→    fontName?: string;
+   164→  }
+   165→  const rawItems: RawItem[] = [];
+   166→  for (const raw of textContent.items) {
+   167→    if (!("str" in raw)) continue;
+   168→    const str = (raw as any).str as string;
+   169→    if (!str) continue; // keep empty strings for spacing logic
+   170→    const tr = (raw as any).transform as number[];
+   171→    if (!tr || tr.length < 6) continue;
+   172→    const a = tr[0];
+   173→    const d = tr[3];
+   174→    const pdfX = tr[4];
+   175→    const pdfY = tr[5];
+   176→    const fontSize = Math.abs(d) || Math.abs(a) || 10;
+   177→    const itemWidth = (raw as any).width as number;
+   178→    const itemHeight = (raw as any).height as number || fontSize;
+   179→    rawItems.push({
+   180→      text: str,
+   181→      pdfX,
+   182→      pdfYTop: pageH - pdfY, // convert to top-left origin
+   183→      width: itemWidth > 0 ? itemWidth : fontSize * str.length * 0.5,
+   184→      height: itemHeight > 0 ? itemHeight : fontSize,
+   185→      fontSize,
+   186→      fontName: (raw as any).fontName,
+   187→    });
+   188→  }
+   189→
+   190→  // Second pass: merge items on the same line (same y ± 25% font size, x within gap threshold)
+   191→  // into line items. Then we'll merge adjacent lines into paragraphs.
+   192→  const lines: RawItem[] = [];
+   193→  const used = new Set<number>();
+   194→  for (let i = 0; i < rawItems.length; i++) {
+   195→    if (used.has(i)) continue;
+   196→    const base = rawItems[i];
+   197→    used.add(i);
+   198→    const lineItems: RawItem[] = [base];
+   199→    let curRight = base.pdfX + base.width;
+   200→    // Find items on the same line to the right
+   201→    for (let j = i + 1; j < rawItems.length; j++) {
+   202→      if (used.has(j)) continue;
+   203→      const cand = rawItems[j];
+   204→      const dy = Math.abs(cand.pdfYTop - base.pdfYTop);
+   205→      // Same line if vertical distance is small relative to font size
+   206→      if (dy < base.fontSize * 0.5) {
+   207→        // Check x proximity — items should be reasonably close
+   208→        const gap = cand.pdfX - curRight;
+   209→        // Average character width for this font size
+   210→        const charW = base.fontSize * 0.5;
+   211→        if (gap > -charW * 2 && gap < charW * 8) {
+   212→          lineItems.push(cand);
+   213→          used.add(j);
+   214→          curRight = Math.max(curRight, cand.pdfX + cand.width);
+   215→        }
+   216→      }
+   217→    }
+   218→    // Sort line items by x position
+   219→    lineItems.sort((a, b) => a.pdfX - b.pdfX);
+   220→    // Build merged line item
+   221→    const minX = Math.min(...lineItems.map((it) => it.pdfX));
+   222→    const maxX = Math.max(...lineItems.map((it) => it.pdfX + it.width));
+   223→    const minY = Math.min(...lineItems.map((it) => it.pdfYTop));
+   224→    const maxY = Math.max(...lineItems.map((it) => it.pdfYTop + it.height));
+   225→    // Join text — preserve single space between items if there was a gap
+   226→    let lineText = "";
+   227→    for (let k = 0; k < lineItems.length; k++) {
+   228→      const it = lineItems[k];
+   229→      if (k > 0) {
+   230→        const prev = lineItems[k - 1];
+   231→        const prevRight = prev.pdfX + prev.width;
+   232→        const gap = it.pdfX - prevRight;
+   233→        const charW = it.fontSize * 0.3;
+   234→        if (gap > charW) lineText += " ";
+   235→      }
+   236→      lineText += it.text;
+   237→    }
+   238→    if (!lineText.trim()) continue;
+   239→    const fontSize = Math.max(...lineItems.map((it) => it.fontSize));
+   240→    lines.push({
+   241→      text: lineText.trim(),
+   242→      pdfX: minX,
+   243→      pdfYTop: minY,
+   244→      width: maxX - minX,
+   245→      height: maxY - minY,
+   246→      fontSize,
+   247→      fontName: base.fontName,
+   248→    });
+   249→  }
+   250→
+   251→  // Third pass: merge lines into paragraphs if they're close vertically
+   252→  // and have similar x position + font size (typical paragraph structure).
+   253→  lines.sort((a, b) => a.pdfYTop - b.pdfYTop);
+   254→  const merged: RawItem[] = [];
+   255→  const usedLine = new Set<number>();
+   256→  for (let i = 0; i < lines.length; i++) {
+   257→    if (usedLine.has(i)) continue;
+   258→    const base = lines[i];
+   259→    usedLine.add(i);
+   260→    const group: RawItem[] = [base];
+   261→    let curBottom = base.pdfYTop + base.height;
+   262→    for (let j = i + 1; j < lines.length; j++) {
+   263→      if (usedLine.has(j)) continue;
+   264→      const cand = lines[j];
+   265→      const dx = Math.abs(cand.pdfX - base.pdfX);
+   266→      const sizeRatio = cand.fontSize / base.fontSize;
+   267→      const verticalGap = cand.pdfYTop - curBottom;
+   268→      // Same paragraph if: similar x position, similar font size, gap is line-height-ish
+   269→      if (
+   270→        dx < base.fontSize * 2 &&
+   271→        sizeRatio > 0.85 &&
+   272→        sizeRatio < 1.15 &&
+   273→        verticalGap > 0 &&
+   274→        verticalGap < base.fontSize * 1.5
+   275→      ) {
+   276→        group.push(cand);
+   277→        usedLine.add(j);
+   278→        curBottom = cand.pdfYTop + cand.height;
+   279→      } else {
+   280→        break; // lines are sorted, so we can stop
+   281→      }
+   282→    }
+   283→    if (group.length === 1) {
+   284→      merged.push(group[0]);
+   285→    } else {
+   286→      const minX = Math.min(...group.map((g) => g.pdfX));
+   287→      const maxX = Math.max(...group.map((g) => g.pdfX + g.width));
+   288→      const minY = Math.min(...group.map((g) => g.pdfYTop));
+   289→      const maxY = Math.max(...group.map((g) => g.pdfYTop + g.height));
+   290→      const fontSize = group[0].fontSize;
+   291→      merged.push({
+   292→        text: group.map((g) => g.text).join("\n"),
+   293→        pdfX: minX,
+   294→        pdfYTop: minY,
+   295→        width: maxX - minX,
+   296→        height: maxY - minY,
+   297→        fontSize,
+   298→        fontName: base.fontName,
+   299→      });
+   300→    }
+   301→  }
+   302→
+   303→  // Convert to percentage coordinates and apply scale
+   304→  const items: PdfTextItem[] = merged
+   305→    .map((m) => {
+   306→      // Skip if entirely off-page
+   307→      if (m.pdfX < 0 || m.pdfX > pageW || m.pdfYTop < 0 || m.pdfYTop > pageH)
+   308→        return null;
+   309→      return {
+   310→        text: m.text,
+   311→        x: m.pdfX / pageW,
+   312→        y: m.pdfYTop / pageH,
+   313→        width: m.width / pageW,
+   314→        height: Math.max(m.height, m.fontSize) / pageH,
+   315→        fontSizeRel: m.fontSize / pageH,
+   316→        fontSizePx: m.fontSize * 1.5, // matches our default render scale of 1.5
+   317→        fontName: m.fontName,
+   318→      } as PdfTextItem;
+   319→    })
+   320→    .filter((x): x is PdfTextItem => x !== null);
+   321→
+   322→  return items;
+   323→}
+   324→
+   325→// Extract existing images from a page so they can be made editable.
+   326→// Uses pdf.js's operator list to find paintImageXObject operations,
+   327→// then resolves the image data via page.objs.
+   328→export async function extractImageItems(
+   329→  doc: PdfDocument,
+   330→  pageIndex: number
+   331→): Promise<PdfImageItem[]> {
+   332→  const pdfDoc = await getPdfDoc(doc.data);
+   333→  const page = await pdfDoc.getPage(doc.pages[pageIndex].pageNumber);
+   334→  const viewport = page.getViewport({ scale: 1 });
+   335→  const pageW = viewport.width;
+   336→  const pageH = viewport.height;
+   337→  const opList = await page.getOperatorList();
+   338→  const pdfjs = await getPdfjs();
+   339→  const OPS = pdfjs.OPS;
+   340→  const items: PdfImageItem[] = [];
+   341→  const paintImageFn = OPS.paintImageXObject;
+   342→  const paintInlineFn = OPS.paintInlineImageXObject;
+   343→  const transformFn = OPS.transform;
+   344→  const saveFn = OPS.save;
+   345→  const restoreFn = OPS.restore;
+   346→
+   347→  // Track the current transformation matrix (CTM) by walking through the ops.
+   348→  function multiply(m1: number[], m2: number[]): number[] {
+   349→    const [a1, b1, c1, d1, e1, f1] = m1;
+   350→    const [a2, b2, c2, d2, e2, f2] = m2;
+   351→    return [
+   352→      a1 * a2 + c1 * b2,
+   353→      b1 * a2 + d1 * b2,
+   354→      a1 * c2 + c1 * d2,
+   355→      b1 * c2 + d1 * d2,
+   356→      a1 * e2 + c1 * f2 + e1,
+   357→      b1 * e2 + d1 * f2 + f1,
+   358→    ];
+   359→  }
+   360→  // Initial CTM: pdf.js default transform for the viewport at scale 1.
+   361→  // For viewport at scale 1, the transform converts PDF coords (bottom-left)
+   362→  // to viewport coords (top-left). But the operator list operates in PDF
+   363→  // user space, NOT viewport space. So we start with the identity CTM
+   364→  // representing the PDF's default coordinate system.
+   365→  let ctm: number[] = [1, 0, 0, 1, 0, 0];
+   366→  const ctmStack: number[][] = [];
+   367→
+   368→  for (let i = 0; i < opList.fnArray.length; i++) {
+   369→    const fn = opList.fnArray[i];
+   370→
+   371→    // Maintain CTM
+   372→    if (fn === saveFn) {
+   373→      ctmStack.push([...ctm]);
+   374→    } else if (fn === restoreFn) {
+   375→      if (ctmStack.length > 0) ctm = ctmStack.pop()!;
+   376→    } else if (fn === transformFn) {
+   377→      const args = opList.argsArray[i] as number[];
+   378→      if (args && args.length >= 6) {
+   379→        ctm = multiply(args, ctm);
+   380→      }
+   381→      continue;
+   382→    }
+   383→
+   384→    const isPaintImage = fn === paintImageFn || fn === paintInlineFn;
+   385→    if (!isPaintImage) continue;
+   386→    const args = opList.argsArray[i];
+   387→    if (!args || args.length < 1) continue;
+   388→    const isInline = fn === paintInlineFn;
+   389→    let objId: string;
+   390→    if (!isInline) {
+   391→      objId = String(args[0]);
+   392→    } else {
+   393→      objId = `inline-${i}`;
+   394→    }
+   395→
+   396→    // The CTM at this point gives us the matrix that maps image unit-space
+   397→    // (0..1) to PDF user space. For a typical image drawn at position (x, y)
+   398→    // with width w and height h, the CTM is [w, 0, 0, h, x, y] (no flip in
+   399→    // PDF user space; pdf.js handles the flip in the render step).
+   400→    const a = ctm[0];
+   401→    const d = ctm[3];
+   402→    const e = ctm[4];
+   403→    const f = ctm[5];
+   404→    // pdf.js's operator-list transforms use device-space coords where the unit
+   405→    // length equals PDF points multiplied by an internal device scale. We can
+   406→    // recover the scale by noting that for a typical image, the CTM's a and d
+   407→    // equal the display width/height in PDF points × device scale. We don't know
+   408→    // the device scale directly, but we can detect it: for any image, the CTM
+   409→    // value `a` should equal displayWidth × deviceScale. If we know the image's
+   410→    // intrinsic width from args (imgWidth, imgHeight), then deviceScale = a / imgWidth.
+   411→    // For paintImageXObject, args = [objId, imgWidth, imgHeight].
+   412→    // For paintInlineImageXObject, args[0] is the image data; args[1,2] are w,h.
+   413→    let intrinsicW = 1;
+   414→    let intrinsicH = 1;
+   415→    if (!isInline) {
+   416→      intrinsicW = args[1] || 1;
+   417→      intrinsicH = args[2] || 1;
+   418→    } else {
+   419→      intrinsicW = args[1] || 1;
+   420→      intrinsicH = args[2] || 1;
+   421→    }
+   422→    // deviceScale = a / intrinsicW (assuming image is drawn 1:1 with intrinsic size)
+   423→    // BUT some images are scaled non-uniformly. To be safe, derive scale from
+   424→    // the relationship: page width in PDF points = page width in device units / deviceScale.
+   425→    // We know pageW (PDF points) and we can compute device page width = e_max - e_min
+   426→    // across all ops. Easier: derive deviceScale from the assumption that the image
+   427→    // was placed in PDF user space at the intrinsic size or a simple scale.
+   428→    // Use the simplest robust approach: deviceScale = a / intrinsicW when a > 0.
+   429→    const deviceScale = intrinsicW > 0 ? Math.abs(a) / intrinsicW : 1;
+   430→    const realA = a / deviceScale;
+   431→    const realD = d / deviceScale;
+   432→    const realE = e / deviceScale;
+   433→    const realF = f / deviceScale;
+   434→    const displayW = Math.abs(realA);
+   435→    const displayH = Math.abs(realD);
+   436→    const pdfX = realE;
+   437→    // In PDF user space, y is bottom-left origin. Convert to top-left.
+   438→    const pdfYBottom = realD < 0 ? realF - displayH : realF;
+   439→    const pdfYTop = pageH - pdfYBottom - displayH;
+   440→    if (displayW <= 1 || displayH <= 1) continue;
+   441→    if (pdfX < -10 || pdfX > pageW + 10 || pdfYTop < -10 || pdfYTop > pageH + 10)
+   442→      continue;
+   443→
+   444→    // Try to resolve the image data URL
+   445→    let src: string | undefined;
+   446→    try {
+   447→      if (!isInline) {
+   448→        const imgObj = await new Promise<any>((resolve, reject) => {
+   449→          const tryGet = (attempt: number) => {
+   450→            if (attempt > 20) {
+   451→              reject(new Error("Image object not resolved"));
+   452→              return;
+   453→            }
+   454→            const obj = page.objs.get(objId);
+   455→            if (obj) resolve(obj);
+   456→            else setTimeout(() => tryGet(attempt + 1), 100);
+   457→          };
+   458→          tryGet(0);
+   459→        });
+   460→        if (imgObj) {
+   461→          const canvas = document.createElement("canvas");
+   462→          canvas.width = imgObj.width || 256;
+   463→          canvas.height = imgObj.height || 256;
+   464→          const ctx = canvas.getContext("2d");
+   465→          if (ctx) {
+   466→            if (imgObj.bitmap) {
+   467→              ctx.drawImage(imgObj.bitmap, 0, 0, canvas.width, canvas.height);
+   468→              src = canvas.toDataURL("image/png");
+   469→            } else if (imgObj.data && imgObj.width && imgObj.height) {
+   470→              const tempCanvas = document.createElement("canvas");
+   471→              tempCanvas.width = imgObj.width;
+   472→              tempCanvas.height = imgObj.height;
+   473→              const tempCtx = tempCanvas.getContext("2d");
+   474→              if (tempCtx) {
+   475→                const imgData = new ImageData(
+   476→                  new Uint8ClampedArray(imgObj.data),
+   477→                  imgObj.width,
+   478→                  imgObj.height
+   479→                );
+   480→                tempCtx.putImageData(imgData, 0, 0);
+   481→                ctx.drawImage(tempCanvas, 0, 0, canvas.width, canvas.height);
+   482→                src = canvas.toDataURL("image/png");
+   483→              }
+   484→            }
+   485→          }
+   486→        }
+   487→      }
+   488→    } catch {
+   489→      // ignore resolution errors — still record position
+   490→    }
+   491→
+   492→    items.push({
+   493→      x: Math.max(0, pdfX) / pageW,
+   494→      y: Math.max(0, pdfYTop) / pageH,
+   495→      width: displayW / pageW,
+   496→      height: displayH / pageH,
+   497→      objId,
+   498→      src,
+   499→    });
+   500→  }
+   501→  return items;
+   502→}
+   503→
+   504→// ============================================================
+   505→// Export logic — uses pdf-lib to overlay annotations on the
+   506→// original PDF, preserving all original quality.
+   507→// ============================================================
+   508→
+   509→export async function exportAnnotatedPdf(
+   510→  doc: PdfDocument,
+   511→  annotations: Annotation[]
+   512→): Promise<Blob> {
+   513→  const { PDFDocument, rgb, degrees, StandardFonts } = await import("pdf-lib");
+   514→  const pdfDoc = await PDFDocument.load(doc.data.slice(0));
+   515→  const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
+   516→  const helveticaBoldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+   517→  const helveticaObliqueFont = await pdfDoc.embedFont(
+   518→    StandardFonts.HelveticaOblique
+   519→  );
+   520→  const helveticaBoldObliqueFont = await pdfDoc.embedFont(
+   521→    StandardFonts.HelveticaBoldOblique
+   522→  );
+   523→  const timesFont = await pdfDoc.embedFont(StandardFonts.TimesRoman);
+   524→  const courierFont = await pdfDoc.embedFont(StandardFonts.Courier);
+   525→
+   526→  function hexToRgb(hex: string) {
+   527→    const clean = hex.replace("#", "");
+   528→    if (clean.length !== 6) return rgb(0, 0, 0);
+   529→    const r = parseInt(clean.slice(0, 2), 16) / 255;
+   530→    const g = parseInt(clean.slice(2, 4), 16) / 255;
+   531→    const b = parseInt(clean.slice(4, 6), 16) / 255;
+   532→    return rgb(r, g, b);
+   533→  }
+   534→
+   535→  function getFont(ann: TextAnnotation | TextReplaceAnnotation) {
+   536→    const wantBold = ann.bold;
+   537→    const wantItalic = ann.italic;
+   538→    if (ann.fontFamily === "Times") return timesFont;
+   539→    if (ann.fontFamily === "Courier") return courierFont;
+   540→    if (wantBold && wantItalic) return helveticaBoldObliqueFont;
+   541→    if (wantBold) return helveticaBoldFont;
+   542→    if (wantItalic) return helveticaObliqueFont;
+   543→    return helveticaFont;
+   544→  }
+   545→
+   546→  // Apply per-page rotation first by re-creating pages.
+   547→  // pdf-lib cannot rotate a page in place, but we can call setRotation.
+   548→  const pages = pdfDoc.getPages();
+   549→  for (let i = 0; i < doc.pages.length && i < pages.length; i++) {
+   550→    const p = pages[i];
+   551→    const stored = doc.pages[i];
+   552→    p.setRotation(degrees(stored.rotation));
+   553→    const w = p.getWidth();
+   554→    const h = p.getHeight();
+   555→    const pageAnnotations = annotations.filter((a) => a.page === i);
+   556→
+   557→    for (const ann of pageAnnotations) {
+   558→      const ax = ann.x * w;
+   559→      const ay = ann.y * h;
+   560→      const aw = ann.width * w;
+   561→      const ah = ann.height * h;
+   562→      // pdf-lib origin is bottom-left; we use top-left origin in editor
+   563→      // so y becomes (h - ay - ah)
+   564→      const py = h - ay - ah;
+   565→
+   566→      switch (ann.type) {
+   567→        case "text": {
+   568→          const t = ann as TextAnnotation;
+   569→          if (!t.text.trim()) break; // skip empty text annotations
+   570→          const font = getFont(t);
+   571→          const fontSize = t.fontSize * h;
+   572→          const lines = t.text.split("\n");
+   573→          lines.forEach((line, idx) => {
+   574→            const textHeightOffset = idx * fontSize * 1.2;
+   575→            p.drawText(line, {
+   576→              x: ax,
+   577→              y: py + ah - fontSize + textHeightOffset * -1 + fontSize * 0.2,
+   578→              size: fontSize,
+   579→              font,
+   580→              color: hexToRgb(t.color),
+   581→            });
+   582→          });
+   583→          break;
+   584→        }
+   585→        case "text-replace": {
+   586→          // Edit existing PDF text: cover original with a rectangle in the
+   587→          // cover color (typically white), then draw new text on top.
+   588→          const t = ann as TextReplaceAnnotation;
+   589→          // 1. Cover the original text area
+   590→          p.drawRectangle({
+   591→            x: ax,
+   592→            y: py,
+   593→            width: aw,
+   594→            height: ah,
+   595→            color: hexToRgb(t.coverColor || "#FFFFFF"),
+   596→            opacity: 1,
+   597→          });
+   598→          // 2. Draw the new text on top
+   599→          if (t.text.trim()) {
+   600→            const font = getFont(t);
+   601→            const fontSize = t.fontSize * h;
+   602→            const lines = t.text.split("\n");
+   603→            lines.forEach((line, idx) => {
+   604→              const textHeightOffset = idx * fontSize * 1.2;
+   605→              p.drawText(line, {
+   606→                x: ax,
+   607→                y: py + ah - fontSize + textHeightOffset * -1 + fontSize * 0.2,
+   608→                size: fontSize,
+   609→                font,
+   610→                color: hexToRgb(t.color),
+   611→              });
+   612→            });
+   613→          }
+   614→          break;
+   615→        }
+   616→        case "rectangle": {
+   617→          const s = ann as ShapeAnnotation;
+   618→          p.drawRectangle({
+   619→            x: ax,
+   620→            y: py,
+   621→            width: aw,
+   622→            height: ah,
+   623→            borderColor: hexToRgb(s.color),
+   624→            borderWidth: s.strokeWidth * w,
+   625→            color: s.fill ? hexToRgb(s.fillColor) : undefined,
+   626→            opacity: s.opacity,
+   627→          });
+   628→          break;
+   629→        }
+   630→        case "circle": {
+   631→          const s = ann as ShapeAnnotation;
+   632→          p.drawEllipse({
+   633→            x: ax,
+   634→            y: py,
+   635→            width: aw,
+   636→            height: ah,
+   637→            borderColor: hexToRgb(s.color),
+   638→            borderWidth: s.strokeWidth * w,
+   639→            color: s.fill ? hexToRgb(s.fillColor) : undefined,
+   640→            opacity: s.opacity,
+   641→          });
+   642→          break;
+   643→        }
+   644→        case "line": {
+   645→          const s = ann as ShapeAnnotation;
+   646→          p.drawLine({
+   647→            start: { x: ax, y: h - ay },
+   648→            end: { x: ax + aw, y: h - ay - ah },
+   649→            thickness: s.strokeWidth * w,
+   650→            color: hexToRgb(s.color),
+   651→            opacity: s.opacity,
+   652→          });
+   653→          break;
+   654→        }
+   655→        case "highlight": {
+   656→          const h_ann = ann as HighlightAnnotation;
+   657→          p.drawRectangle({
+   658→            x: ax,
+   659→            y: py,
+   660→            width: aw,
+   661→            height: ah,
+   662→            color: hexToRgb(h_ann.color),
+   663→            opacity: h_ann.opacity,
+   664→            borderColor: undefined,
+   665→          });
+   666→          break;
+   667→        }
+   668→        case "drawing": {
+   669→          const d = ann as DrawingAnnotation;
+   670→          if (d.points.length < 2) break;
+   671→          // Draw segment by segment as thin rectangles
+   672→          for (let k = 1; k < d.points.length; k++) {
+   673→            const a = d.points[k - 1];
+   674→            const b = d.points[k];
+   675→            const x1 = a.x * w;
+   676→            const y1 = h - a.y * h;
+   677→            const x2 = b.x * w;
+   678→            const y2 = h - b.y * h;
+   679→            p.drawLine({
+   680→              start: { x: x1, y: y1 },
+   681→              end: { x: x2, y: y2 },
+   682→              thickness: d.strokeWidth * w,
+   683→              color: hexToRgb(d.color),
+   684→            });
+   685→          }
+   686→          break;
+   687→        }
+   688→        case "image":
+   689→        case "signature": {
+   690→          const img = ann as ImageAnnotation;
+   691→          const dataUrl = img.src;
+   692→          try {
+   693→            const base64 = dataUrl.split(",")[1];
+   694→            const isPng = dataUrl.startsWith("data:image/png");
+   695→            const bytes = Uint8Array.from(atob(base64), (c) =>
+   696→              c.charCodeAt(0)
+   697→            );
+   698→            const embedded = isPng
+   699→              ? await pdfDoc.embedPng(bytes)
+   700→              : await pdfDoc.embedJpg(bytes);
+   701→            p.drawImage(embedded, {
+   702→              x: ax,
+   703→              y: py,
+   704→              width: aw,
+   705→              height: ah,
+   706→            });
+   707→          } catch (e) {
+   708→            console.error("Failed to embed image:", e);
+   709→          }
+   710→          break;
+   711→        }
+   712→      }
+   713→    }
+   714→  }
+   715→
+   716→  // If pages were deleted, remove them from the exported PDF
+   717→  // pdf-lib removes by index — we need to remove from end
+   718→  if (doc.pages.length < pages.length) {
+   719→    const toRemove = pages.length - doc.pages.length;
+   720→    for (let i = 0; i < toRemove; i++) {
+   721→      pdfDoc.removePage(pages.length - 1 - i);
+   722→    }
+   723→  }
+   724→
+   725→  const bytes = await pdfDoc.save();
+   726→  return new Blob([bytes], { type: "application/pdf" });
+   727→}
+   728→
+   729→// Helper: read an image File as data URL
+   730→export function readFileAsDataURL(file: File): Promise<string> {
+   731→  return new Promise((resolve, reject) => {
+   732→    const reader = new FileReader();
+   733→    reader.onload = () => resolve(reader.result as string);
+   734→    reader.onerror = reject;
+   735→    reader.readAsDataURL(file);
+   736→  });
+   737→}
+   738→

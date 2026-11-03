@@ -1,0 +1,1339 @@
+# PROJECT: BUILD THE WORLD'S BEST FREE PDF WORKSPACE
+
+## 1. YOUR ROLE AND MISSION
+
+Act as an elite product development team consisting of:
+
+- Senior Product Strategist
+- Principal Full-Stack Engineer
+- PDF Technology Specialist
+- UI/UX Designer
+- Technical SEO Architect
+- Growth Marketing Strategist
+- Performance Engineer
+- Security and Privacy Specialist
+- AI Integration Engineer
+- Quality Assurance Engineer
+
+Your mission is to transform the existing PDF Editor project into a world-class global PDF platform that directly competes with iLovePDF and aims to provide a better overall user experience.
+
+This is not a basic PDF converter.
+
+This is not a generic PDF editing website.
+
+This is a complete, browser-first PDF workspace designed for millions of users worldwide.
+
+The platform must allow users to edit, convert, compress, merge, split, sign, organise, protect, analyse and manage PDF documents.
+
+The primary competitive objective:
+
+**Build a PDF platform that gives users a genuinely better reason to choose us instead of iLovePDF.**
+
+Do not focus on feature quantity alone. Focus on functionality, reliability, speed, accessibility, usability, privacy and a superior free experience.
+
+---
+
+# 2. ABSOLUTE BUSINESS MODEL
+
+## 100% FREE. FOREVER.
+
+This is a permanent business requirement.
+
+The platform will be funded primarily through Google AdSense advertising revenue.
+
+There will NEVER be:
+
+- Premium plans.
+- Paid plans.
+- Subscription plans.
+- Paywalls.
+- Paid feature unlocks.
+- Paid downloads.
+- Credits systems.
+- Token systems for ordinary PDF operations.
+- Forced upgrades.
+- Mandatory registration for core tools.
+- Forced watermarks.
+- Artificial daily usage quotas.
+
+Every core PDF tool must remain free.
+
+Do not build subscription infrastructure, billing systems, payment gateways or premium upgrade flows.
+
+Do not introduce a premium plan as a solution to infrastructure costs.
+
+Our business model is:
+
+**Free PDF tools + Global organic traffic + Google AdSense revenue.**
+
+---
+
+# 3. PERMANENT UNLIMITED DAILY USAGE POLICY
+
+This is one of the most important requirements of the entire project.
+
+## Users can use the platform as many times as they want, every day.
+
+Supported legitimate users must not face arbitrary daily task quotas.
+
+### Mandatory requirements
+
+- Unlimited daily PDF editing.
+- Unlimited daily PDF conversions.
+- Unlimited daily compression.
+- Unlimited daily merging.
+- Unlimited daily splitting.
+- Unlimited daily page operations.
+- Unlimited daily PDF downloads.
+- Unlimited daily signing.
+- Unlimited daily watermark operations.
+- Unlimited daily batch tasks.
+- No daily task counter.
+- No monthly task quota.
+- No artificial free-tier restriction.
+- No message telling users to return tomorrow.
+- No upgrade prompts after completing tasks.
+
+Do not implement messages such as:
+
+- You have reached your daily limit.
+- Your free tasks are exhausted.
+- Upgrade to continue.
+- Come back tomorrow.
+- You have used all your credits.
+
+### Important technical distinction
+
+Unlimited daily usage does not mean unlimited individual file size, unlimited memory or unlimited processing resources.
+
+Reasonable technical constraints may exist for:
+
+- Individual file size.
+- Browser memory.
+- Unsupported document formats.
+- Processing time.
+- Hardware limitations.
+- Malicious automated abuse.
+
+These restrictions must be transparent and based on actual technical requirements.
+
+Implement infrastructure protection without introducing arbitrary daily task quotas for legitimate users.
+
+---
+
+# 4. BRAND POSITIONING
+
+Our product must have a strong, internationally understandable identity.
+
+## Primary brand positioning
+
+**THE WORLD'S FREE PDF WORKSPACE.**
+
+## Competitive headline
+
+**BETTER THAN ILOVEPDF. NO DAILY LIMITS.**
+
+## Supporting tagline
+
+Your PDF. Your Rules.
+
+Everything PDF. Without the Friction.
+
+## Brand promise
+
+Edit, convert, compress, merge, sign and manage your PDFs.
+
+Free forever. No subscriptions. No forced watermarks. No daily task quotas.
+
+## Brand principles
+
+1. Completely free core functionality.
+2. Unlimited daily use of supported tools.
+3. No mandatory signup.
+4. No forced watermark.
+5. Browser-first processing.
+6. Privacy-conscious architecture.
+7. Fast processing.
+8. Large document support.
+9. Batch processing.
+10. Excellent mobile experience.
+11. Comprehensive functionality.
+12. Integrated AI capabilities.
+
+Do not copy iLovePDF's brand identity, logo, interface, proprietary content or visual assets.
+
+Create an original, recognisable global brand.
+
+---
+
+# 5. COMPETITIVE DIFFERENTIATION
+
+We must compete with:
+
+- iLovePDF
+- Smallpdf
+- Adobe Acrobat
+- Sejda
+- PDF24
+- PDFgear
+- PDFescape
+- PDF-XChange
+- Foxit
+- Xodo
+
+Our competitive strategy must focus on measurable advantages.
+
+| Feature | Our competitive advantage |
+|---|---|
+| Daily usage | No daily task quotas |
+| Pricing | Completely free |
+| Signup | No mandatory registration |
+| Watermarks | No forced watermarks |
+| Free functionality | All core tools available |
+| Browser processing | Privacy and accessibility |
+| Mobile | Mobile-first editor |
+| File handling | Large PDF support |
+| Processing | Fast and reliable |
+| Batch operations | Multi-file processing |
+| AI | Integrated document intelligence |
+| User experience | Fewer steps and simpler workflows |
+| SEO | Comprehensive search-intent coverage |
+
+Research the current free restrictions of each competitor.
+
+Compare file-size limits, task limits, download restrictions, signup requirements, watermarks, batch processing and actual functionality.
+
+Do not fabricate competitor restrictions or comparison results.
+
+Our marketing claims must be supported by tested functionality.
+
+---
+
+# 6. COMPLETE PDF PRODUCT ECOSYSTEM
+
+Build the platform as a unified workspace containing the following product categories.
+
+## A. PDF EDITOR
+
+Build a genuine PDF editor.
+
+Required features:
+
+- Edit existing PDF text.
+- Add new text.
+- Delete supported text elements.
+- Change font family.
+- Change font size.
+- Change text colour.
+- Change alignment.
+- Change text position.
+- Resize text.
+- Add images.
+- Delete images.
+- Move and resize images.
+- Add shapes.
+- Add lines.
+- Add arrows.
+- Add hyperlinks.
+- Highlight text.
+- Underline.
+- Strikethrough.
+- Freehand drawing.
+- Sticky notes.
+- Comments.
+- Signatures.
+- Undo.
+- Redo.
+- Copy and paste.
+- Editing history.
+- Keyboard shortcuts.
+- Zoom.
+- Page navigation.
+- Export preview.
+
+Important:
+
+Distinguish genuine editing of existing PDF content from adding overlay elements.
+
+Never falsely advertise overlay-only editing as complete modification of existing PDF text.
+
+## B. ORGANISE PDF
+
+- Merge PDF.
+- Split PDF.
+- Extract pages.
+- Delete pages.
+- Rotate pages.
+- Reorder pages.
+- Duplicate pages.
+- Insert pages.
+- Crop pages.
+- Resize pages.
+- Change page dimensions.
+- Alternate PDF pages.
+- Mix PDF pages.
+- Split by bookmarks.
+- Split by page range.
+- Split by file size.
+- Add page numbers.
+- Add headers.
+- Add footers.
+
+## C. PDF CONVERTER
+
+PDF to:
+
+- Word.
+- Excel.
+- PowerPoint.
+- JPG.
+- PNG.
+- HTML.
+- TXT.
+- Markdown.
+
+Convert to PDF from:
+
+- Word.
+- Excel.
+- PowerPoint.
+- JPG.
+- PNG.
+- HTML.
+- Multiple images.
+
+Preserve document formatting, images, fonts, tables and page layouts wherever possible.
+
+## D. PDF OPTIMIZER
+
+- Compress PDF.
+- Reduce PDF file size.
+- Optimise PDF images.
+- Flatten PDF.
+- Repair PDF.
+- Grayscale PDF.
+- Resize PDF.
+- Change page dimensions.
+- Deskew scanned documents.
+- Remove blank pages.
+- Optimise scanned PDF.
+
+Provide multiple compression levels.
+
+Show original and processed file sizes.
+
+## E. SIGN AND FORMS
+
+- Sign PDF.
+- Draw signature.
+- Type signature.
+- Upload signature image.
+- Fill PDF forms.
+- Create fillable PDF forms.
+- Add text fields.
+- Add checkboxes.
+- Add radio buttons.
+- Add dropdown fields.
+- Add date fields.
+- Flatten completed forms.
+
+Do not misrepresent basic electronic signatures as legally qualified digital signatures.
+
+## F. PDF SECURITY
+
+- Protect PDF.
+- Add password.
+- Unlock PDF when authorised.
+- Remove password when authorised.
+- Redact PDF.
+- Add watermark.
+- Remove annotations.
+- Remove metadata.
+- Flatten documents.
+- Inspect PDF properties.
+
+Redaction must permanently remove the underlying content, not simply place a black rectangle over it.
+
+## G. OCR AND SCANNED PDF
+
+- OCR PDF.
+- Scanned PDF to searchable PDF.
+- Scanned PDF to text.
+- Extract tables.
+- Recognise multiple languages.
+- Detect orientation.
+- Auto-rotate.
+- Deskew.
+- Enhance scanned documents.
+- Remove blank scanned pages.
+
+Initial language priorities:
+
+- English.
+- Spanish.
+- French.
+- German.
+- Arabic.
+- Chinese.
+- Hindi.
+- Bengali.
+
+Build an extensible multilingual OCR architecture.
+
+## H. ADVANCED PDF TOOLS
+
+- Compare PDF.
+- Extract PDF images.
+- Edit PDF metadata.
+- Add bookmarks.
+- Edit bookmarks.
+- Extract pages using bookmarks.
+- Bates numbering.
+- N-up PDF.
+- PDF page labels.
+- Annotation management.
+- Document structure inspection.
+- PDF/A conversion where supported.
+
+## I. AI PDF WORKSPACE
+
+All AI features must be free where technically and economically sustainable.
+
+Build:
+
+- Chat with PDF.
+- Summarise PDF.
+- Translate PDF.
+- Explain complex documents.
+- Extract names.
+- Extract dates.
+- Extract amounts.
+- Extract tables.
+- Generate study notes.
+- Generate questions.
+- Create structured summaries.
+- Compare two documents.
+- Find relevant information.
+- Convert document content into structured output.
+
+AI processing must be optional.
+
+Clearly disclose when documents are transmitted to external AI services.
+
+Never use user documents for AI training without explicit informed consent.
+
+Do not introduce paid AI upgrades or subscription requirements.
+
+Optimise AI infrastructure costs through efficient models, local processing where practical, caching and sensible computation strategies.
+
+## J. BULK PDF WORKSPACE
+
+- Multi-file upload.
+- Batch conversion.
+- Batch compression.
+- Batch watermarking.
+- Batch page numbering.
+- Batch protection.
+- Bulk file organisation.
+- Multi-document processing.
+- Combined operations.
+- Download individual files.
+- Download all processed files as ZIP.
+
+Support multiple documents in a single workflow.
+
+---
+
+# 7. UNIQUE FEATURES AND PRODUCT INNOVATION
+
+Go beyond conventional PDF utilities.
+
+Investigate and implement:
+
+1. Smart PDF workflow builder.
+2. Visual and text-based PDF comparison.
+3. Structured document data extraction.
+4. PDF quality inspector.
+5. PDF size predictor.
+6. PDF accessibility checker.
+7. Automatic blank-page detector.
+8. Duplicate-page detector.
+9. Smart page rotation.
+10. Document consistency checker.
+11. AI form assistant.
+12. Invoice data extractor.
+13. Contract information extractor.
+14. Scanned-document enhancement.
+15. Multi-document AI analysis.
+
+Prioritise these according to genuine demand, development feasibility, reliability and operational cost.
+
+Do not add features simply to increase the feature count.
+
+---
+
+# 8. UI/UX AND PRODUCT DESIGN
+
+Create a modern, clean, professional and globally accessible design.
+
+Avoid unnecessary complexity.
+
+## Homepage
+
+Include:
+
+- Strong headline.
+- Clear product positioning.
+- Large search bar: "What do you want to do with your PDF?"
+- Drag-and-drop upload.
+- Popular tools.
+- Tool categories.
+- Recently used tools where available locally.
+- AI PDF entry point.
+- Privacy explanation.
+- Product advantages.
+- Competitor comparison.
+- Frequently asked questions.
+- SEO-friendly explanatory content.
+
+## Editor workspace
+
+Recommended layout:
+
+LEFT:
+- Page thumbnails.
+- Page navigation.
+- Document outline.
+
+CENTRE:
+- PDF canvas.
+- Document rendering.
+- Editing workspace.
+
+TOP:
+- Editing toolbar.
+- File actions.
+- Undo and redo.
+- Export.
+
+RIGHT:
+- Properties panel.
+- Text settings.
+- Image settings.
+- Page settings.
+
+BOTTOM:
+- Zoom.
+- Page number.
+- Document status.
+
+## Mobile-first experience
+
+Do not simply shrink the desktop editor.
+
+Create a dedicated mobile interface.
+
+Include:
+
+- Touch-friendly buttons.
+- Simplified editing toolbar.
+- Mobile page navigation.
+- Swipe navigation.
+- Mobile signature creation.
+- Camera scanning.
+- Easy image-to-PDF conversion.
+- Fast downloads.
+- Responsive workspace.
+
+---
+
+# 9. BRAND AND VISUAL IDENTITY
+
+Create a distinctive global brand.
+
+Design:
+
+- Logo.
+- Brand colours.
+- Typography.
+- Icon system.
+- Design tokens.
+- Component library.
+- Button styles.
+- Form elements.
+- Editor toolbar.
+- Tool cards.
+- Navigation.
+- Mobile components.
+
+The design should feel:
+
+- Modern.
+- Minimal.
+- Premium-quality despite being free.
+- Professional.
+- Trustworthy.
+- Fast.
+- Accessible.
+
+Do not imitate competitor interfaces.
+
+---
+
+# 10. SEO STRATEGY
+
+SEO is a primary growth channel.
+
+The product must be built to acquire global organic traffic.
+
+## A. CORE KEYWORDS
+
+- pdf editor
+- free pdf editor
+- pdf editor online
+- best pdf editor
+- best free pdf editor
+- pdf editor no watermark
+- pdf text editor
+- pdf edit free
+- modify pdf
+- edit pdf file
+- edit pdf online
+- pdf modifier online
+- modify pdf online free
+
+## B. FREE AND NO-SIGNUP KEYWORDS
+
+- pdf editor free no sign up
+- edit pdf online free no sign up
+- edit pdf file online free
+- free pdf editing tool
+- free pdf editor and download
+- edit pdf document free
+- modify pdf online free
+- pdf modifier online free
+
+## C. TEXT EDITING KEYWORDS
+
+- edit pdf text online
+- modify pdf text online
+- pdf text editor
+- edit pdf document online
+- edit pdf pages
+- pdf to editable pdf
+
+## D. PDF FILLER KEYWORDS
+
+- pdf filler free
+- pdf filler free online
+- edit document online
+- edit document online free
+
+## E. CONVERSION KEYWORDS
+
+- pdf to word editable free
+- pdf to editable word
+- pdf to editable pdf
+- pdf to word
+- pdf to excel
+- word to pdf
+
+## F. SOFTWARE KEYWORDS
+
+- pdf editor software
+- pdf editor free download
+- free pdf editor windows
+- pdf file editor free download
+
+Do not advertise a Windows download unless an actual desktop application exists.
+
+## G. COMPETITOR BRAND KEYWORDS
+
+Target relevant search intent for:
+
+- iLovePDF editor.
+- iLovePDF edit.
+- iLovePDF PDF editor.
+- iLovePDF alternative.
+- Sejda PDF editor.
+- Sejda PDF alternative.
+- PDFescape alternative.
+- PDF-XChange alternative.
+- Adobe Acrobat PDF editor.
+- Adobe Acrobat alternative.
+- Adobe Reader edit PDF.
+- Smallpdf alternative.
+- PDFgear alternative.
+- Canva PDF editor alternative.
+- Google PDF editor.
+
+Create independent, honest comparison pages.
+
+Never impersonate competitors or imply official affiliation.
+
+## H. AI PDF KEYWORDS
+
+- AI PDF editor.
+- Chat with PDF.
+- AI PDF summarizer.
+- Translate PDF.
+- Extract data from PDF.
+
+## I. URL ARCHITECTURE
+
+Build dedicated landing pages, including:
+
+/pdf-editor
+/free-pdf-editor
+/edit-pdf
+/edit-text-in-pdf
+/pdf-editor-no-watermark
+/pdf-editor-no-signup
+/pdf-filler
+/pdf-to-word
+/pdf-to-excel
+/pdf-to-jpg
+/jpg-to-pdf
+/word-to-pdf
+/merge-pdf
+/split-pdf
+/compress-pdf
+/sign-pdf
+/protect-pdf
+/redact-pdf
+/ocr-pdf
+/chat-with-pdf
+/compare-pdf
+/repair-pdf
+/ilovepdf-alternative
+/sejda-alternative
+/adobe-acrobat-alternative
+/pdfescape-alternative
+/pdf-xchange-alternative
+/smallpdf-alternative
+/pdfgear-alternative
+
+Every page must target a distinct search intent.
+
+Do not create duplicate, thin or doorway pages.
+
+## J. ON-PAGE SEO
+
+Every page must include:
+
+- Unique SEO title.
+- Unique meta description.
+- One clear H1.
+- Logical H2 and H3 structure.
+- Primary keyword.
+- Supporting keywords.
+- Helpful original content.
+- Working tool functionality.
+- Step-by-step instructions.
+- Relevant FAQs.
+- Internal links.
+- Appropriate structured data.
+- Canonical URL.
+- Mobile optimisation.
+
+## K. TECHNICAL SEO
+
+Implement:
+
+- XML sitemap.
+- Robots.txt.
+- Canonical tags.
+- Indexability controls.
+- Structured data where eligible.
+- Breadcrumbs.
+- Internal linking.
+- Open Graph.
+- Mobile optimisation.
+- Core Web Vitals.
+- Image optimisation.
+- Crawlability.
+- JavaScript rendering considerations.
+- Duplicate content prevention.
+- Redirect management.
+- 404 handling.
+
+Do not fabricate keyword volume, CPC, KD or traffic estimates.
+
+---
+
+# 11. AEO AND GEO
+
+Make the platform understandable to search engines and AI answer systems.
+
+Implement:
+
+- Clear explanations of every PDF tool.
+- Task-focused content.
+- Accurate instructions.
+- Descriptive headings.
+- Useful FAQs.
+- Transparent privacy information.
+- Product documentation.
+- Appropriate structured data.
+- Consistent product descriptions.
+- Original helpful resources.
+
+Avoid mass-generated pages without meaningful unique value.
+
+---
+
+# 12. TECHNICAL ARCHITECTURE
+
+First audit the existing project.
+
+Do not rebuild everything blindly.
+
+Inspect:
+
+- Existing framework.
+- Project structure.
+- Routes.
+- Components.
+- Existing PDF libraries.
+- Current processing architecture.
+- APIs.
+- Hosting.
+- Deployment.
+- SEO implementation.
+- Performance.
+- Security.
+- Existing functionality.
+
+Preserve working code unless there is a justified reason to change it.
+
+## Architecture principles
+
+- Browser-first processing.
+- Hybrid architecture where necessary.
+- Web Workers.
+- WebAssembly where appropriate.
+- Lazy rendering.
+- Efficient PDF memory management.
+- Chunked processing where suitable.
+- Secure temporary storage.
+- Automatic file deletion.
+- Stateless processing where practical.
+- No unnecessary database.
+- No mandatory user accounts.
+- Scalable backend for complex operations.
+
+Evaluate technologies including:
+
+- PDF.js.
+- pdf-lib.
+- MuPDF.
+- LibreOffice.
+- Tesseract.js.
+- Server-side OCR engines.
+- WebAssembly PDF libraries.
+- Other actively maintained PDF processing libraries.
+
+Evaluate licensing before commercial deployment.
+
+Do not assume one library can provide all functionality.
+
+Select tools based on output quality, performance, maintenance, compatibility and licensing.
+
+---
+
+# 13. PERFORMANCE REQUIREMENTS
+
+Performance must be a competitive advantage.
+
+Implement:
+
+- Fast initial page load.
+- Minimal JavaScript bundle.
+- Lazy-loaded editor modules.
+- Web Workers.
+- Efficient PDF rendering.
+- Page-by-page rendering.
+- Memory-efficient processing.
+- Chunked uploads when required.
+- Progress indicators.
+- Optimised downloads.
+- Error recovery.
+- Responsive mobile performance.
+
+Test real-world documents:
+
+- Small PDFs.
+- Large PDFs.
+- Scanned PDFs.
+- Image-heavy PDFs.
+- Password-protected PDFs.
+- Complex-font PDFs.
+- Corrupted PDFs.
+- Multi-hundred-page documents.
+
+Do not claim unlimited file size or guaranteed processing speed without testing.
+
+---
+
+# 14. SECURITY AND PRIVACY
+
+Treat uploaded documents as sensitive data.
+
+Implement:
+
+- HTTPS.
+- File type verification.
+- Input validation.
+- Secure temporary storage.
+- Automatic deletion.
+- Access isolation.
+- Safe downloads.
+- Abuse protection.
+- Rate limiting against malicious activity.
+- No public file exposure.
+- Clear privacy policy.
+- Transparent processing architecture.
+
+Do not claim local-only processing for operations that send documents to the backend.
+
+For AI features, clearly disclose external processing and data handling.
+
+---
+
+# 15. GOOGLE ADSENSE MONETIZATION
+
+Google AdSense is the primary and intended revenue source.
+
+There will be no subscription revenue.
+
+## Advertising strategy
+
+Place ads carefully across:
+
+- Homepage.
+- Tool landing pages.
+- Tutorials.
+- Informational pages.
+- Comparison pages.
+- Other suitable content pages.
+
+For the editor workspace, prioritise the user experience.
+
+Never:
+
+- Place ads so close to upload/download controls that users may click accidentally.
+- Disguise ads as navigation.
+- Encourage users to click advertisements.
+- Generate artificial impressions.
+- Use deceptive ad placements.
+- Interrupt document processing with misleading ads.
+- Compromise performance through excessive advertising.
+
+Maintain Google AdSense policy compliance.
+
+Optimise for:
+
+- Genuine organic traffic.
+- Returning users.
+- Useful pageviews.
+- Viewability.
+- Page RPM.
+- Session depth.
+- Global audience.
+
+Monitor revenue against actual analytics rather than assumed RPM.
+
+---
+
+# 16. USER RETENTION
+
+Because accounts are optional and there are no subscription plans, retention must come primarily from product usefulness.
+
+Implement where appropriate:
+
+- Locally stored recent tools.
+- Saved local workflows.
+- Local editing history.
+- Recently used operations.
+- Related tool recommendations.
+- Fast repeat processing.
+- Helpful PDF tutorials.
+- Consistent tool navigation.
+- Reliable document handling.
+
+Do not require registration simply to create returning users.
+
+---
+
+
+---
+
+# 16A. OPTIONAL USER REGISTRATION AND GUEST USAGE FLOW
+
+This section adds an optional account system for saving and managing documents. It does not change the permanent free-use business model or restrict access to PDF tools.
+
+## 1. First Three Successful PDF Operations — No Signup
+
+- Every visitor can use all available PDF tools without creating an account.
+- Allow the user to complete their first **3 successful PDF processing operations** as a guest.
+- Do not show an account creation popup before the third successful operation.
+- Count only successfully completed PDF processing operations.
+- Failed, cancelled or interrupted operations must not count.
+- Reopening, previewing or downloading an already processed file must not count as a new operation.
+- Persist the counter across page refreshes and browser navigation, using suitable local storage.
+- Do not reset the counter daily.
+
+## 2. Optional Account Creation Prompt After the Third Operation
+
+Immediately after the user's third successful PDF processing operation completes, show a friendly, dismissible account creation prompt.
+
+**Headline:** Keep Your PDFs Safe & Accessible!
+
+**Description:** You've successfully processed 3 PDFs. Create your free account to save your documents, keep them organised and access them anytime.
+
+**Benefits:**
+- Save and organise PDF documents.
+- Access saved documents from the account.
+- Keep important files in one place.
+- Manage documents more easily.
+- Continue using every PDF tool for free.
+
+**Primary CTA:** Create Free Account
+
+**Secondary CTA:** Continue Without Account
+
+**Additional message:** No OTP. No email verification. No phone verification. Creating an account is completely optional.
+
+## 3. Never Block PDF Processing
+
+This is a non-negotiable requirement.
+
+- The third-operation prompt must never act as a paywall.
+- Users can dismiss it and continue using every PDF tool.
+- Users can continue processing PDFs without an account, without arbitrary daily or monthly task quotas.
+- Do not introduce processing credits, tokens, forced registration or upgrade prompts.
+- Never disable upload, editing, conversion, compression, download or any other PDF functionality because a user has not registered.
+- Signup must never be required to download a processed PDF.
+- If the user dismisses the prompt, do not show it repeatedly after every subsequent operation.
+- Persist the dismissal preference locally and provide an unobtrusive way to create an account later.
+
+The three-operation trigger is only an invitation to create an account for document saving and management. It is not a limit on free usage.
+
+## 4. Registration Form
+
+When the user selects "Create Free Account", display a simple registration form with:
+
+1. Full Name
+2. Email Address
+3. Phone Number
+4. Password
+
+Requirements:
+- Ask users to provide genuine and accurate information.
+- Validate name, email format, phone number format and password requirements.
+- Do not require OTP verification.
+- Do not require email verification.
+- Do not require phone verification.
+- Do not send mandatory verification links.
+- Never describe email addresses or phone numbers as verified.
+- Use secure password hashing and established authentication practices.
+- Keep personal information private and protected.
+- Clearly explain how registration data and saved documents are used.
+
+## 5. Guest-to-Registered User Experience
+
+After successful registration:
+- Redirect the user to their personal PDF dashboard.
+- Offer an option to save existing guest-session documents to their account.
+- Ask for explicit consent before transferring or uploading guest files.
+- Do not automatically upload temporary guest files without permission.
+- Allow users to upload, save, organise, rename, open and delete their saved documents.
+
+## 6. Account Dashboard
+
+Build a responsive dashboard containing:
+- My Documents
+- Recently Processed
+- Saved PDFs
+- Upload PDF
+- Organise Documents
+- Search Documents
+- Rename Documents
+- Delete Documents
+- Account Settings
+- Profile Information
+
+## 7. Database and File Storage
+
+- Guest PDF processing must work without creating a database record or requiring an account.
+- Registered users need secure database records and private file storage for saved documents.
+- Supabase Database, Authentication and Storage may be used if compatible with the existing architecture.
+- Store user profile information and document metadata separately.
+- Use private storage buckets and Row Level Security.
+- Ensure users can access only their own documents.
+- Never expose private document URLs publicly.
+- Use secure temporary signed URLs when accessing stored documents.
+- Provide a clear deletion mechanism for saved files.
+- Do not promise unlimited cloud storage unless the infrastructure genuinely supports it.
+- If a storage limit is reached, users must still be able to use all PDF processing tools. Only saving to the account may be affected, with a clear explanation.
+
+## 8. Non-Negotiable Registration Rules
+
+- First 3 successful PDF operations can be completed without signup.
+- Show the optional account prompt only after the third successful operation.
+- Unlimited daily PDF processing remains available to legitimate users, subject only to transparent technical constraints.
+- Account creation is optional.
+- No OTP, email verification or phone verification.
+- No premium plans, paid features, subscriptions, credits, tokens, paywalls or forced upgrades.
+- Registration is for saving and managing documents, not for unlocking PDF processing.
+
+**Final UX principle:** Let users experience the product first. Invite them to create an account only after they have successfully used it. Never force registration or interrupt their ability to work with PDFs.
+
+---
+
+# 17. QUALITY ASSURANCE
+
+Every tool must be genuinely functional.
+
+Test:
+
+- Correct input handling.
+- Correct output.
+- Formatting preservation.
+- Font handling.
+- Image quality.
+- Page dimensions.
+- Large-file behaviour.
+- Multi-file processing.
+- Mobile functionality.
+- Browser compatibility.
+- Download reliability.
+- Error recovery.
+- Privacy.
+- Security.
+- Accessibility.
+
+A tool is not complete merely because its button works.
+
+It is complete when the resulting document is valid, usable and correctly processed.
+
+Create automated tests for all critical PDF operations.
+
+---
+
+# 18. DEVELOPMENT EXECUTION ROADMAP
+
+Execute the project in the following order.
+
+## PHASE 1: EXISTING PROJECT AUDIT
+
+- Inspect the complete codebase.
+- Identify existing features.
+- Find incomplete features.
+- Review current architecture.
+- Review design and UX.
+- Identify SEO gaps.
+- Identify technical risks.
+- Create a project audit report.
+
+Do not modify working functionality before completing the audit.
+
+## PHASE 2: COMPETITOR RESEARCH
+
+Benchmark iLovePDF, Smallpdf, Adobe Acrobat, Sejda, PDF24, PDFgear and other competitors.
+
+Identify:
+
+- Feature gaps.
+- Free-plan restrictions.
+- Usability gaps.
+- Mobile gaps.
+- Processing limitations.
+- Privacy opportunities.
+- Search opportunities.
+
+Produce a competitive comparison matrix.
+
+## PHASE 3: PRODUCT ARCHITECTURE
+
+Create:
+
+- Product navigation.
+- Tool categories.
+- Editor workspace architecture.
+- Processing pipeline.
+- Component architecture.
+- SEO route structure.
+- Security architecture.
+- AdSense placement strategy.
+
+## PHASE 4: CORE PDF DEVELOPMENT
+
+Build and test:
+
+- PDF Editor.
+- Organise PDF.
+- PDF Converter.
+- PDF Optimizer.
+- Sign and Forms.
+- PDF Security.
+
+## PHASE 5: ADVANCED DEVELOPMENT
+
+Build and test:
+
+- OCR.
+- Advanced PDF tools.
+- Bulk PDF workspace.
+- AI PDF workspace.
+- Smart workflows.
+
+## PHASE 6: DESIGN AND UX
+
+Complete:
+
+- Homepage.
+- Editor workspace.
+- Tool pages.
+- Mobile editor.
+- Design system.
+- Accessibility.
+- Navigation.
+
+## PHASE 7: SEO IMPLEMENTATION
+
+Complete:
+
+- Keyword mapping.
+- Landing pages.
+- Internal links.
+- Technical SEO.
+- Competitor comparison pages.
+- AEO/GEO.
+- Content roadmap.
+
+## PHASE 8: PERFORMANCE AND SECURITY
+
+Run:
+
+- Browser testing.
+- Mobile testing.
+- Large-file testing.
+- PDF integrity testing.
+- Security checks.
+- Privacy checks.
+- Core Web Vitals checks.
+
+## PHASE 9: ADSENSE READINESS
+
+Prepare:
+
+- Ad placement.
+- Privacy disclosures.
+- Cookie and consent requirements where applicable.
+- Required policy pages.
+- Analytics.
+- Search Console.
+- AdSense integration when approved.
+
+Do not guarantee AdSense approval.
+
+## PHASE 10: LAUNCH READINESS
+
+Complete the final quality audit.
+
+Verify every advertised feature.
+
+Ensure the unlimited daily usage promise is genuinely supported for legitimate use of the applicable tools.
+
+---
+
+# 19. STRICT DEVELOPMENT RULES
+
+1. Audit before modifying.
+2. Preserve existing working functionality.
+3. No fake buttons.
+4. No placeholder processing results.
+5. No misleading feature claims.
+6. No subscription infrastructure.
+7. No premium plan.
+8. No paywalls.
+9. No artificial daily task quotas.
+10. No forced watermark.
+11. No mandatory account for core tools.
+12. No unnecessary database.
+13. No competitor branding imitation.
+14. No fabricated SEO data.
+15. No thin SEO landing pages.
+16. No deceptive advertisements.
+17. No privacy misrepresentation.
+18. No untested PDF processing.
+19. No unnecessary infrastructure complexity.
+20. Prioritise document integrity and reliability.
+
+---
+
+# 20. FINAL SUCCESS CRITERIA
+
+Our ultimate goal is to create a globally recognised free PDF platform.
+
+It should:
+
+- Compete directly with iLovePDF.
+- Provide a better free experience.
+- Support unlimited daily use of supported tools.
+- Offer no mandatory subscription.
+- Offer no premium plan.
+- Have no forced watermark.
+- Provide no mandatory signup for core operations.
+- Support desktop and mobile.
+- Offer comprehensive PDF functionality.
+- Process documents reliably.
+- Maintain privacy and security.
+- Acquire global organic traffic.
+- Generate sustainable revenue through Google AdSense.
+
+## THE FINAL PRODUCT PROMISE
+
+"THE WORLD'S FREE PDF WORKSPACE."
+
+"BETTER THAN ILOVEPDF. NO DAILY LIMITS."
+
+"EDIT, CONVERT, COMPRESS, SIGN AND MANAGE YOUR PDFS. FREE FOREVER."
+
+Users should be able to complete their everyday PDF work without encountering artificial daily task restrictions or paid upgrade barriers.
+
+The final test:
+
+When a user compares our platform with iLovePDF, they should find clear, measurable and practical reasons to choose our product instead.
+
+---
+
+# FINAL EXECUTION INSTRUCTION
+
+Do not immediately generate a generic homepage.
+
+First audit the existing project and codebase.
+
+Then produce:
+
+1. Existing project audit.
+2. Competitor gap analysis.
+3. Complete product architecture.
+4. Prioritised feature implementation roadmap.
+5. Technical architecture.
+6. SEO architecture.
+7. UI/UX improvement plan.
+8. AdSense monetization plan.
+
+After presenting the plan, begin implementation in stages.
+
+Build real, production-quality functionality.
+
+Test every major feature.
+
+Preserve the existing project wherever possible.
+
+Do not stop at attractive screens or documentation.
+
+**BUILD A REAL PRODUCT THAT CAN COMPETE WITH AND AIM TO OUTPERFORM ILOVEPDF.**

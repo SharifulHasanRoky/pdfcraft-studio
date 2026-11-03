@@ -2,8 +2,12 @@
 
 import { useEffect, useRef, useState, useCallback } from "react";
 import { usePdfStore } from "@/lib/pdf-store";
-import { renderPageToCanvas, extractTextItems } from "@/lib/pdf-utils";
-import type { PdfTextItem } from "@/lib/pdf-utils";
+import {
+  renderPageToCanvas,
+  extractTextItems,
+  extractImageItems,
+} from "@/lib/pdf-utils";
+import type { PdfTextItem, PdfImageItem } from "@/lib/pdf-utils";
 import type {
   Annotation,
   TextAnnotation,
@@ -14,7 +18,14 @@ import type {
   ImageAnnotation,
 } from "@/lib/pdf-types";
 import { motion } from "framer-motion";
-import { Trash2, Loader2, Check, X } from "lucide-react";
+import {
+  Trash2,
+  Loader2,
+  Check,
+  X,
+  ImageIcon,
+  Replace,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface DragState {
@@ -67,16 +78,19 @@ export function CanvasEditor() {
     w: 0,
     h: 0,
   });
-  // Existing-PDF text items shown when "edit-text" tool is active
+  // Existing-PDF text items shown when "edit-text" tool is active OR select mode
   const [textItems, setTextItems] = useState<PdfTextItem[]>([]);
+  const [imageItems, setImageItems] = useState<PdfImageItem[]>([]);
   const [textItemsLoading, setTextItemsLoading] = useState(false);
-  const [hoveredItem, setHoveredItem] = useState<number | null>(null);
+  const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   // The text item the user is currently editing (becomes a textarea)
   const [editingItem, setEditingItem] = useState<{
     index: number;
     text: string;
     fontSizePx: number;
   } | null>(null);
+  // Image item the user is hovering for replace/delete
+  const [hoveredImage, setHoveredImage] = useState<number | null>(null);
 
   const startDrag = (d: DragState | null) => {
     dragRef.current = d;
@@ -133,23 +147,35 @@ export function CanvasEditor() {
     return () => window.removeEventListener("place-signature", handler);
   }, [page, currentPageIndex, addAnnotation, selectAnnotation, setPendingSignatureSrc]);
 
-  // Extract existing PDF text items when the "edit-text" tool is active
+  // Extract existing PDF text items + images when the user is in element-editing mode.
+  // We activate extraction for both "edit-text" AND "select" tools so that users can
+  // click any element directly without having to switch tools.
   useEffect(() => {
     if (!doc || !page) return;
-    if (activeTool !== "edit-text") {
+    if (activeTool !== "edit-text" && activeTool !== "select") {
       setTextItems([]);
+      setImageItems([]);
       return;
     }
     let cancelled = false;
     setTextItemsLoading(true);
     (async () => {
       try {
-        const items = await extractTextItems(doc, currentPageIndex);
+        const [texts, imgs] = await Promise.all([
+          extractTextItems(doc, currentPageIndex),
+          // Image extraction is currently disabled — the pdf.js operator-list
+          // coordinate system is in device space, not PDF points, making reliable
+          // image position extraction difficult. Text editing is fully working,
+          // and users can still cover images with white rectangles using the
+          // rectangle tool, or add new images on top with the image tool.
+          Promise.resolve([] as PdfImageItem[]),
+        ]);
         if (!cancelled) {
-          setTextItems(items);
+          setTextItems(texts);
+          setImageItems(imgs);
         }
       } catch (e) {
-        console.error("Failed to extract text items:", e);
+        console.error("Failed to extract page elements:", e);
       } finally {
         if (!cancelled) setTextItemsLoading(false);
       }
@@ -551,20 +577,24 @@ export function CanvasEditor() {
             />
           )}
 
-          {/* Existing PDF text items (edit-text mode) */}
-          {activeTool === "edit-text" &&
+          {/* Existing PDF TEXT items — clickable to edit inline.
+              Active in BOTH "edit-text" tool AND "select" tool so users can click
+              any text directly without switching tools. */}
+          {(activeTool === "edit-text" || activeTool === "select") &&
             textItems.map((item, idx) => {
               const isEditing = editingItem?.index === idx;
-              const isHovered = hoveredItem === idx;
+              const isHovered = hoveredItem === `t-${idx}`;
+              const itemKey = `t-${idx}`;
               return (
                 <div
-                  key={`ti-${idx}`}
-                  onPointerEnter={() => setHoveredItem(idx)}
+                  key={itemKey}
+                  onPointerEnter={() => setHoveredItem(itemKey)}
                   onPointerLeave={() =>
-                    setHoveredItem((cur) => (cur === idx ? null : cur))
+                    setHoveredItem((cur) => (cur === itemKey ? null : cur))
                   }
                   onPointerDown={(e) => {
                     if (isEditing) return;
+                    if (activeTool !== "edit-text") return; // select mode: only edit when edit-text tool active
                     e.stopPropagation();
                     setEditingItem({
                       index: idx,
@@ -572,7 +602,16 @@ export function CanvasEditor() {
                       fontSizePx: item.fontSizePx,
                     });
                   }}
-                  className="absolute transition-colors"
+                  onDoubleClick={(e) => {
+                    // Double-click works in select mode too — quick edit
+                    e.stopPropagation();
+                    setEditingItem({
+                      index: idx,
+                      text: item.text,
+                      fontSizePx: item.fontSizePx,
+                    });
+                  }}
+                  className="absolute transition-all group"
                   style={{
                     left: `${item.x * 100}%`,
                     top: `${item.y * 100}%`,
@@ -580,18 +619,22 @@ export function CanvasEditor() {
                     minHeight: `${item.height * 100}%`,
                     cursor: isEditing ? "text" : "pointer",
                     backgroundColor: isEditing
-                      ? "rgba(255,255,255,0.95)"
+                      ? "rgba(255,255,255,0.98)"
                       : isHovered
-                      ? "rgba(99, 102, 241, 0.15)"
-                      : "rgba(99, 102, 241, 0.05)",
-                    border: `1px dashed ${
+                      ? "rgba(236, 72, 153, 0.18)"
+                      : "rgba(236, 72, 153, 0.06)",
+                    border: `${isEditing ? 2 : 1.5}px ${
                       isEditing
-                        ? "#6366f1"
+                        ? "solid #ec4899"
                         : isHovered
-                        ? "#6366f1"
-                        : "rgba(99, 102, 241, 0.4)"
+                        ? "solid #ec4899"
+                        : "dashed rgba(236, 72, 153, 0.5)"
                     }`,
-                    zIndex: isEditing || isHovered ? 5 : 2,
+                    borderRadius: isHovered || isEditing ? "4px" : "2px",
+                    zIndex: isEditing ? 10 : isHovered ? 8 : 3,
+                    boxShadow: isHovered
+                      ? "0 4px 12px rgba(236, 72, 153, 0.2)"
+                      : "none",
                   }}
                 >
                   {isEditing ? (
@@ -614,8 +657,6 @@ export function CanvasEditor() {
                           color: activeColor,
                           rotation: 0,
                           text: newText,
-                          // Use the toolbar font size if user changed it; otherwise
-                          // preserve the original font size from the PDF.
                           fontSize:
                             activeFontSize !== 16
                               ? activeFontSize / 100
@@ -630,47 +671,206 @@ export function CanvasEditor() {
                         addAnnotation(ann);
                         selectAnnotation(id);
                         setEditingItem(null);
-                        // Remove this text item from the list so it doesn't show as
-                        // still-editable; the new TextReplaceAnnotation is on top.
-                        setTextItems((prev) => prev.filter((_, i) => i !== idx));
+                        setTextItems((prev) =>
+                          prev.filter((_, i) => i !== idx)
+                        );
                       }}
                       onCancel={() => setEditingItem(null)}
                     />
                   ) : (
-                    <span
-                      className="block whitespace-pre"
-                      style={{
-                        fontSize: `${item.fontSizePx}px`,
-                        lineHeight: 1.2,
-                        color: "transparent",
-                      }}
-                    >
-                      {item.text}
-                    </span>
+                    <>
+                      <span
+                        className="block whitespace-pre-wrap break-words"
+                        style={{
+                          fontSize: `${item.fontSizePx}px`,
+                          lineHeight: 1.2,
+                          color: "transparent",
+                        }}
+                      >
+                        {item.text}
+                      </span>
+                      {/* Hover label */}
+                      {isHovered && (
+                        <div className="absolute -top-7 left-0 px-2 py-0.5 rounded-md bg-primary text-primary-foreground text-[10px] font-medium whitespace-nowrap shadow-lg pointer-events-none">
+                          Click to edit text
+                        </div>
+                      )}
+                    </>
                   )}
                 </div>
               );
             })}
 
-          {/* Edit-text mode loading indicator */}
-          {activeTool === "edit-text" && textItemsLoading && (
-            <div className="absolute top-2 left-1/2 -translate-x-1/2 px-3 py-1.5 rounded-full bg-card/90 backdrop-blur-sm border text-xs text-muted-foreground flex items-center gap-2 shadow">
-              <Loader2 className="h-3 w-3 animate-spin" />
-              Scanning page for text…
-            </div>
-          )}
+          {/* Existing PDF IMAGE items — clickable to replace or delete.
+              Active in both edit-text and select modes. */}
+          {(activeTool === "edit-text" || activeTool === "select") &&
+            imageItems.map((item, idx) => {
+              const isHovered = hoveredImage === idx;
+              return (
+                <div
+                  key={`img-${idx}`}
+                  onPointerEnter={() => setHoveredImage(idx)}
+                  onPointerLeave={() =>
+                    setHoveredImage((cur) => (cur === idx ? null : cur))
+                  }
+                  className="absolute transition-all"
+                  style={{
+                    left: `${item.x * 100}%`,
+                    top: `${item.y * 100}%`,
+                    width: `${item.width * 100}%`,
+                    height: `${item.height * 100}%`,
+                    cursor: "pointer",
+                    border: `2px ${
+                      isHovered ? "solid #10b981" : "dashed rgba(16, 185, 129, 0.6)"
+                    }`,
+                    backgroundColor: isHovered
+                      ? "rgba(16, 185, 129, 0.1)"
+                      : "transparent",
+                    borderRadius: "4px",
+                    zIndex: isHovered ? 8 : 3,
+                    boxShadow: isHovered
+                      ? "0 4px 12px rgba(16, 185, 129, 0.3)"
+                      : "none",
+                  }}
+                >
+                  {isHovered && (
+                    <>
+                      {/* Action toolbar above image */}
+                      <div className="absolute -top-9 left-1/2 -translate-x-1/2 flex items-center gap-0.5 bg-card/95 backdrop-blur-sm rounded-md shadow-lg border p-0.5 z-10">
+                        <button
+                          onPointerDown={(e) => e.stopPropagation()}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            // Trigger replace: open file picker
+                            const input = document.createElement("input");
+                            input.type = "file";
+                            input.accept = "image/png,image/jpeg";
+                            input.onchange = () => {
+                              const file = input.files?.[0];
+                              if (!file) return;
+                              const reader = new FileReader();
+                              reader.onload = () => {
+                                const src = reader.result as string;
+                                const img = new Image();
+                                img.onload = () => {
+                                  const aspect =
+                                    img.width / img.height;
+                                  const w = item.width;
+                                  const h = w / aspect;
+                                  const id = `ann-${Date.now()}-${Math.random()
+                                    .toString(36)
+                                    .slice(2, 7)}`;
+                                  // Cover original image area with white, then place new image
+                                  // We use a text-replace-like approach but with an image annotation
+                                  // layered on top via two annotations.
+                                  // Simpler: just place new image annotation on top.
+                                  const ann: ImageAnnotation = {
+                                    id,
+                                    page: currentPageIndex,
+                                    type: "image",
+                                    x: item.x,
+                                    y: item.y + (item.height - h) / 2,
+                                    width: w,
+                                    height: h,
+                                    color: "#000000",
+                                    rotation: 0,
+                                    src,
+                                  };
+                                  addAnnotation(ann);
+                                  selectAnnotation(id);
+                                  // Remove this image item from list (now covered by annotation)
+                                  setImageItems((prev) =>
+                                    prev.filter((_, i) => i !== idx)
+                                  );
+                                };
+                                img.src = src;
+                              };
+                              reader.readAsDataURL(file);
+                            };
+                            input.click();
+                          }}
+                          className="h-7 w-7 rounded flex items-center justify-center hover:bg-accent text-emerald-600"
+                          title="Replace image"
+                        >
+                          <Replace className="h-3.5 w-3.5" />
+                        </button>
+                        <button
+                          onPointerDown={(e) => e.stopPropagation()}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            // Delete: cover image with white rectangle
+                            const id = `ann-${Date.now()}-${Math.random()
+                              .toString(36)
+                              .slice(2, 7)}`;
+                            const ann: ShapeAnnotation = {
+                              id,
+                              page: currentPageIndex,
+                              type: "rectangle",
+                              x: item.x,
+                              y: item.y,
+                              width: item.width,
+                              height: item.height,
+                              color: "#FFFFFF",
+                              rotation: 0,
+                              strokeWidth: 0.0001,
+                              fill: true,
+                              fillColor: "#FFFFFF",
+                              opacity: 1,
+                            };
+                            addAnnotation(ann);
+                            setImageItems((prev) =>
+                              prev.filter((_, i) => i !== idx)
+                            );
+                          }}
+                          className="h-7 w-7 rounded flex items-center justify-center hover:bg-accent text-destructive"
+                          title="Delete image"
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </button>
+                      </div>
+                      <div className="absolute -top-7 left-0 px-2 py-0.5 rounded-md bg-emerald-500 text-white text-[10px] font-medium whitespace-nowrap shadow-lg pointer-events-none">
+                        <ImageIcon className="h-3 w-3 inline mr-1" />
+                        Image — click actions above
+                      </div>
+                    </>
+                  )}
+                </div>
+              );
+            })}
 
-          {/* Edit-text mode empty hint */}
+          {/* Element-edit mode loading indicator */}
+          {(activeTool === "edit-text" || activeTool === "select") &&
+            textItemsLoading && (
+              <div className="absolute top-2 left-1/2 -translate-x-1/2 px-3 py-1.5 rounded-full bg-card/90 backdrop-blur-sm border text-xs text-muted-foreground flex items-center gap-2 shadow">
+                <Loader2 className="h-3 w-3 animate-spin" />
+                Scanning page for elements…
+              </div>
+            )}
+
+          {/* Element-edit mode empty hint */}
           {activeTool === "edit-text" &&
             !textItemsLoading &&
-            textItems.length === 0 && (
+            textItems.length === 0 &&
+            imageItems.length === 0 && (
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 px-4 py-3 rounded-xl bg-card/90 backdrop-blur-sm border text-center text-sm text-muted-foreground shadow max-w-xs">
                 No selectable text found on this page.
                 <br />
                 <span className="text-xs">
-                  (Scanned PDFs without a text layer can't be edited this way —
-                  use the Text tool instead.)
+                  (Scanned PDFs without a text layer can&apos;t be edited this
+                  way — use the Text tool instead.)
                 </span>
+              </div>
+            )}
+
+          {/* Hint banner in select mode showing how many elements are editable */}
+          {activeTool === "select" &&
+            !textItemsLoading &&
+            (textItems.length > 0 || imageItems.length > 0) && (
+              <div className="absolute top-2 left-1/2 -translate-x-1/2 px-3 py-1.5 rounded-full bg-primary/10 backdrop-blur-sm border border-primary/30 text-xs text-primary flex items-center gap-2 shadow pointer-events-none">
+                <span className="font-medium">
+                  {textItems.length} text + {imageItems.length} image
+                </span>
+                <span className="opacity-70">— hover & double-click to edit</span>
               </div>
             )}
 

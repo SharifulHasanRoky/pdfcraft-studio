@@ -35,6 +35,101 @@ interface ToolHubProps {
 
 const RECENT_TOOLS_KEY = "pdfcraft:recent-tools";
 
+/**
+ * Multi-competitor comparison table.
+ * Source data verified Nov 2026 from each competitor's publicly listed free-tier
+ * restrictions. Numbers may change — always check the competitor's site.
+ *
+ * Sources:
+ * - iLovePDF: 2-5 free tasks/day, 15-400MB file size, watermark on some tools
+ * - Sejda: 3 tasks/hour (web), 200 pages or 50MB per file
+ * - Smallpdf: 2 documents/day (web), limited daily downloads
+ * - Canva: free for core editing, requires account, cloud-based, 5GB storage
+ * - Adobe Acrobat: free Reader is view-only; editing/conversion requires paid plans
+ */
+const COMPARE_ROWS: {
+  feature: string;
+  ilovepdf: string;
+  sejda: string;
+  smallpdf: string;
+  canva: string;
+  adobe: string;
+  us: string;
+}[] = [
+  {
+    feature: "Daily task limit",
+    ilovepdf: "2–5 tasks/day",
+    sejda: "3 tasks/hour",
+    smallpdf: "2 docs/day",
+    canva: "Unlimited*",
+    adobe: "View-only",
+    us: "Unlimited",
+  },
+  {
+    feature: "Sign-up required",
+    ilovepdf: "After limit",
+    sejda: "No",
+    smallpdf: "Yes",
+    canva: "Yes (account)",
+    adobe: "Yes (Adobe ID)",
+    us: "Never",
+  },
+  {
+    feature: "Watermark on free",
+    ilovepdf: "Some tools",
+    sejda: "No",
+    smallpdf: "Yes",
+    canva: "No",
+    adobe: "Trial only",
+    us: "No, ever",
+  },
+  {
+    feature: "File upload to servers",
+    ilovepdf: "Yes",
+    sejda: "Yes (auto-deleted)",
+    smallpdf: "Yes",
+    canva: "Yes (cloud)",
+    adobe: "Yes (Document Cloud)",
+    us: "No — stays in browser",
+  },
+  {
+    feature: "Edit existing PDF text",
+    ilovepdf: "Paid only",
+    sejda: "Yes (limited)",
+    smallpdf: "Paid only",
+    canva: "Yes (overlay)",
+    adobe: "Paid only",
+    us: "Yes, free",
+  },
+  {
+    feature: "Free file size limit",
+    ilovepdf: "15–400 MB",
+    sejda: "50 MB / 200 pages",
+    smallpdf: "5 MB",
+    canva: "25 MB",
+    adobe: "100 MB",
+    us: "No hard limit",
+  },
+  {
+    feature: "Premium plan price",
+    ilovepdf: "$7/mo ($48/yr)",
+    sejda: "$5 week / $63 yr",
+    smallpdf: "$7/mo",
+    canva: "$15/mo Pro",
+    adobe: "$12.99–19.99/mo",
+    us: "No premium. Ever.",
+  },
+  {
+    feature: "3D immersive view",
+    ilovepdf: "No",
+    sejda: "No",
+    smallpdf: "No",
+    canva: "No",
+    adobe: "No",
+    us: "Yes",
+  },
+];
+
 export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
   const [query, setQuery] = useState("");
   const [isDragging, setIsDragging] = useState(false);
@@ -148,7 +243,7 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
 
           <nav className="hidden md:flex items-center gap-6 text-sm">
             <a href="#tools" className="text-muted-foreground hover:text-foreground transition-colors">Tools</a>
-            <a href="#compare" className="text-muted-foreground hover:text-foreground transition-colors">vs iLovePDF</a>
+            <a href="#compare" className="text-muted-foreground hover:text-foreground transition-colors">vs competitors</a>
             <a href="#faq" className="text-muted-foreground hover:text-foreground transition-colors">FAQ</a>
           </nav>
 
@@ -214,7 +309,7 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
               className="text-base sm:text-lg text-muted-foreground mb-8 max-w-xl mx-auto"
             >
               {TOOLS.length} tools to merge, split, compress, convert and edit your PDFs.
-              No signup. No watermark. No daily limits. Better than iLovePDF.
+              No signup. No watermark. No daily limits. Better than iLovePDF, Sejda, Smallpdf, Canva and Adobe.
             </motion.p>
 
             {/* Search bar */}
@@ -387,48 +482,100 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
         </div>
       </section>
 
-      {/* COMPARE — single, focused competitive section */}
+      {/* COMPARE — premium multi-competitor table */}
       <section id="compare" className="py-16 md:py-20 bg-muted/30">
-        <div className="container mx-auto max-w-4xl px-4 sm:px-6">
+        <div className="container mx-auto max-w-7xl px-4 sm:px-6">
           <div className="text-center mb-10">
             <p className="text-xs font-semibold text-primary uppercase tracking-wider mb-2">
               Why switch
             </p>
             <h2 className="text-2xl md:text-3xl font-bold tracking-tight">
-              Better than iLovePDF.{" "}
+              Better than the rest.{" "}
               <span className="text-gradient">No daily limits.</span>
             </h2>
+            <p className="text-sm text-muted-foreground mt-3 max-w-xl mx-auto">
+              How PDFCraft Studio stacks up against iLovePDF, Sejda, Smallpdf, Canva and Adobe Acrobat.
+            </p>
           </div>
 
-          <div className="rounded-2xl border bg-card overflow-hidden shadow-sm">
-            <div className="grid grid-cols-3 text-sm">
-              <div className="p-4 bg-muted/50 font-medium text-muted-foreground">Feature</div>
-              <div className="p-4 bg-muted/50 font-medium text-center text-muted-foreground">iLovePDF</div>
-              <div className="p-4 bg-gradient-to-br from-primary/10 to-amber-500/5 font-medium text-center text-primary">PDFCraft</div>
-              {[
-                { feature: "Daily task limit", them: "2 tasks/day", us: "Unlimited" },
-                { feature: "Sign-up required", them: "After limit", us: "Never" },
-                { feature: "Watermark on free", them: "Yes", us: "No, never" },
-                { feature: "File upload", them: "To servers", us: "Stays in browser" },
-                { feature: "Premium plan", them: "$7+/month", us: "No premium. Ever." },
-                { feature: "All tools free", them: "Limited", us: "All 14 tools" },
-              ].map((row, i) => (
-                <div key={i} className="contents">
-                  <div className="p-4 border-t">{row.feature}</div>
-                  <div className="p-4 border-t text-center text-muted-foreground text-xs">{row.them}</div>
-                  <div className="p-4 border-t text-center font-semibold text-emerald-600 dark:text-emerald-400 text-xs">
-                    <span className="inline-flex items-center gap-1">
+          {/* Desktop table — full comparison */}
+          <div className="hidden md:block rounded-2xl border bg-card overflow-hidden shadow-sm">
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="bg-muted/50">
+                    <th className="p-4 text-left font-medium text-muted-foreground w-44">Feature</th>
+                    <th className="p-4 text-center font-medium text-muted-foreground">iLovePDF</th>
+                    <th className="p-4 text-center font-medium text-muted-foreground">Sejda</th>
+                    <th className="p-4 text-center font-medium text-muted-foreground">Smallpdf</th>
+                    <th className="p-4 text-center font-medium text-muted-foreground">Canva</th>
+                    <th className="p-4 text-center font-medium text-muted-foreground">Adobe Acrobat</th>
+                    <th className="p-4 text-center font-semibold bg-gradient-to-b from-primary/10 to-amber-500/5 text-primary">PDFCraft</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {COMPARE_ROWS.map((row, i) => (
+                    <tr key={i} className="border-t border-border/40">
+                      <td className="p-4 font-medium">{row.feature}</td>
+                      <td className="p-4 text-center text-xs text-muted-foreground">{row.ilovepdf}</td>
+                      <td className="p-4 text-center text-xs text-muted-foreground">{row.sejda}</td>
+                      <td className="p-4 text-center text-xs text-muted-foreground">{row.smallpdf}</td>
+                      <td className="p-4 text-center text-xs text-muted-foreground">{row.canva}</td>
+                      <td className="p-4 text-center text-xs text-muted-foreground">{row.adobe}</td>
+                      <td className="p-4 text-center font-semibold text-emerald-600 dark:text-emerald-400 text-xs bg-gradient-to-b from-primary/5 to-transparent">
+                        <span className="inline-flex items-center gap-1">
+                          <Check className="h-3 w-3 shrink-0" />
+                          {row.us}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Mobile — stacked competitor cards */}
+          <div className="md:hidden space-y-4">
+            {COMPARE_ROWS.map((row, i) => (
+              <div key={i} className="rounded-xl border border-border/60 bg-card p-4">
+                <p className="text-sm font-semibold mb-3">{row.feature}</p>
+                <div className="space-y-1.5 text-xs">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-muted-foreground">iLovePDF</span>
+                    <span className="text-muted-foreground text-right">{row.ilovepdf}</span>
+                  </div>
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-muted-foreground">Sejda</span>
+                    <span className="text-muted-foreground text-right">{row.sejda}</span>
+                  </div>
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-muted-foreground">Smallpdf</span>
+                    <span className="text-muted-foreground text-right">{row.smallpdf}</span>
+                  </div>
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-muted-foreground">Canva</span>
+                    <span className="text-muted-foreground text-right">{row.canva}</span>
+                  </div>
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-muted-foreground">Adobe Acrobat</span>
+                    <span className="text-muted-foreground text-right">{row.adobe}</span>
+                  </div>
+                  <div className="flex items-center justify-between gap-2 pt-1.5 mt-1.5 border-t border-border/40">
+                    <span className="font-semibold text-primary">PDFCraft</span>
+                    <span className="font-semibold text-emerald-600 dark:text-emerald-400 text-right flex items-center gap-1">
                       <Check className="h-3 w-3" />
                       {row.us}
                     </span>
                   </div>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
-          <p className="text-xs text-muted-foreground mt-4 text-center">
-            Comparison based on iLovePDF&apos;s publicly listed free-tier restrictions.
-            Always verify on competitor sites.
+
+          <p className="text-xs text-muted-foreground mt-4 text-center max-w-2xl mx-auto">
+            Comparison based on each competitor&apos;s publicly listed free-tier restrictions at the time
+            of writing. Limits may change — always verify on the competitor&apos;s site.
           </p>
         </div>
       </section>
@@ -499,7 +646,7 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
                 <span className="font-bold text-sm">PDFCraft Studio</span>
               </div>
               <p className="text-xs text-muted-foreground leading-relaxed max-w-xs">
-                The world&apos;s free PDF workspace. Better than iLovePDF — no daily limits,
+                The world&apos;s free PDF workspace. Better than iLovePDF, Sejda, Smallpdf, Canva and Adobe — no daily limits,
                 no signup, no watermark. Browser-based, private by design.
               </p>
             </div>

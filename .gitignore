@@ -52,3 +52,9 @@ prompt
 server.log
 # Skills directory
 /skills/
+# Sample PDFs and downloads
+/download/
+/sample*.pdf
+/upload/
+/scripts/
+/tmp/

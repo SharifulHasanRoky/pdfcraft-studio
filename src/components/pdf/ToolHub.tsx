@@ -27,7 +27,6 @@ import {
 } from "@/lib/tools-registry";
 import { loadPdfFromFile } from "@/lib/pdf-utils";
 import { usePdfStore } from "@/lib/pdf-store";
-import { useTilt, useCountUp, useInView } from "@/lib/use-3d";
 
 interface ToolHubProps {
   onOpenTool: (slug: string) => void;
@@ -148,9 +147,9 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
 
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground">
-      {/* NAV — minimal, sticky */}
-      <header className="sticky top-0 z-50 border-b border-border bg-background/85 backdrop-blur-xl">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
+      {/* NAV */}
+      <header className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur-md">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <button
             onClick={() => {
               setQuery("");
@@ -191,165 +190,159 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
         </div>
       </header>
 
-      {/* HERO — clean, solid, focused */}
-      <section className="bg-hero-solid border-b border-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-14 md:py-20">
-          <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full glass text-xs font-medium mb-5">
-              <span className="flex h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
-              Free forever • No daily limits • Browser-based
-            </div>
-
-            <motion.h1
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
-              className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight leading-[1.05] mb-5"
-            >
-              Every PDF tool.{" "}
-              <span className="text-primary">Free. Forever.</span>
-            </motion.h1>
-
-            <motion.p
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.05 }}
-              className="text-base sm:text-lg text-muted-foreground mb-7 max-w-2xl"
-            >
-              {TOOLS.length} tools to merge, split, compress, convert and edit your PDFs.
-              No signup. No watermark. No daily limits. Better than iLovePDF.
-            </motion.p>
-
-            {/* Search bar */}
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.1 }}
-              className="relative max-w-xl mb-4"
-            >
-              <div className="relative">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground pointer-events-none" />
-                <input
-                  type="text"
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Search tools — merge, compress, convert…"
-                  className="w-full h-12 pl-12 pr-10 rounded-lg border border-border bg-card text-sm shadow-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
-                />
-                {query && (
-                  <button
-                    onClick={() => setQuery("")}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 h-7 w-7 rounded-full hover:bg-accent flex items-center justify-center"
-                  >
-                    <X className="h-4 w-4" />
-                  </button>
-                )}
-              </div>
-
-              <AnimatePresence>
-                {searchResults.length > 0 && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -8 }}
-                    className="absolute top-full mt-2 left-0 right-0 rounded-lg border bg-popover shadow-xl overflow-hidden z-10"
-                  >
-                    {searchResults.map((tool) => {
-                      const Icon = tool.icon;
-                      return (
-                        <button
-                          key={tool.id}
-                          onClick={() => {
-                            handleToolClick(tool.slug);
-                            setQuery("");
-                          }}
-                          className="w-full flex items-center gap-3 p-3 hover:bg-accent text-left transition-colors"
-                        >
-                          <div
-                            className="h-8 w-8 rounded-lg flex items-center justify-center shrink-0"
-                            style={{ backgroundColor: tool.color }}
-                          >
-                            <Icon className="h-4 w-4 text-white" />
-                          </div>
-                          <div className="min-w-0 flex-1">
-                            <p className="text-sm font-medium">{tool.title}</p>
-                            <p className="text-xs text-muted-foreground truncate">{tool.description}</p>
-                          </div>
-                        </button>
-                      );
-                    })}
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
-
-            {/* Drag & drop PDF upload */}
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.15 }}
-              onDragOver={(e) => {
-                e.preventDefault();
-                setIsDragging(true);
-              }}
-              onDragLeave={() => setIsDragging(false)}
-              onDrop={handleDrop}
-              onClick={() => !isLoading && document.getElementById("hero-upload-input")?.click()}
-              className={`relative cursor-pointer rounded-lg border-2 border-dashed transition-all p-5 max-w-xl ${
-                isDragging
-                  ? "border-primary bg-primary/5"
-                  : "border-border hover:border-primary/60 hover:bg-accent/30"
-              }`}
-            >
-              <input
-                id="hero-upload-input"
-                type="file"
-                accept="application/pdf"
-                className="hidden"
-                onChange={(e) => {
-                  const f = e.target.files?.[0];
-                  if (f) handleFile(f);
-                  e.target.value = "";
-                }}
-              />
-              {isLoading ? (
-                <div className="flex items-center justify-center gap-2.5">
-                  <div className="h-5 w-5 rounded-full border-2 border-primary border-t-transparent animate-spin" />
-                  <p className="text-sm font-medium">Loading PDF…</p>
-                </div>
-              ) : (
-                <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-lg bg-primary flex items-center justify-center">
-                    <Upload className="h-4 w-4 text-primary-foreground" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium">Open a PDF to edit visually</p>
-                    <p className="text-xs text-muted-foreground">Drag &amp; drop or click to browse</p>
-                  </div>
-                </div>
-              )}
-            </motion.div>
-
-            {error && <p className="mt-3 text-sm text-destructive">{error}</p>}
+      {/* HERO — clean, centered, focused */}
+      <section className="border-b border-border bg-background">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 py-16 md:py-24 text-center">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium mb-6">
+            <span className="flex h-1.5 w-1.5 rounded-full bg-primary" />
+            Free forever • No daily limits • Browser-based
           </div>
-        </div>
 
-        {/* Compact stats — inline, no separate section */}
-        <div className="border-t border-border bg-card">
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 py-4">
-            <div className="grid grid-cols-4 gap-4 text-center">
-              <AnimatedStat icon={Users} value={50000} suffix="+" label="Users" />
-              <AnimatedStat icon={FileText} value={1200000} suffix="+" label="PDFs" />
-              <AnimatedStat icon={Shield} value={0} label="Limits" />
-              <AnimatedStat icon={Heart} value={100} suffix="%" label="Free" />
+          <motion.h1
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight leading-[1.1] mb-5"
+          >
+            Every PDF tool.{" "}
+            <span className="text-primary">Free. Forever.</span>
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.05 }}
+            className="text-base sm:text-lg text-muted-foreground mb-8"
+          >
+            {TOOLS.length} tools to merge, split, compress, convert and edit PDFs.
+            No signup. No watermark. Better than iLovePDF.
+          </motion.p>
+
+          {/* Search bar */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.1 }}
+            className="relative max-w-xl mx-auto mb-4"
+          >
+            <div className="relative">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground pointer-events-none" />
+              <input
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search tools — merge, compress, convert…"
+                className="w-full h-12 pl-12 pr-10 rounded-lg border border-border bg-card text-sm shadow-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
+              />
+              {query && (
+                <button
+                  onClick={() => setQuery("")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 h-7 w-7 rounded-full hover:bg-accent flex items-center justify-center"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              )}
             </div>
+
+            <AnimatePresence>
+              {searchResults.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: -8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  className="absolute top-full mt-2 left-0 right-0 rounded-lg border bg-popover shadow-xl overflow-hidden z-10 text-left"
+                >
+                  {searchResults.map((tool) => {
+                    const Icon = tool.icon;
+                    return (
+                      <button
+                        key={tool.id}
+                        onClick={() => {
+                          handleToolClick(tool.slug);
+                          setQuery("");
+                        }}
+                        className="w-full flex items-center gap-3 p-3 hover:bg-accent text-left transition-colors"
+                      >
+                        <div
+                          className="h-8 w-8 rounded-lg flex items-center justify-center shrink-0"
+                          style={{ backgroundColor: tool.color }}
+                        >
+                          <Icon className="h-4 w-4 text-white" />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <p className="text-sm font-medium">{tool.title}</p>
+                          <p className="text-xs text-muted-foreground truncate">{tool.description}</p>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
+
+          {/* Drag & drop PDF upload */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.15 }}
+            onDragOver={(e) => {
+              e.preventDefault();
+              setIsDragging(true);
+            }}
+            onDragLeave={() => setIsDragging(false)}
+            onDrop={handleDrop}
+            onClick={() => !isLoading && document.getElementById("hero-upload-input")?.click()}
+            className={`relative cursor-pointer rounded-lg border-2 border-dashed transition-all p-5 max-w-xl mx-auto ${
+              isDragging
+                ? "border-primary bg-primary/5"
+                : "border-border hover:border-primary/60 hover:bg-accent/30"
+            }`}
+          >
+            <input
+              id="hero-upload-input"
+              type="file"
+              accept="application/pdf"
+              className="hidden"
+              onChange={(e) => {
+                const f = e.target.files?.[0];
+                if (f) handleFile(f);
+                e.target.value = "";
+              }}
+            />
+            {isLoading ? (
+              <div className="flex items-center justify-center gap-2.5">
+                <div className="h-5 w-5 rounded-full border-2 border-primary border-t-transparent animate-spin" />
+                <p className="text-sm font-medium">Loading PDF…</p>
+              </div>
+            ) : (
+              <div className="flex items-center justify-center gap-3">
+                <div className="h-10 w-10 rounded-lg bg-primary flex items-center justify-center">
+                  <Upload className="h-4 w-4 text-primary-foreground" />
+                </div>
+                <div className="text-left">
+                  <p className="text-sm font-medium">Open a PDF to edit visually</p>
+                  <p className="text-xs text-muted-foreground">Drag &amp; drop or click to browse</p>
+                </div>
+              </div>
+            )}
+          </motion.div>
+
+          {error && <p className="mt-3 text-sm text-destructive">{error}</p>}
+
+          {/* Inline stats */}
+          <div className="mt-10 flex items-center justify-center gap-8 text-sm">
+            <Stat value="50K+" label="Users" />
+            <Stat value="1.2M+" label="PDFs processed" />
+            <Stat value="0" label="Daily limits" />
+            <Stat value="100%" label="Free" />
           </div>
         </div>
       </section>
 
-      {/* TOOLS — single clean section */}
+      {/* TOOLS */}
       <section id="tools" className="py-12 md:py-16 bg-background">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
           {recentTools.length > 0 && (
             <div className="mb-8">
               <h2 className="text-xs font-semibold mb-3 flex items-center gap-2 text-muted-foreground uppercase tracking-wider">
@@ -365,9 +358,7 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
           )}
 
           <div className="mb-6">
-            <h2 className="text-xl md:text-2xl font-bold tracking-tight mb-1">
-              Popular tools
-            </h2>
+            <h2 className="text-xl md:text-2xl font-bold tracking-tight mb-1">Popular tools</h2>
             <p className="text-sm text-muted-foreground">All free, all browser-based</p>
           </div>
 
@@ -384,19 +375,13 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
 
           {/* All tools by category */}
           <div className="space-y-8">
-            {(Object.keys(TOOL_CATEGORIES) as ToolCategory[]).map((cat, catIdx) => {
+            {(Object.keys(TOOL_CATEGORIES) as ToolCategory[]).map((cat) => {
               const catInfo = TOOL_CATEGORIES[cat];
               const catTools = TOOLS.filter((t) => t.category === cat);
               if (catTools.length === 0) return null;
               const CatIcon = catInfo.icon;
               return (
-                <motion.div
-                  key={cat}
-                  initial={{ opacity: 0, y: 12 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-50px" }}
-                  transition={{ duration: 0.3, delay: catIdx * 0.03 }}
-                >
+                <div key={cat}>
                   <div className="flex items-center gap-2 mb-3">
                     <div className="h-6 w-6 rounded-md bg-secondary/10 flex items-center justify-center">
                       <CatIcon className="h-3 w-3 text-secondary" />
@@ -416,14 +401,14 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
                       />
                     ))}
                   </div>
-                </motion.div>
+                </div>
               );
             })}
           </div>
         </div>
       </section>
 
-      {/* COMPARE — compact, single screen */}
+      {/* COMPARE — compact */}
       <section id="compare" className="py-12 bg-secondary/5 border-y border-border">
         <div className="max-w-5xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-6">
@@ -431,14 +416,11 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
               Why switch
             </p>
             <h2 className="text-xl md:text-2xl font-bold tracking-tight">
-              Better than the rest.{" "}
-              <span className="text-primary">No daily limits.</span>
+              Better than the rest. <span className="text-primary">No daily limits.</span>
             </h2>
           </div>
 
-          {/* Compact comparison table */}
-          <div className="rounded-xl border bg-card overflow-hidden">
-            {/* Header row */}
+          <div className="rounded-lg border bg-card overflow-hidden">
             <div className="grid grid-cols-5 bg-muted/40 border-b border-border">
               <div className="p-2.5 sm:p-3 text-xs sm:text-sm font-medium text-muted-foreground">Feature</div>
               <div className="p-2.5 sm:p-3 text-center text-xs sm:text-sm font-medium text-muted-foreground">iLovePDF</div>
@@ -446,7 +428,6 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
               <div className="p-2.5 sm:p-3 text-center text-xs sm:text-sm font-medium text-muted-foreground">Smallpdf</div>
               <div className="p-2.5 sm:p-3 text-center text-xs sm:text-sm font-bold text-primary bg-primary/5">PDFCraft</div>
             </div>
-            {/* Body rows */}
             {COMPARE_ROWS.map((row, i) => (
               <div
                 key={i}
@@ -465,12 +446,12 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
           </div>
 
           <p className="text-[10px] text-muted-foreground mt-3 text-center">
-            Based on each competitor&apos;s publicly listed free-tier restrictions. Always verify on their site.
+            Based on each competitor&apos;s publicly listed free-tier restrictions. Verify on their site.
           </p>
         </div>
       </section>
 
-      {/* FAQ — collapsible, compact */}
+      {/* FAQ */}
       <section id="faq" className="py-12 bg-background">
         <div className="max-w-2xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-6">
@@ -479,9 +460,9 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
           </div>
           <div className="space-y-2">
             {[
-              { q: "Is PDFCraft Studio really free?", a: "Yes. Every tool is 100% free. No sign-up, no watermark, no daily limit. Funded by ads, never by you." },
-              { q: "Are my PDFs uploaded to a server?", a: "No. All processing happens in your browser using JavaScript. Your PDFs never leave your device." },
-              { q: "Is there a daily usage limit?", a: "No. Use any tool as many times as you want, every day. No quotas, no 'come back tomorrow' messages." },
+              { q: "Is PDFCraft Studio really free?", a: "Yes. Every tool is 100% free. No sign-up, no watermark, no daily limit." },
+              { q: "Are my PDFs uploaded to a server?", a: "No. All processing happens in your browser. Your PDFs never leave your device." },
+              { q: "Is there a daily usage limit?", a: "No. Use any tool as many times as you want, every day." },
               { q: "Can I edit existing text inside a PDF?", a: "Yes. Click 'Edit a PDF' at the top. The visual editor lets you click any text and edit it inline." },
               { q: "Does it work on mobile?", a: "Yes. PDFCraft Studio is fully responsive — works on iOS, Android, tablets and desktops." },
             ].map((faq, i) => (
@@ -497,9 +478,9 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
         </div>
       </section>
 
-      {/* FOOTER — minimal */}
+      {/* FOOTER */}
       <footer className="border-t bg-card py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
             <div className="col-span-2">
               <div className="flex items-center gap-2 mb-2">
@@ -548,7 +529,7 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
   );
 }
 
-/* ============== TOOL CARD — solid color, 3D tilt ============== */
+/* ============== TOOL CARD — simple, clean ============== */
 
 interface ToolCardProps {
   tool: ToolMeta;
@@ -559,71 +540,42 @@ interface ToolCardProps {
 
 function ToolCard({ tool, onClick, small, delay = 0 }: ToolCardProps) {
   const Icon = tool.icon;
-  const { ref, style } = useTilt(4);
-  const { ref: inViewRef, inView } = useInView<HTMLButtonElement>(0.1);
-
   return (
     <motion.button
-      ref={inViewRef}
-      initial={{ opacity: 0, y: 12 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.3, delay }}
+      initial={{ opacity: 0, y: 8 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-30px" }}
+      transition={{ duration: 0.25, delay }}
       onClick={onClick}
-      className="group relative w-full"
-      style={{ transformStyle: "preserve-3d" }}
+      className="group relative w-full overflow-hidden rounded-xl border border-border bg-card p-4 text-left hover:border-primary/50 hover:shadow-md transition-all"
     >
       <div
-        ref={ref}
-        style={style}
-        className="relative w-full overflow-hidden rounded-xl border border-border bg-card p-3 text-left hover:border-primary/50 hover:shadow-md transition-colors"
+        className={`${small ? "h-8 w-8" : "h-10 w-10"} rounded-lg flex items-center justify-center mb-2.5`}
+        style={{ backgroundColor: tool.color }}
       >
-        <div
-          className={`relative ${small ? "h-8 w-8" : "h-9 w-9"} rounded-lg flex items-center justify-center mb-2`}
-          style={{ backgroundColor: tool.color, transform: "translateZ(20px)" }}
-        >
-          <Icon className={`${small ? "h-4 w-4" : "h-4 w-4"} text-white`} />
-        </div>
-        <h3 className={`text-sm font-semibold ${small ? "" : "mb-0.5"}`} style={{ transform: "translateZ(10px)" }}>
-          {tool.title}
-        </h3>
-        {!small && (
-          <p className="text-xs text-muted-foreground leading-snug line-clamp-2">
-            {tool.description}
-          </p>
-        )}
-        {tool.isBeta && (
-          <span className="absolute top-2 right-2 text-[9px] font-bold px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-700 dark:text-amber-400">
-            BETA
-          </span>
-        )}
+        <Icon className={`${small ? "h-4 w-4" : "h-5 w-5"} text-white`} />
       </div>
+      <h3 className="text-sm font-semibold mb-0.5">{tool.title}</h3>
+      {!small && (
+        <p className="text-xs text-muted-foreground leading-snug line-clamp-2">
+          {tool.description}
+        </p>
+      )}
+      {tool.isBeta && (
+        <span className="absolute top-2 right-2 text-[9px] font-bold px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-700 dark:text-amber-400">
+          BETA
+        </span>
+      )}
     </motion.button>
   );
 }
 
-/* ============== ANIMATED STAT (count up) ============== */
+/* ============== STAT ============== */
 
-interface AnimatedStatProps {
-  icon: LucideIcon;
-  value: number;
-  suffix?: string;
-  label: string;
-}
-
-function AnimatedStat({ icon: Icon, value, suffix = "", label }: AnimatedStatProps) {
-  const { ref, value: animatedValue } = useCountUp(value, 1500);
-  const formatted = useMemo(() => {
-    if (value >= 1000000) return (animatedValue / 1000000).toFixed(1) + "M";
-    if (value >= 1000) return (animatedValue / 1000).toFixed(animatedValue < 10000 ? 1 : 0) + "K";
-    return String(animatedValue);
-  }, [animatedValue, value]);
-
+function Stat({ value, label }: { value: string; label: string }) {
   return (
-    <div ref={ref} className="flex flex-col items-center gap-0.5">
-      <Icon className="h-3.5 w-3.5 text-muted-foreground/70 mb-0.5" />
-      <div className="text-lg md:text-xl font-bold tabular-nums">
-        {formatted}{suffix}
-      </div>
+    <div className="text-center">
+      <div className="text-lg md:text-xl font-bold tabular-nums">{value}</div>
       <div className="text-[10px] text-muted-foreground">{label}</div>
     </div>
   );

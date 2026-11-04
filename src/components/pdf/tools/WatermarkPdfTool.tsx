@@ -123,7 +123,7 @@ export function WatermarkPdfTool({ tool, onBack }: WatermarkPdfToolProps) {
       ) : (
         <div className="space-y-5">
           <div className="flex items-center gap-3 p-4 rounded-xl border bg-card">
-            <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shrink-0">
+            <div className="h-10 w-10 rounded-lg bg-cyan-500 flex items-center justify-center shrink-0">
               <FileText className="h-5 w-5 text-white" />
             </div>
             <div className="flex-1 min-w-0">
@@ -243,7 +243,7 @@ export function WatermarkPdfTool({ tool, onBack }: WatermarkPdfToolProps) {
           <Button
             onClick={handleApply}
             disabled={processing || !text.trim()}
-            className="w-full h-12 bg-gradient-to-r from-cyan-500 to-blue-600 text-white hover:opacity-90 border-0 gap-2"
+            className="w-full h-12 bg-cyan-500 text-white hover:brightness-95 gap-2"
           >
             {processing ? (
               <>
@@ -270,7 +270,7 @@ export function WatermarkPdfTool({ tool, onBack }: WatermarkPdfToolProps) {
               <a
                 href={resultUrl}
                 download={`${file.name.replace(/\.pdf$/i, "")}-watermarked.pdf`}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-gradient-to-r from-emerald-500 to-teal-600 text-white text-sm font-medium hover:opacity-90"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-emerald-500 text-white text-sm font-medium hover:opacity-90"
               >
                 <Download className="h-4 w-4" />
                 Download watermarked PDF

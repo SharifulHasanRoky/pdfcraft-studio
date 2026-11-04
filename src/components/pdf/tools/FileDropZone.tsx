@@ -92,7 +92,7 @@ export function FileDropZone({
         <div className="flex flex-col items-center gap-4">
           <div className="relative">
             <div className="absolute inset-0 bg-primary/20 blur-2xl rounded-full" />
-            <div className="relative h-14 w-14 rounded-2xl bg-gradient-to-br from-rose-400 via-violet-500 to-amber-400 flex items-center justify-center shadow-md">
+            <div className="relative h-14 w-14 rounded-2xl bg-primary flex items-center justify-center shadow-md">
               <Upload className="h-7 w-7 text-white" />
             </div>
           </div>
@@ -124,7 +124,7 @@ export function FileChip({ file, onRemove, index }: FileChipProps) {
       exit={{ opacity: 0, scale: 0.9 }}
       className="flex items-center gap-3 p-3 rounded-xl border bg-card"
     >
-      <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-rose-400 via-violet-500 to-amber-400 flex items-center justify-center shrink-0">
+      <div className="h-10 w-10 rounded-lg bg-primary flex items-center justify-center shrink-0">
         <FileText className="h-5 w-5 text-white" />
       </div>
       <div className="flex-1 min-w-0">

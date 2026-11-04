@@ -32,7 +32,7 @@ export function ProtectPdfTool({ tool, onBack }: ProtectPdfToolProps) {
       ) : (
         <div className="space-y-5">
           <div className="flex items-center gap-3 p-4 rounded-xl border bg-card">
-            <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-red-500 to-rose-600 flex items-center justify-center shrink-0">
+            <div className="h-10 w-10 rounded-lg bg-red-500 flex items-center justify-center shrink-0">
               <FileText className="h-5 w-5 text-white" />
             </div>
             <div className="flex-1 min-w-0">

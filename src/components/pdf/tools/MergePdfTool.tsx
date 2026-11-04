@@ -171,7 +171,7 @@ export function MergePdfTool({ tool, onBack }: MergePdfToolProps) {
           <Button
             onClick={handleMerge}
             disabled={processing || files.length < 2}
-            className="w-full h-12 bg-gradient-to-r from-rose-500 via-violet-600 to-amber-500 text-white hover:opacity-90 border-0 gap-2"
+            className="w-full h-12 bg-primary text-white hover:brightness-95 gap-2"
           >
             {processing ? (
               <>
@@ -201,7 +201,7 @@ export function MergePdfTool({ tool, onBack }: MergePdfToolProps) {
               <a
                 href={resultUrl}
                 download="merged.pdf"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-gradient-to-r from-emerald-500 to-teal-600 text-white text-sm font-medium hover:opacity-90"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-emerald-500 text-white text-sm font-medium hover:opacity-90"
               >
                 <Download className="h-4 w-4" />
                 Download merged PDF

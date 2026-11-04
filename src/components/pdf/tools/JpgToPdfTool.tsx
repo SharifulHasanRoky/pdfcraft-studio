@@ -282,7 +282,7 @@ export function JpgToPdfTool({ tool, onBack }: JpgToPdfToolProps) {
           <Button
             onClick={handleConvert}
             disabled={processing || files.length === 0}
-            className="w-full h-12 bg-gradient-to-r from-rose-500 to-orange-500 text-white hover:opacity-90 border-0 gap-2"
+            className="w-full h-12 bg-rose-500 text-white hover:brightness-95 gap-2"
           >
             {processing ? (
               <>
@@ -309,7 +309,7 @@ export function JpgToPdfTool({ tool, onBack }: JpgToPdfToolProps) {
               <a
                 href={resultUrl}
                 download="images.pdf"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-gradient-to-r from-emerald-500 to-teal-600 text-white text-sm font-medium hover:opacity-90"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-emerald-500 text-white text-sm font-medium hover:opacity-90"
               >
                 <Download className="h-4 w-4" />
                 Download PDF

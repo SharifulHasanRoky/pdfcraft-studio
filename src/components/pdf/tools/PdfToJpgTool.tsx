@@ -114,7 +114,7 @@ export function PdfToJpgTool({ tool, onBack }: PdfToJpgToolProps) {
         <div className="space-y-5">
           <div className="flex items-center justify-between gap-3 p-4 rounded-xl border bg-card">
             <div className="flex items-center gap-3 min-w-0">
-              <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-fuchsia-500 to-pink-600 flex items-center justify-center shrink-0">
+              <div className="h-10 w-10 rounded-lg bg-fuchsia-500 flex items-center justify-center shrink-0">
                 <FileImage className="h-5 w-5 text-white" />
               </div>
               <div className="min-w-0">
@@ -155,7 +155,7 @@ export function PdfToJpgTool({ tool, onBack }: PdfToJpgToolProps) {
               <Button
                 onClick={downloadAll}
                 disabled={downloadingAll}
-                className="w-full h-12 bg-gradient-to-r from-fuchsia-500 to-pink-600 text-white hover:opacity-90 border-0 gap-2"
+                className="w-full h-12 bg-fuchsia-500 text-white hover:brightness-95 gap-2"
               >
                 {downloadingAll ? (
                   <>

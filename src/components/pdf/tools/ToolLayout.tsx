@@ -33,7 +33,8 @@ export function ToolLayout({ tool, onBack, children }: ToolLayoutProps) {
           </button>
           <div className="flex items-center gap-2 min-w-0">
             <div
-              className={`h-6 w-6 rounded-md bg-gradient-to-br ${tool.color} flex items-center justify-center shrink-0`}
+              className={`h-6 w-6 rounded-md flex items-center justify-center shrink-0`}
+              style={{ backgroundColor: tool.color }}
             >
               <Icon className="h-3.5 w-3.5 text-white" />
             </div>
@@ -57,7 +58,8 @@ export function ToolLayout({ tool, onBack, children }: ToolLayoutProps) {
         <div className="mb-8">
           <div className="flex items-start gap-4 mb-3">
             <div
-              className={`h-12 w-12 rounded-xl bg-gradient-to-br ${tool.color} flex items-center justify-center shrink-0 shadow-sm`}
+              className={`h-12 w-12 rounded-xl flex items-center justify-center shrink-0 shadow-sm`}
+              style={{ backgroundColor: tool.color }}
             >
               <Icon className="h-6 w-6 text-white" />
             </div>

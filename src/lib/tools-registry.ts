@@ -37,7 +37,7 @@ export interface ToolMeta {
   longDescription: string;
   category: ToolCategory;
   icon: LucideIcon;
-  color: string; // tailwind gradient classes e.g. "from-rose-500 to-pink-600"
+  color: string; // tailwind gradient classes e.g. "var(--tool-rose)"
   keywords: string[];
   faqs: { q: string; a: string }[];
   howItWorks: string[];
@@ -89,7 +89,7 @@ export const TOOLS: ToolMeta[] = [
       "Merge PDF is a free online tool that lets you combine multiple PDF files into a single document. Reorder pages by dragging, then click Merge to combine them. 100% free, no signup, processed in your browser.",
     category: "organize",
     icon: Layers,
-    color: "from-rose-500 to-pink-600",
+    color: "var(--tool-rose)",
     keywords: ["merge pdf", "combine pdf", "join pdf", "pdf merger"],
     popular: true,
     howItWorks: [
@@ -128,7 +128,7 @@ export const TOOLS: ToolMeta[] = [
       "Split PDF lets you extract pages from a PDF or split one PDF into many. Enter page ranges like '1-3, 5, 7-9' or split every page into a separate file. Free, browser-based, no signup.",
     category: "organize",
     icon: Scissors,
-    color: "from-orange-500 to-amber-600",
+    color: "var(--tool-orange)",
     keywords: ["split pdf", "extract pages", "divide pdf", "pdf splitter"],
     popular: true,
     howItWorks: [
@@ -163,7 +163,7 @@ export const TOOLS: ToolMeta[] = [
       "Rotate PDF pages permanently. Fix sideways or upside-down pages. Rotate every page or pick specific pages. Free, browser-based, no signup.",
     category: "organize",
     icon: RotateCw,
-    color: "from-amber-500 to-yellow-600",
+    color: "var(--tool-yellow)",
     keywords: ["rotate pdf", "flip pdf", "pdf rotation", "rotate page"],
     howItWorks: [
       "Upload a PDF file.",
@@ -193,7 +193,7 @@ export const TOOLS: ToolMeta[] = [
       "Organize PDF pages visually. See thumbnails of every page, delete unwanted pages, reorder by moving pages, and rotate any page. Free, no signup, browser-based.",
     category: "organize",
     icon: ListOrdered,
-    color: "from-violet-500 to-purple-600",
+    color: "var(--tool-violet)",
     keywords: ["organize pdf", "reorder pages", "delete pages", "pdf organizer"],
     popular: true,
     howItWorks: [
@@ -225,7 +225,7 @@ export const TOOLS: ToolMeta[] = [
       "Add page numbers to any PDF. Pick position (top/bottom, left/center/right), starting number, and format like 'Page 1 of 10' or '1/10'. Free, browser-based, no signup.",
     category: "edit",
     icon: Hash,
-    color: "from-emerald-500 to-teal-600",
+    color: "var(--tool-emerald)",
     keywords: ["page numbers", "number pdf pages", "add numbers to pdf"],
     howItWorks: [
       "Upload a PDF file.",
@@ -255,7 +255,7 @@ export const TOOLS: ToolMeta[] = [
       "Add a custom text watermark to every page of a PDF. Control font size, color, opacity, rotation angle, and position. Common use: 'CONFIDENTIAL', 'DRAFT', 'SAMPLE'. Free, browser-based.",
     category: "edit",
     icon: Stamp,
-    color: "from-cyan-500 to-blue-600",
+    color: "var(--tool-cyan)",
     keywords: ["watermark pdf", "add watermark", "stamp pdf", "confidential pdf"],
     howItWorks: [
       "Upload a PDF file.",
@@ -286,7 +286,7 @@ export const TOOLS: ToolMeta[] = [
       "Convert PDF to JPG images. Each page becomes a high-quality JPG. Download individual pages or all of them. Free, browser-based, no signup.",
     category: "convert",
     icon: FileImage,
-    color: "from-fuchsia-500 to-pink-600",
+    color: "var(--tool-pink)",
     keywords: ["pdf to jpg", "pdf to image", "convert pdf to image"],
     popular: true,
     howItWorks: [
@@ -317,7 +317,7 @@ export const TOOLS: ToolMeta[] = [
       "Convert images to PDF. Combine JPG, PNG, and other formats into one PDF document. Reorder images freely. Choose A4, Letter, or fit-to-image page size. Free, no signup.",
     category: "convert",
     icon: ImageIcon,
-    color: "from-rose-500 to-orange-500",
+    color: "var(--tool-rose)",
     keywords: ["jpg to pdf", "image to pdf", "convert images to pdf"],
     popular: true,
     howItWorks: [
@@ -348,7 +348,7 @@ export const TOOLS: ToolMeta[] = [
       "Extract text from any PDF that has a text layer. Edit the extracted text, copy to clipboard, or download as a .txt file. Free, browser-based, no signup.",
     category: "convert",
     icon: Type,
-    color: "from-violet-500 to-fuchsia-600",
+    color: "var(--tool-violet)",
     keywords: ["pdf to text", "extract text from pdf", "pdf text extractor"],
     howItWorks: [
       "Upload a PDF file.",
@@ -378,7 +378,7 @@ export const TOOLS: ToolMeta[] = [
       "Extract every embedded image from a PDF. Preview thumbnails, download individual images or all as PNGs. Free, browser-based, no signup.",
     category: "convert",
     icon: ImagePlus,
-    color: "from-amber-500 to-orange-600",
+    color: "var(--tool-yellow)",
     keywords: ["extract images from pdf", "pdf image extractor", "save pdf images"],
     howItWorks: [
       "Upload a PDF file.",
@@ -409,7 +409,7 @@ export const TOOLS: ToolMeta[] = [
       "Compress PDF to reduce file size. Choose Light, Recommended, or Extreme compression. See before/after file sizes. Free, browser-based, no signup.",
     category: "optimize",
     icon: Minimize2,
-    color: "from-emerald-500 to-green-600",
+    color: "var(--tool-emerald)",
     keywords: ["compress pdf", "reduce pdf size", "pdf compressor", "shrink pdf"],
     popular: true,
     howItWorks: [
@@ -444,7 +444,7 @@ export const TOOLS: ToolMeta[] = [
       "View and edit PDF metadata. See title, author, subject, keywords, creator, dates, page count, file size, PDF version. Edit fields and download. Free, browser-based, no signup.",
     category: "optimize",
     icon: Info,
-    color: "from-slate-500 to-gray-600",
+    color: "var(--tool-navy)",
     keywords: ["pdf properties", "pdf metadata", "edit pdf metadata", "pdf info"],
     howItWorks: [
       "Upload a PDF file.",
@@ -475,7 +475,7 @@ export const TOOLS: ToolMeta[] = [
       "Unlock PDF removes password protection from a PDF — but you must know the password. Upload the locked PDF, enter the password, download an unlocked copy. Free, browser-based, no signup.",
     category: "security",
     icon: Unlock,
-    color: "from-emerald-500 to-teal-600",
+    color: "var(--tool-emerald)",
     keywords: ["unlock pdf", "remove pdf password", "decrypt pdf", "pdf unlocker"],
     howItWorks: [
       "Upload a password-protected PDF.",
@@ -505,7 +505,7 @@ export const TOOLS: ToolMeta[] = [
       "Add password protection to a PDF. Browser-based PDF encryption is technically limited, so we offer metadata-level protection. For true encryption, consider a desktop tool. Free, browser-based, no signup.",
     category: "security",
     icon: Lock,
-    color: "from-red-500 to-rose-600",
+    color: "var(--tool-rose)",
     keywords: ["protect pdf", "password pdf", "encrypt pdf", "secure pdf"],
     isBeta: true,
     howItWorks: [

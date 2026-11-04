@@ -227,10 +227,10 @@
     }
   }
   .scroll-left {
-    animation: scroll-left 40s linear infinite;
+    animation: scroll-left 60s linear infinite;
   }
   .scroll-right {
-    animation: scroll-right 40s linear infinite;
+    animation: scroll-right 60s linear infinite;
   }
   /* Pause animation on hover */
   .scroll-pause:hover .scroll-left,

@@ -424,18 +424,18 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
 
           <div className="mb-8">
             <p className="text-xs font-semibold text-primary uppercase tracking-wider mb-2">
-              Popular tools
+              Explore tools
             </p>
             <h2 className="font-display text-3xl md:text-4xl font-bold tracking-tight mb-2">
-              What people use most
+              {TOOLS.length} tools at your fingertips
             </h2>
             <p className="text-sm text-muted-foreground">
-              {TOOLS.length} free tools. Hover to pause, click to use.
+              Hover to pause, click to use any tool.
             </p>
           </div>
 
           {/* Infinite slider with 2 rows */}
-          <ToolsSlider tools={popularTools} onToolClick={handleToolClick} />
+          <ToolsSlider tools={TOOLS} onToolClick={handleToolClick} />
 
           <div className="mb-8 mt-16">
             <p className="text-xs font-semibold text-primary uppercase tracking-wider mb-2">

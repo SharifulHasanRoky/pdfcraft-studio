@@ -1,47 +1,47 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#1a0f1f"/>
-      <stop offset="50%" stop-color="#2d1b4e"/>
+      <stop offset="0%" stop-color="#1a1a0f"/>
+      <stop offset="50%" stop-color="#2d2410"/>
       <stop offset="100%" stop-color="#1a0f1f"/>
     </linearGradient>
-    <radialGradient id="rose" cx="0.15" cy="0.2" r="0.4">
-      <stop offset="0%" stop-color="#FB7185" stop-opacity="0.5"/>
-      <stop offset="100%" stop-color="#FB7185" stop-opacity="0"/>
-    </radialGradient>
-    <radialGradient id="violet" cx="0.85" cy="0.15" r="0.4">
-      <stop offset="0%" stop-color="#A855F7" stop-opacity="0.5"/>
-      <stop offset="100%" stop-color="#A855F7" stop-opacity="0"/>
-    </radialGradient>
-    <radialGradient id="amber" cx="0.7" cy="0.85" r="0.4">
-      <stop offset="0%" stop-color="#FBBF24" stop-opacity="0.4"/>
+    <radialGradient id="amber" cx="0.15" cy="0.2" r="0.4">
+      <stop offset="0%" stop-color="#FBBF24" stop-opacity="0.5"/>
       <stop offset="100%" stop-color="#FBBF24" stop-opacity="0"/>
     </radialGradient>
+    <radialGradient id="violet" cx="0.85" cy="0.15" r="0.4">
+      <stop offset="0%" stop-color="#8B5CF6" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#8B5CF6" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="rose" cx="0.7" cy="0.85" r="0.4">
+      <stop offset="0%" stop-color="#FB7185" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#FB7185" stop-opacity="0"/>
+    </radialGradient>
     <linearGradient id="title" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0%" stop-color="#FB7185"/>
-      <stop offset="50%" stop-color="#A855F7"/>
-      <stop offset="100%" stop-color="#FBBF24"/>
+      <stop offset="0%" stop-color="#FBBF24"/>
+      <stop offset="50%" stop-color="#FB7185"/>
+      <stop offset="100%" stop-color="#8B5CF6"/>
     </linearGradient>
     <linearGradient id="logoBg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#FB7185"/>
-      <stop offset="50%" stop-color="#A855F7"/>
-      <stop offset="100%" stop-color="#FBBF24"/>
+      <stop offset="0%" stop-color="#FBBF24"/>
+      <stop offset="50%" stop-color="#FB7185"/>
+      <stop offset="100%" stop-color="#8B5CF6"/>
     </linearGradient>
   </defs>
 
   <rect width="1200" height="630" fill="url(#bg)"/>
-  <rect width="1200" height="630" fill="url(#rose)"/>
-  <rect width="1200" height="630" fill="url(#violet)"/>
   <rect width="1200" height="630" fill="url(#amber)"/>
+  <rect width="1200" height="630" fill="url(#violet)"/>
+  <rect width="1200" height="630" fill="url(#rose)"/>
 
   <!-- Logo + Brand -->
   <g transform="translate(80 60)">
     <rect width="64" height="64" rx="16" fill="url(#logoBg)"/>
     <g transform="translate(14 16)">
       <rect x="0" y="0" width="36" height="44" rx="3" fill="#ffffff"/>
-      <rect x="6" y="10" width="24" height="2.5" rx="1.25" fill="#A855F7"/>
+      <rect x="6" y="10" width="24" height="2.5" rx="1.25" fill="#FBBF24"/>
       <rect x="6" y="16" width="20" height="2.5" rx="1.25" fill="#FB7185"/>
-      <rect x="6" y="22" width="22" height="2.5" rx="1.25" fill="#FBBF24"/>
+      <rect x="6" y="22" width="22" height="2.5" rx="1.25" fill="#8B5CF6"/>
       <rect x="6" y="28" width="16" height="2.5" rx="1.25" fill="#0EA5E9"/>
     </g>
     <text x="80" y="40" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="700" fill="#ffffff">PDFCraft Studio</text>
@@ -51,34 +51,34 @@
   <g transform="translate(80 180)">
     <rect width="320" height="36" rx="18" fill="#ffffff" fill-opacity="0.1" stroke="#ffffff" stroke-opacity="0.2"/>
     <circle cx="20" cy="18" r="5" fill="#10B981"/>
-    <text x="36" y="24" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="500" fill="#ffffff">Free forever • No sign-up • 100% private</text>
+    <text x="36" y="24" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="500" fill="#ffffff">Free forever • No daily limits • Browser-based</text>
   </g>
 
   <!-- Headline -->
-  <text x="80" y="290" font-family="Inter, Arial, sans-serif" font-size="72" font-weight="800" fill="url(#title)">Edit any PDF</text>
-  <text x="80" y="370" font-family="Inter, Arial, sans-serif" font-size="72" font-weight="800" fill="url(#title)">your way.</text>
-  <text x="80" y="440" font-family="Inter, Arial, sans-serif" font-size="40" font-weight="500" fill="#9ca3af">Quality, never lost.</text>
+  <text x="80" y="290" font-family="Inter, Arial, sans-serif" font-size="72" font-weight="800" fill="url(#title)">Every PDF tool.</text>
+  <text x="80" y="370" font-family="Inter, Arial, sans-serif" font-size="72" font-weight="800" fill="url(#title)">Free. Forever.</text>
+  <text x="80" y="440" font-family="Inter, Arial, sans-serif" font-size="40" font-weight="500" fill="#9ca3af">Better than iLovePDF. No daily limits.</text>
 
   <!-- Sub -->
-  <text x="80" y="500" font-family="Inter, Arial, sans-serif" font-size="20" fill="#cbd5e1">Edit text, images, signatures — right in your browser.</text>
-  <text x="80" y="528" font-family="Inter, Arial, sans-serif" font-size="20" fill="#cbd5e1">Lossless export. Your files never leave your device.</text>
+  <text x="80" y="500" font-family="Inter, Arial, sans-serif" font-size="20" fill="#cbd5e1">Merge, split, compress, convert and edit your PDFs.</text>
+  <text x="80" y="528" font-family="Inter, Arial, sans-serif" font-size="20" fill="#cbd5e1">100% free. No signup. No watermark.</text>
 
   <!-- Trust badges right side -->
   <g transform="translate(820 220)">
     <g transform="translate(0 0)">
       <rect width="280" height="64" rx="12" fill="#ffffff" fill-opacity="0.05" stroke="#ffffff" stroke-opacity="0.1"/>
-      <text x="20" y="28" font-family="Inter, Arial, sans-serif" font-size="32" font-weight="800" fill="#FB7185">50K+</text>
+      <text x="20" y="28" font-family="Inter, Arial, sans-serif" font-size="32" font-weight="800" fill="#FBBF24">50K+</text>
       <text x="20" y="50" font-family="Inter, Arial, sans-serif" font-size="13" fill="#9ca3af">Happy users worldwide</text>
     </g>
     <g transform="translate(0 80)">
       <rect width="280" height="64" rx="12" fill="#ffffff" fill-opacity="0.05" stroke="#ffffff" stroke-opacity="0.1"/>
-      <text x="20" y="28" font-family="Inter, Arial, sans-serif" font-size="32" font-weight="800" fill="#A855F7">4.9 ★</text>
+      <text x="20" y="28" font-family="Inter, Arial, sans-serif" font-size="32" font-weight="800" fill="#8B5CF6">4.9 ★</text>
       <text x="20" y="50" font-family="Inter, Arial, sans-serif" font-size="13" fill="#9ca3af">Average user rating</text>
     </g>
     <g transform="translate(0 160)">
       <rect width="280" height="64" rx="12" fill="#ffffff" fill-opacity="0.05" stroke="#ffffff" stroke-opacity="0.1"/>
-      <text x="20" y="28" font-family="Inter, Arial, sans-serif" font-size="32" font-weight="800" fill="#FBBF24">100%</text>
-      <text x="20" y="50" font-family="Inter, Arial, sans-serif" font-size="13" fill="#9ca3af">Free, always — no watermark</text>
+      <text x="20" y="28" font-family="Inter, Arial, sans-serif" font-size="32" font-weight="800" fill="#FB7185">100%</text>
+      <text x="20" y="50" font-family="Inter, Arial, sans-serif" font-size="13" fill="#9ca3af">Free, always — no premium</text>
     </g>
     <g transform="translate(0 240)">
       <rect width="280" height="64" rx="12" fill="#ffffff" fill-opacity="0.05" stroke="#ffffff" stroke-opacity="0.1"/>

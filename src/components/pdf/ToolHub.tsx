@@ -49,7 +49,6 @@ const COMPARE_ROWS: {
   ilovepdf: string;
   sejda: string;
   smallpdf: string;
-  canva: string;
   us: string;
 }[] = [
   {
@@ -57,7 +56,6 @@ const COMPARE_ROWS: {
     ilovepdf: "2–5 tasks/day",
     sejda: "3 tasks/hour",
     smallpdf: "2 docs/day",
-    canva: "Unlimited*",
     us: "Unlimited",
   },
   {
@@ -65,7 +63,6 @@ const COMPARE_ROWS: {
     ilovepdf: "After limit",
     sejda: "No",
     smallpdf: "Yes",
-    canva: "Yes (account)",
     us: "Never",
   },
   {
@@ -73,7 +70,6 @@ const COMPARE_ROWS: {
     ilovepdf: "Some tools",
     sejda: "No",
     smallpdf: "Yes",
-    canva: "No",
     us: "No, ever",
   },
   {
@@ -81,7 +77,6 @@ const COMPARE_ROWS: {
     ilovepdf: "Yes",
     sejda: "Yes (auto-deleted)",
     smallpdf: "Yes",
-    canva: "Yes (cloud)",
     us: "No — stays in browser",
   },
   {
@@ -89,7 +84,6 @@ const COMPARE_ROWS: {
     ilovepdf: "Paid only",
     sejda: "Yes (limited)",
     smallpdf: "Paid only",
-    canva: "Yes (overlay)",
     us: "Yes, free",
   },
   {
@@ -97,7 +91,6 @@ const COMPARE_ROWS: {
     ilovepdf: "15–400 MB",
     sejda: "50 MB / 200 pages",
     smallpdf: "5 MB",
-    canva: "25 MB",
     us: "No hard limit",
   },
   {
@@ -105,7 +98,6 @@ const COMPARE_ROWS: {
     ilovepdf: "$7/mo ($48/yr)",
     sejda: "$5 week / $63 yr",
     smallpdf: "$7/mo",
-    canva: "$15/mo Pro",
     us: "No premium. Ever.",
   },
   {
@@ -113,7 +105,6 @@ const COMPARE_ROWS: {
     ilovepdf: "No",
     sejda: "No",
     smallpdf: "No",
-    canva: "No",
     us: "Yes",
   },
 ];
@@ -222,8 +213,8 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
             className="flex items-center gap-2 group"
           >
             <div className="relative h-8 w-8">
-              <div className="absolute inset-0 rounded-lg bg-gradient-to-br from-rose-400 via-violet-500 to-amber-400 blur-md opacity-50 group-hover:opacity-90 transition-opacity" />
-              <div className="relative h-8 w-8 rounded-lg bg-gradient-to-br from-rose-400 via-violet-500 to-amber-400 flex items-center justify-center shadow-sm">
+              <div className="absolute inset-0 rounded-lg bg-gradient-to-br from-amber-400 via-violet-500 to-rose-400 blur-md opacity-50 group-hover:opacity-90 transition-opacity" />
+              <div className="relative h-8 w-8 rounded-lg bg-gradient-to-br from-amber-400 via-violet-500 to-rose-400 flex items-center justify-center shadow-sm">
                 <FileText className="h-4 w-4 text-white" />
               </div>
             </div>
@@ -249,7 +240,7 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
             <Button
               size="sm"
               onClick={() => document.getElementById("hero-upload-input")?.click()}
-              className="gap-1.5 bg-gradient-to-r from-rose-500 via-violet-600 to-amber-500 text-white hover:opacity-90 border-0 h-8 shadow-lg shadow-primary/30"
+              className="gap-1.5 bg-gradient-to-r from-amber-500 via-rose-500 to-violet-600 text-white hover:opacity-90 border-0 h-8 shadow-lg shadow-amber-500/30"
             >
               <Upload className="h-3.5 w-3.5" />
               <span className="hidden sm:inline">Edit a PDF</span>
@@ -320,7 +311,7 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
                 className="text-base sm:text-lg text-muted-foreground mb-7 max-w-xl"
               >
                 {TOOLS.length} tools to merge, split, compress, convert and edit PDFs.
-                No signup. No watermark. No daily limits. Better than iLovePDF, Sejda, Smallpdf, Canva.
+                No signup. No watermark. No daily limits. Better than iLovePDF, Sejda and Smallpdf.
               </motion.p>
 
               {/* Search bar */}
@@ -419,7 +410,7 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
                   </div>
                 ) : (
                   <div className="flex items-center justify-center gap-3">
-                    <div className="h-9 w-9 rounded-lg bg-gradient-to-br from-rose-500 via-violet-600 to-amber-500 flex items-center justify-center">
+                    <div className="h-9 w-9 rounded-lg bg-gradient-to-br from-amber-500 via-rose-500 to-violet-600 flex items-center justify-center">
                       <Upload className="h-4 w-4 text-white" />
                     </div>
                     <div className="text-left">
@@ -559,7 +550,7 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
               <span className="text-gradient">No daily limits.</span>
             </motion.h2>
             <p className="text-sm text-muted-foreground mt-3 max-w-xl mx-auto">
-              How PDFCraft Studio stacks up against iLovePDF, Sejda, Smallpdf and Canva.
+              How PDFCraft Studio stacks up against iLovePDF, Sejda and Smallpdf.
             </p>
           </div>
 
@@ -573,7 +564,6 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
                     <th className="p-4 text-center font-medium text-muted-foreground">iLovePDF</th>
                     <th className="p-4 text-center font-medium text-muted-foreground">Sejda</th>
                     <th className="p-4 text-center font-medium text-muted-foreground">Smallpdf</th>
-                    <th className="p-4 text-center font-medium text-muted-foreground">Canva</th>
                     <th className="p-4 text-center font-semibold bg-gradient-to-b from-primary/10 to-amber-500/5 text-primary">PDFCraft</th>
                   </tr>
                 </thead>
@@ -584,7 +574,6 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
                       <td className="p-4 text-center text-xs text-muted-foreground">{row.ilovepdf}</td>
                       <td className="p-4 text-center text-xs text-muted-foreground">{row.sejda}</td>
                       <td className="p-4 text-center text-xs text-muted-foreground">{row.smallpdf}</td>
-                      <td className="p-4 text-center text-xs text-muted-foreground">{row.canva}</td>
                       <td className="p-4 text-center font-semibold text-emerald-600 dark:text-emerald-400 text-xs bg-gradient-to-b from-primary/5 to-transparent">
                         <span className="inline-flex items-center gap-1">
                           <Check className="h-3 w-3 shrink-0" />
@@ -615,10 +604,6 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
                   <div className="flex items-center justify-between gap-2">
                     <span className="text-muted-foreground">Smallpdf</span>
                     <span className="text-muted-foreground text-right">{row.smallpdf}</span>
-                  </div>
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="text-muted-foreground">Canva</span>
-                    <span className="text-muted-foreground text-right">{row.canva}</span>
                   </div>
                   <div className="flex items-center justify-between gap-2 pt-1.5 mt-1.5 border-t border-border/40">
                     <span className="font-semibold text-primary">PDFCraft</span>
@@ -691,7 +676,7 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
           <Button
             size="lg"
             onClick={() => document.getElementById("hero-upload-input")?.click()}
-            className="gap-2 bg-gradient-to-r from-rose-500 via-violet-600 to-amber-500 text-white hover:opacity-90 border-0 h-12 px-8 shadow-xl shadow-primary/30"
+            className="gap-2 bg-gradient-to-r from-amber-500 via-rose-500 to-violet-600 text-white hover:opacity-90 border-0 h-12 px-8 shadow-xl shadow-amber-500/30"
           >
             <Upload className="h-4 w-4" />
             Open a PDF — it&apos;s free
@@ -705,13 +690,13 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
           <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
             <div className="col-span-2">
               <div className="flex items-center gap-2 mb-2">
-                <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-rose-400 via-violet-500 to-amber-400 flex items-center justify-center">
+                <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-amber-400 via-violet-500 to-rose-400 flex items-center justify-center">
                   <FileText className="h-3.5 w-3.5 text-white" />
                 </div>
                 <span className="font-bold text-sm">PDFCraft Studio</span>
               </div>
               <p className="text-xs text-muted-foreground leading-relaxed max-w-xs">
-                The world&apos;s free PDF workspace. Better than iLovePDF, Sejda, Smallpdf, Canva — no daily limits,
+                The world&apos;s free PDF workspace. Better than iLovePDF, Sejda and Smallpdf — no daily limits,
                 no signup, no watermark. Browser-based, private by design.
               </p>
             </div>
@@ -763,12 +748,12 @@ function PdfMockup3D({ parallax }: { parallax: { x: number; y: number } }) {
       }}
     >
       {/* Back glow */}
-      <div className="absolute inset-0 -z-10 scale-110 rounded-3xl bg-gradient-to-br from-rose-400/30 via-violet-500/30 to-amber-400/30 blur-3xl" />
+      <div className="absolute inset-0 -z-10 scale-110 rounded-3xl bg-gradient-to-br from-amber-400/30 via-violet-500/30 to-rose-400/30 blur-3xl" />
 
       {/* PDF Page mockup */}
       <div className="relative w-72 h-96 rounded-2xl bg-white shadow-2xl border border-white/40 overflow-hidden">
         {/* Header bar */}
-        <div className="h-10 bg-gradient-to-r from-rose-500 via-violet-600 to-amber-500 flex items-center px-4 gap-2">
+        <div className="h-10 bg-gradient-to-r from-amber-500 via-rose-500 to-violet-600 flex items-center px-4 gap-2">
           <div className="h-2 w-2 rounded-full bg-white/60" />
           <div className="h-2 w-2 rounded-full bg-white/40" />
           <div className="h-2 w-2 rounded-full bg-white/30" />
@@ -777,7 +762,7 @@ function PdfMockup3D({ parallax }: { parallax: { x: number; y: number } }) {
 
         {/* Page content — fake text lines */}
         <div className="p-5 space-y-2">
-          <div className="h-3 w-3/4 rounded-full bg-gradient-to-r from-rose-400 to-violet-500" />
+          <div className="h-3 w-3/4 rounded-full bg-gradient-to-r from-amber-400 to-violet-500" />
           <div className="h-1.5 w-full rounded-full bg-slate-200" />
           <div className="h-1.5 w-5/6 rounded-full bg-slate-200" />
           <div className="h-1.5 w-4/5 rounded-full bg-slate-200" />
@@ -824,7 +809,7 @@ function PdfMockup3D({ parallax }: { parallax: { x: number; y: number } }) {
         className="absolute -top-8 -left-12 px-3 py-2 rounded-xl bg-white shadow-xl border border-white/40 flex items-center gap-2"
         style={{ transform: "translateZ(80px)" }}
       >
-        <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-rose-500 to-pink-600 flex items-center justify-center">
+        <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center">
           <Layers className="h-3.5 w-3.5 text-white" />
         </div>
         <div>
@@ -933,7 +918,7 @@ function InteractiveShowcase({ onOpenEditor }: { onOpenEditor: () => void }) {
                     <div
                       className={`h-9 w-9 rounded-lg flex items-center justify-center shrink-0 transition-colors ${
                         isActive
-                          ? "bg-gradient-to-br from-rose-500 via-violet-600 to-amber-500"
+                          ? "bg-gradient-to-br from-amber-500 via-rose-500 to-violet-600"
                           : "bg-primary/10"
                       }`}
                     >
@@ -951,7 +936,7 @@ function InteractiveShowcase({ onOpenEditor }: { onOpenEditor: () => void }) {
             })}
             <Button
               onClick={onOpenEditor}
-              className="w-full mt-4 bg-gradient-to-r from-rose-500 via-violet-600 to-amber-500 text-white hover:opacity-90 border-0 gap-2"
+              className="w-full mt-4 bg-gradient-to-r from-amber-500 via-rose-500 to-violet-600 text-white hover:opacity-90 border-0 gap-2"
             >
               Try it now — free
             </Button>
@@ -969,7 +954,7 @@ const FEATURES = [
     desc: "Click any text in your PDF and edit it inline. Add new text, change fonts, colors, sizes.",
     preview: (
       <div className="w-64 h-80 rounded-2xl bg-white shadow-2xl overflow-hidden border border-border/40">
-        <div className="h-8 bg-gradient-to-r from-rose-500 to-violet-600" />
+        <div className="h-8 bg-gradient-to-r from-amber-500 to-violet-600" />
         <div className="p-5 space-y-2">
           <div className="h-3 w-3/4 rounded-full bg-slate-200" />
           <div className="relative inline-block">
@@ -1003,7 +988,7 @@ const FEATURES = [
             transition={{ delay: i * 0.15 }}
             className="w-44 h-24 rounded-xl bg-white shadow-xl border border-border/40 flex items-center px-3 gap-2"
           >
-            <div className="h-12 w-10 rounded-md bg-gradient-to-br from-rose-400 to-violet-500" />
+            <div className="h-12 w-10 rounded-md bg-gradient-to-br from-amber-400 to-violet-500" />
             <div className="flex-1">
               <div className="h-1.5 w-full rounded-full bg-slate-200" />
               <div className="h-1.5 w-2/3 mt-1 rounded-full bg-slate-200" />

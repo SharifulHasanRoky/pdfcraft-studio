@@ -424,25 +424,29 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
 
           <div className="mb-8">
             <p className="text-xs font-semibold text-primary uppercase tracking-wider mb-2">
-              All tools
+              Popular tools
             </p>
             <h2 className="font-display text-3xl md:text-4xl font-bold tracking-tight mb-2">
-              Popular tools
+              What people use most
             </h2>
             <p className="text-sm text-muted-foreground">
-              {TOOLS.length} free tools. No signup, no watermark, no daily limits.
+              {TOOLS.length} free tools. Hover to pause, click to use.
             </p>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 mb-14">
-            {popularTools.map((tool, i) => (
-              <ToolCard
-                key={tool.id}
-                tool={tool}
-                onClick={() => handleToolClick(tool.slug)}
-                delay={i * 0.04}
-              />
-            ))}
+          {/* Infinite slider with 2 rows */}
+          <ToolsSlider tools={popularTools} onToolClick={handleToolClick} />
+
+          <div className="mb-8 mt-16">
+            <p className="text-xs font-semibold text-primary uppercase tracking-wider mb-2">
+              All tools
+            </p>
+            <h2 className="font-display text-3xl md:text-4xl font-bold tracking-tight mb-2">
+              Browse by category
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              {TOOLS.length} free tools organized by what you want to do.
+            </p>
           </div>
 
           {/* All tools by category */}
@@ -752,5 +756,83 @@ function ToolCard({ tool, onClick, small, delay = 0 }: ToolCardProps) {
         </span>
       )}
     </motion.button>
+  );
+}
+
+/* ============== TOOLS SLIDER — infinite scroll, 2 rows ============== */
+
+interface ToolsSliderProps {
+  tools: ToolMeta[];
+  onToolClick: (slug: string) => void;
+}
+
+function ToolsSlider({ tools, onToolClick }: ToolsSliderProps) {
+  // Split tools into 2 rows (interleaved for variety)
+  const row1 = tools.filter((_, i) => i % 2 === 0);
+  const row2 = tools.filter((_, i) => i % 2 === 1);
+  // Duplicate the arrays so the scroll can loop seamlessly
+  const row1Loop = [...row1, ...row1];
+  const row2Loop = [...row2, ...row2];
+
+  return (
+    <div className="scroll-pause relative mb-14 -mx-4 sm:-mx-6">
+      {/* Edge fade left */}
+      <div className="absolute left-0 top-0 bottom-0 w-16 z-10 bg-gradient-to-r from-background to-transparent pointer-events-none" />
+      {/* Edge fade right */}
+      <div className="absolute right-0 top-0 bottom-0 w-16 z-10 bg-gradient-to-l from-background to-transparent pointer-events-none" />
+
+      {/* Row 1 — scrolls left */}
+      <div className="flex gap-3 mb-3 px-4 sm:px-6 overflow-hidden">
+        <div className="flex gap-3 scroll-left" style={{ width: "max-content" }}>
+          {row1Loop.map((tool, i) => (
+            <SliderCard
+              key={`r1-${tool.id}-${i}`}
+              tool={tool}
+              onClick={() => onToolClick(tool.slug)}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Row 2 — scrolls right (opposite direction) */}
+      <div className="flex gap-3 px-4 sm:px-6 overflow-hidden">
+        <div className="flex gap-3 scroll-right" style={{ width: "max-content" }}>
+          {row2Loop.map((tool, i) => (
+            <SliderCard
+              key={`r2-${tool.id}-${i}`}
+              tool={tool}
+              onClick={() => onToolClick(tool.slug)}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* Compact card for slider — fixed width */
+function SliderCard({ tool, onClick }: { tool: ToolMeta; onClick: () => void }) {
+  const Icon = tool.icon;
+  return (
+    <button
+      onClick={onClick}
+      className="group relative shrink-0 w-44 sm:w-48 rounded-xl border border-border bg-card p-4 text-left hover:border-primary/50 hover:shadow-md hover:-translate-y-0.5 transition-all"
+    >
+      <div
+        className="h-10 w-10 rounded-lg flex items-center justify-center mb-2.5"
+        style={{ backgroundColor: tool.color }}
+      >
+        <Icon className="h-5 w-5 text-white" />
+      </div>
+      <h3 className="text-sm font-semibold mb-0.5 truncate">{tool.title}</h3>
+      <p className="text-xs text-muted-foreground leading-snug line-clamp-2">
+        {tool.description}
+      </p>
+      {tool.isBeta && (
+        <span className="absolute top-2 right-2 text-[9px] font-bold px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-700 dark:text-amber-400">
+          BETA
+        </span>
+      )}
+    </button>
   );
 }

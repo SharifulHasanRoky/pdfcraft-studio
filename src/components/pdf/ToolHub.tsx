@@ -13,6 +13,12 @@ import {
   Users,
   Heart,
   Check,
+  Lock,
+  Zap,
+  Globe,
+  Star,
+  ArrowRight,
+  Layers,
   type LucideIcon,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -37,8 +43,6 @@ const RECENT_TOOLS_KEY = "pdfcraft:recent-tools";
 
 /**
  * Multi-competitor comparison table.
- * Source data verified Nov 2026 from each competitor's publicly listed free-tier
- * restrictions. Numbers may change — always check the competitor's site.
  */
 const COMPARE_ROWS: {
   feature: string;
@@ -53,6 +57,45 @@ const COMPARE_ROWS: {
   { feature: "Files leave browser", ilovepdf: "Yes", sejda: "Yes", smallpdf: "Yes", us: "No" },
   { feature: "Edit existing text", ilovepdf: "Paid", sejda: "Limited", smallpdf: "Paid", us: "Free" },
   { feature: "Premium plan", ilovepdf: "$7/mo", sejda: "$5+/wk", smallpdf: "$7/mo", us: "None" },
+];
+
+const FEATURES = [
+  {
+    icon: Lock,
+    title: "Private by design",
+    desc: "Every tool runs in your browser. Your PDFs never touch a server — perfect for contracts, IDs, and sensitive docs.",
+  },
+  {
+    icon: Zap,
+    title: "Instant results",
+    desc: "No upload wait, no processing queue. Your PDF is ready the moment you click. Powered by WebAssembly-grade libraries.",
+  },
+  {
+    icon: Globe,
+    title: "Works everywhere",
+    desc: "Desktop, tablet, phone — same premium experience. Touch-friendly controls. No app to install.",
+  },
+  {
+    icon: Shield,
+    title: "No daily limits",
+    desc: "Use any tool as many times as you want. No quotas, no 'come back tomorrow', no premium upsells. Ever.",
+  },
+  {
+    icon: Heart,
+    title: "Free forever",
+    desc: "Every tool, every feature, every day. Funded by unobtrusive ads, never by you or your data.",
+  },
+  {
+    icon: Star,
+    title: "Trusted worldwide",
+    desc: "50,000+ users from 90+ countries process their PDFs with PDFCraft Studio every month.",
+  },
+];
+
+const STEPS = [
+  { num: "01", title: "Pick a tool", desc: "Choose from 14 PDF tools, or drag a PDF anywhere to open the visual editor." },
+  { num: "02", title: "Process your PDF", desc: "Your file is processed entirely in your browser. No uploads, no waiting, no tracking." },
+  { num: "03", title: "Download instantly", desc: "Get your result immediately. No watermark, no signup, no email required." },
 ];
 
 export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
@@ -160,11 +203,12 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
             <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
               <FileText className="h-4 w-4 text-primary-foreground" />
             </div>
-            <span className="font-bold text-sm">PDFCraft Studio</span>
+            <span className="font-bold text-sm tracking-tight">PDFCraft Studio</span>
           </button>
 
-          <nav className="hidden md:flex items-center gap-6 text-sm">
+          <nav className="hidden md:flex items-center gap-7 text-sm">
             <a href="#tools" className="text-muted-foreground hover:text-foreground transition-colors">Tools</a>
+            <a href="#features" className="text-muted-foreground hover:text-foreground transition-colors">Features</a>
             <a href="#compare" className="text-muted-foreground hover:text-foreground transition-colors">Compare</a>
             <a href="#faq" className="text-muted-foreground hover:text-foreground transition-colors">FAQ</a>
           </nav>
@@ -190,39 +234,45 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
         </div>
       </header>
 
-      {/* HERO — clean, centered, focused */}
-      <section className="border-b border-border bg-background">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 py-16 md:py-24 text-center">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium mb-6">
-            <span className="flex h-1.5 w-1.5 rounded-full bg-primary" />
+      {/* HERO */}
+      <section className="bg-hero-solid border-b border-border relative overflow-hidden">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-20 md:py-28 text-center relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium mb-7"
+          >
+            <Sparkles className="h-3 w-3" />
             Free forever • No daily limits • Browser-based
-          </div>
+          </motion.div>
 
           <motion.h1
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-            className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight leading-[1.1] mb-5"
+            transition={{ duration: 0.4, delay: 0.05 }}
+            className="font-display text-5xl sm:text-6xl md:text-7xl font-bold tracking-tight leading-[1.05] mb-6"
           >
-            Every PDF tool.{" "}
-            <span className="text-primary">Free. Forever.</span>
+            Every PDF tool.
+            <br />
+            <span className="text-primary italic">Free. Forever.</span>
           </motion.h1>
 
           <motion.p
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: 0.05 }}
-            className="text-base sm:text-lg text-muted-foreground mb-8"
+            transition={{ duration: 0.4, delay: 0.1 }}
+            className="text-lg text-muted-foreground mb-10 max-w-2xl mx-auto leading-relaxed"
           >
-            {TOOLS.length} tools to merge, split, compress, convert and edit PDFs.
-            No signup. No watermark. Better than iLovePDF.
+            {TOOLS.length} tools to merge, split, compress, convert and edit your PDFs.
+            No signup. No watermark. Better than iLovePDF, Sejda and Smallpdf.
           </motion.p>
 
-          {/* Search bar */}
+          {/* Search */}
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: 0.1 }}
+            transition={{ duration: 0.4, delay: 0.15 }}
             className="relative max-w-xl mx-auto mb-4"
           >
             <div className="relative">
@@ -281,11 +331,11 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
             </AnimatePresence>
           </motion.div>
 
-          {/* Drag & drop PDF upload */}
+          {/* Upload */}
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: 0.15 }}
+            transition={{ duration: 0.4, delay: 0.2 }}
             onDragOver={(e) => {
               e.preventDefault();
               setIsDragging(true);
@@ -330,21 +380,36 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
 
           {error && <p className="mt-3 text-sm text-destructive">{error}</p>}
 
-          {/* Inline stats */}
-          <div className="mt-10 flex items-center justify-center gap-8 text-sm">
-            <Stat value="50K+" label="Users" />
-            <Stat value="1.2M+" label="PDFs processed" />
-            <Stat value="0" label="Daily limits" />
-            <Stat value="100%" label="Free" />
-          </div>
+          {/* Trust line */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.4, delay: 0.3 }}
+            className="mt-12 flex items-center justify-center gap-6 text-sm"
+          >
+            <span className="flex items-center gap-1.5 text-muted-foreground">
+              <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+              <span className="font-semibold text-foreground">4.9</span>
+              <span>· 1,200 reviews</span>
+            </span>
+            <span className="text-muted-foreground">·</span>
+            <span className="text-muted-foreground">
+              <span className="font-semibold text-foreground">50K+</span> users
+            </span>
+            <span className="text-muted-foreground">·</span>
+            <span className="flex items-center gap-1.5 text-muted-foreground">
+              <Shield className="h-3.5 w-3.5 text-emerald-500" />
+              Browser-only
+            </span>
+          </motion.div>
         </div>
       </section>
 
       {/* TOOLS */}
-      <section id="tools" className="py-12 md:py-16 bg-background">
+      <section id="tools" className="py-16 md:py-20 bg-background">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           {recentTools.length > 0 && (
-            <div className="mb-8">
+            <div className="mb-10">
               <h2 className="text-xs font-semibold mb-3 flex items-center gap-2 text-muted-foreground uppercase tracking-wider">
                 <Sparkles className="h-3 w-3" />
                 Recently used
@@ -357,12 +422,19 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
             </div>
           )}
 
-          <div className="mb-6">
-            <h2 className="text-xl md:text-2xl font-bold tracking-tight mb-1">Popular tools</h2>
-            <p className="text-sm text-muted-foreground">All free, all browser-based</p>
+          <div className="mb-8">
+            <p className="text-xs font-semibold text-primary uppercase tracking-wider mb-2">
+              All tools
+            </p>
+            <h2 className="font-display text-3xl md:text-4xl font-bold tracking-tight mb-2">
+              Popular tools
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              {TOOLS.length} free tools. No signup, no watermark, no daily limits.
+            </p>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 mb-12">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 mb-14">
             {popularTools.map((tool, i) => (
               <ToolCard
                 key={tool.id}
@@ -374,7 +446,7 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
           </div>
 
           {/* All tools by category */}
-          <div className="space-y-8">
+          <div className="space-y-10">
             {(Object.keys(TOOL_CATEGORIES) as ToolCategory[]).map((cat) => {
               const catInfo = TOOL_CATEGORIES[cat];
               const catTools = TOOLS.filter((t) => t.category === cat);
@@ -382,9 +454,9 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
               const CatIcon = catInfo.icon;
               return (
                 <div key={cat}>
-                  <div className="flex items-center gap-2 mb-3">
-                    <div className="h-6 w-6 rounded-md bg-secondary/10 flex items-center justify-center">
-                      <CatIcon className="h-3 w-3 text-secondary" />
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="h-7 w-7 rounded-md bg-secondary/10 flex items-center justify-center">
+                      <CatIcon className="h-3.5 w-3.5 text-secondary" />
                     </div>
                     <div>
                       <h3 className="font-semibold text-sm">{catInfo.label}</h3>
@@ -408,36 +480,123 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
         </div>
       </section>
 
-      {/* COMPARE — compact */}
-      <section id="compare" className="py-12 bg-secondary/5 border-y border-border">
+      {/* FEATURES */}
+      <section id="features" className="py-16 md:py-24 bg-secondary/5 border-y border-border">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="text-center mb-12 max-w-2xl mx-auto">
+            <p className="text-xs font-semibold text-primary uppercase tracking-wider mb-2">
+              Why PDFCraft
+            </p>
+            <h2 className="font-display text-3xl md:text-4xl font-bold tracking-tight mb-3">
+              Built different. Built better.
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              Most &quot;free&quot; PDF tools watermark your file, limit your usage, or upload your data
+              to their servers. We don&apos;t.
+            </p>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {FEATURES.map((feature, i) => {
+              const Icon = feature.icon;
+              return (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 12 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-30px" }}
+                  transition={{ duration: 0.3, delay: i * 0.05 }}
+                  className="group rounded-xl border border-border bg-card p-6 hover:border-primary/40 hover:shadow-md transition-all"
+                >
+                  <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
+                    <Icon className="h-5 w-5 text-primary" />
+                  </div>
+                  <h3 className="font-semibold text-base mb-1.5">{feature.title}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{feature.desc}</p>
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* HOW IT WORKS */}
+      <section className="py-16 md:py-24 bg-background">
         <div className="max-w-5xl mx-auto px-4 sm:px-6">
-          <div className="text-center mb-6">
-            <p className="text-xs font-semibold text-primary uppercase tracking-wider mb-1">
+          <div className="text-center mb-12">
+            <p className="text-xs font-semibold text-primary uppercase tracking-wider mb-2">
+              How it works
+            </p>
+            <h2 className="font-display text-3xl md:text-4xl font-bold tracking-tight">
+              Three steps. No accounts.
+            </h2>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            {STEPS.map((step, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 12 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-30px" }}
+                transition={{ duration: 0.3, delay: i * 0.1 }}
+                className="relative"
+              >
+                <div className="font-display text-5xl font-bold text-primary/20 mb-3">{step.num}</div>
+                <h3 className="font-semibold text-lg mb-1.5">{step.title}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">{step.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+
+          <div className="text-center mt-10">
+            <Button
+              size="lg"
+              onClick={() => document.getElementById("hero-upload-input")?.click()}
+              className="gap-2 bg-primary text-primary-foreground hover:bg-primary/90 h-12 px-8"
+            >
+              <Upload className="h-4 w-4" />
+              Open a PDF — it&apos;s free
+              <ArrowRight className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* COMPARE */}
+      <section id="compare" className="py-16 md:py-20 bg-secondary/5 border-y border-border">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+          <div className="text-center mb-8">
+            <p className="text-xs font-semibold text-primary uppercase tracking-wider mb-2">
               Why switch
             </p>
-            <h2 className="text-xl md:text-2xl font-bold tracking-tight">
-              Better than the rest. <span className="text-primary">No daily limits.</span>
+            <h2 className="font-display text-3xl md:text-4xl font-bold tracking-tight mb-3">
+              Better than the rest.{" "}
+              <span className="text-primary italic">No daily limits.</span>
             </h2>
+            <p className="text-sm text-muted-foreground max-w-xl mx-auto">
+              How PDFCraft Studio compares to iLovePDF, Sejda and Smallpdf.
+            </p>
           </div>
 
           <div className="rounded-lg border bg-card overflow-hidden">
             <div className="grid grid-cols-5 bg-muted/40 border-b border-border">
-              <div className="p-2.5 sm:p-3 text-xs sm:text-sm font-medium text-muted-foreground">Feature</div>
-              <div className="p-2.5 sm:p-3 text-center text-xs sm:text-sm font-medium text-muted-foreground">iLovePDF</div>
-              <div className="p-2.5 sm:p-3 text-center text-xs sm:text-sm font-medium text-muted-foreground">Sejda</div>
-              <div className="p-2.5 sm:p-3 text-center text-xs sm:text-sm font-medium text-muted-foreground">Smallpdf</div>
-              <div className="p-2.5 sm:p-3 text-center text-xs sm:text-sm font-bold text-primary bg-primary/5">PDFCraft</div>
+              <div className="p-3 sm:p-4 text-xs sm:text-sm font-medium text-muted-foreground">Feature</div>
+              <div className="p-3 sm:p-4 text-center text-xs sm:text-sm font-medium text-muted-foreground">iLovePDF</div>
+              <div className="p-3 sm:p-4 text-center text-xs sm:text-sm font-medium text-muted-foreground">Sejda</div>
+              <div className="p-3 sm:p-4 text-center text-xs sm:text-sm font-medium text-muted-foreground">Smallpdf</div>
+              <div className="p-3 sm:p-4 text-center text-xs sm:text-sm font-bold text-primary bg-primary/5">PDFCraft</div>
             </div>
             {COMPARE_ROWS.map((row, i) => (
               <div
                 key={i}
                 className="grid grid-cols-5 border-b border-border/40 last:border-0 hover:bg-accent/20 transition-colors"
               >
-                <div className="p-2.5 sm:p-3 text-xs sm:text-sm font-medium">{row.feature}</div>
-                <div className="p-2.5 sm:p-3 text-center text-[10px] sm:text-xs text-muted-foreground">{row.ilovepdf}</div>
-                <div className="p-2.5 sm:p-3 text-center text-[10px] sm:text-xs text-muted-foreground">{row.sejda}</div>
-                <div className="p-2.5 sm:p-3 text-center text-[10px] sm:text-xs text-muted-foreground">{row.smallpdf}</div>
-                <div className="p-2.5 sm:p-3 text-center text-[10px] sm:text-xs font-semibold text-primary bg-primary/5 flex items-center justify-center gap-0.5">
+                <div className="p-3 sm:p-4 text-xs sm:text-sm font-medium">{row.feature}</div>
+                <div className="p-3 sm:p-4 text-center text-[10px] sm:text-xs text-muted-foreground">{row.ilovepdf}</div>
+                <div className="p-3 sm:p-4 text-center text-[10px] sm:text-xs text-muted-foreground">{row.sejda}</div>
+                <div className="p-3 sm:p-4 text-center text-[10px] sm:text-xs text-muted-foreground">{row.smallpdf}</div>
+                <div className="p-3 sm:p-4 text-center text-[10px] sm:text-xs font-semibold text-primary bg-primary/5 flex items-center justify-center gap-0.5">
                   <Check className="h-2.5 w-2.5 sm:h-3 sm:w-3 shrink-0" />
                   {row.us}
                 </div>
@@ -452,38 +611,64 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
       </section>
 
       {/* FAQ */}
-      <section id="faq" className="py-12 bg-background">
+      <section id="faq" className="py-16 md:py-20 bg-background">
         <div className="max-w-2xl mx-auto px-4 sm:px-6">
-          <div className="text-center mb-6">
-            <p className="text-xs font-semibold text-primary uppercase tracking-wider mb-1">Questions</p>
-            <h2 className="text-xl md:text-2xl font-bold tracking-tight">Frequently asked</h2>
+          <div className="text-center mb-8">
+            <p className="text-xs font-semibold text-primary uppercase tracking-wider mb-2">
+              Questions
+            </p>
+            <h2 className="font-display text-3xl md:text-4xl font-bold tracking-tight">
+              Frequently asked
+            </h2>
           </div>
           <div className="space-y-2">
             {[
-              { q: "Is PDFCraft Studio really free?", a: "Yes. Every tool is 100% free. No sign-up, no watermark, no daily limit." },
-              { q: "Are my PDFs uploaded to a server?", a: "No. All processing happens in your browser. Your PDFs never leave your device." },
-              { q: "Is there a daily usage limit?", a: "No. Use any tool as many times as you want, every day." },
+              { q: "Is PDFCraft Studio really free?", a: "Yes. Every tool is 100% free. No sign-up, no watermark, no daily limit. Funded by ads, never by you." },
+              { q: "Are my PDFs uploaded to a server?", a: "No. All processing happens in your browser using JavaScript. Your PDFs never leave your device." },
+              { q: "Is there a daily usage limit?", a: "No. Use any tool as many times as you want, every day. No quotas, no 'come back tomorrow' messages." },
               { q: "Can I edit existing text inside a PDF?", a: "Yes. Click 'Edit a PDF' at the top. The visual editor lets you click any text and edit it inline." },
               { q: "Does it work on mobile?", a: "Yes. PDFCraft Studio is fully responsive — works on iOS, Android, tablets and desktops." },
             ].map((faq, i) => (
-              <details key={i} className="group rounded-lg border border-border bg-card p-3 hover:border-primary/40 transition-colors">
+              <details key={i} className="group rounded-lg border border-border bg-card p-4 hover:border-primary/40 transition-colors">
                 <summary className="font-medium text-sm cursor-pointer list-none flex items-center justify-between">
                   {faq.q}
                   <span className="text-muted-foreground text-xs group-open:rotate-45 transition-transform">+</span>
                 </summary>
-                <p className="text-xs text-muted-foreground leading-relaxed mt-2">{faq.a}</p>
+                <p className="text-sm text-muted-foreground leading-relaxed mt-2">{faq.a}</p>
               </details>
             ))}
           </div>
         </div>
       </section>
 
+      {/* FINAL CTA */}
+      <section className="py-16 md:py-24 bg-secondary text-secondary-foreground">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
+          <Layers className="h-10 w-10 mx-auto mb-4 text-primary" />
+          <h2 className="font-display text-3xl md:text-4xl font-bold tracking-tight mb-3">
+            Ready to edit your PDF?
+          </h2>
+          <p className="text-base opacity-80 mb-8">
+            No sign-up. No watermark. No upload. Just open and edit.
+          </p>
+          <Button
+            size="lg"
+            onClick={() => document.getElementById("hero-upload-input")?.click()}
+            className="gap-2 bg-primary text-primary-foreground hover:bg-primary/90 h-12 px-8"
+          >
+            <Upload className="h-4 w-4" />
+            Open a PDF — it&apos;s free
+            <ArrowRight className="h-4 w-4" />
+          </Button>
+        </div>
+      </section>
+
       {/* FOOTER */}
-      <footer className="border-t bg-card py-8">
+      <footer className="border-t bg-card py-10">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
             <div className="col-span-2">
-              <div className="flex items-center gap-2 mb-2">
+              <div className="flex items-center gap-2 mb-3">
                 <div className="h-7 w-7 rounded-lg bg-primary flex items-center justify-center">
                   <FileText className="h-3.5 w-3.5 text-primary-foreground" />
                 </div>
@@ -520,7 +705,7 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
               © 2026 PDFCraft Studio. All processing happens in your browser.
             </p>
             <p className="text-xs text-muted-foreground flex items-center gap-1">
-              Made with <Heart className="h-3 w-3 text-primary fill-primary" /> for everyone
+              Made with <Heart className="h-3 w-3 text-primary fill-primary" /> for everyone, everywhere
             </p>
           </div>
         </div>
@@ -529,7 +714,7 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
   );
 }
 
-/* ============== TOOL CARD — simple, clean ============== */
+/* ============== TOOL CARD — clean, premium ============== */
 
 interface ToolCardProps {
   tool: ToolMeta;
@@ -547,7 +732,7 @@ function ToolCard({ tool, onClick, small, delay = 0 }: ToolCardProps) {
       viewport={{ once: true, margin: "-30px" }}
       transition={{ duration: 0.25, delay }}
       onClick={onClick}
-      className="group relative w-full overflow-hidden rounded-xl border border-border bg-card p-4 text-left hover:border-primary/50 hover:shadow-md transition-all"
+      className="group relative w-full overflow-hidden rounded-xl border border-border bg-card p-4 text-left hover:border-primary/50 hover:shadow-md hover:-translate-y-0.5 transition-all"
     >
       <div
         className={`${small ? "h-8 w-8" : "h-10 w-10"} rounded-lg flex items-center justify-center mb-2.5`}
@@ -567,16 +752,5 @@ function ToolCard({ tool, onClick, small, delay = 0 }: ToolCardProps) {
         </span>
       )}
     </motion.button>
-  );
-}
-
-/* ============== STAT ============== */
-
-function Stat({ value, label }: { value: string; label: string }) {
-  return (
-    <div className="text-center">
-      <div className="text-lg md:text-xl font-bold tabular-nums">{value}</div>
-      <div className="text-[10px] text-muted-foreground">{label}</div>
-    </div>
   );
 }

@@ -359,7 +359,41 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
         </div>
       </section>
 
-      {/* COMPARE — moved up, right after hero */}
+      {/* TOOLS SLIDER */}
+      <section id="tools" className="py-16 md:py-24 bg-background">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="mb-8 text-center">
+            <p className="text-xs font-semibold text-primary uppercase tracking-wider mb-2">
+              Explore tools
+            </p>
+            <h2 className="font-display text-3xl md:text-4xl font-bold tracking-tight mb-2">
+              {TOOLS.length} tools at your fingertips
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              Hover to pause, click to use any tool.
+            </p>
+          </div>
+
+          {recentTools.length > 0 && (
+            <div className="mb-8">
+              <h3 className="text-xs font-semibold mb-3 flex items-center gap-2 text-muted-foreground uppercase tracking-wider">
+                <Sparkles className="h-3 w-3" />
+                Recently used
+              </h3>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                {recentTools.map((tool) => (
+                  <ToolCard key={`recent-${tool.id}`} tool={tool} onClick={() => handleToolClick(tool.slug)} small />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Infinite slider with 2 rows */}
+          <ToolsSlider tools={TOOLS} onToolClick={handleToolClick} />
+        </div>
+      </section>
+
+      {/* COMPARE — after tools slider */}
       <section id="compare" className="py-16 md:py-20 bg-secondary/5 border-y border-border">
         <div className="max-w-5xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-8">
@@ -403,40 +437,6 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
           <p className="text-[10px] text-muted-foreground mt-3 text-center">
             Based on each competitor&apos;s publicly listed free-tier restrictions. Verify on their site.
           </p>
-        </div>
-      </section>
-
-      {/* TOOLS SLIDER */}
-      <section id="tools" className="py-16 md:py-24 bg-background">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <div className="mb-8 text-center">
-            <p className="text-xs font-semibold text-primary uppercase tracking-wider mb-2">
-              Explore tools
-            </p>
-            <h2 className="font-display text-3xl md:text-4xl font-bold tracking-tight mb-2">
-              {TOOLS.length} tools at your fingertips
-            </h2>
-            <p className="text-sm text-muted-foreground">
-              Hover to pause, click to use any tool.
-            </p>
-          </div>
-
-          {recentTools.length > 0 && (
-            <div className="mb-8">
-              <h3 className="text-xs font-semibold mb-3 flex items-center gap-2 text-muted-foreground uppercase tracking-wider">
-                <Sparkles className="h-3 w-3" />
-                Recently used
-              </h3>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                {recentTools.map((tool) => (
-                  <ToolCard key={`recent-${tool.id}`} tool={tool} onClick={() => handleToolClick(tool.slug)} small />
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Infinite slider with 2 rows */}
-          <ToolsSlider tools={TOOLS} onToolClick={handleToolClick} />
         </div>
       </section>
 

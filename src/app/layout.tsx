@@ -20,7 +20,7 @@ const playfair = Playfair_Display({
   variable: "--font-playfair",
   subsets: ["latin"],
   display: "swap",
-  weight: ["500", "600", "700", "800", "900"],
+  weight: ["600", "700"],
 });
 
 const SITE_URL = "https://pdfcraft.studio";

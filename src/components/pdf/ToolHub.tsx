@@ -359,6 +359,53 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
         </div>
       </section>
 
+      {/* COMPARE — moved up, right after hero */}
+      <section id="compare" className="py-16 md:py-20 bg-secondary/5 border-y border-border">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+          <div className="text-center mb-8">
+            <p className="text-xs font-semibold text-primary uppercase tracking-wider mb-2">
+              Why switch
+            </p>
+            <h2 className="font-display text-3xl md:text-4xl font-bold tracking-tight mb-3">
+              Better than the rest.{" "}
+              <span className="italic">No daily limits.</span>
+            </h2>
+            <p className="text-sm text-muted-foreground max-w-xl mx-auto">
+              How PDFCraft Studio compares to iLovePDF, Sejda and Smallpdf.
+            </p>
+          </div>
+
+          <div className="rounded-xl border border-border bg-card overflow-hidden shadow-sm">
+            <div className="grid grid-cols-5 bg-muted/40 border-b border-border">
+              <div className="p-3 sm:p-4 text-xs sm:text-sm font-medium text-muted-foreground">Feature</div>
+              <div className="p-3 sm:p-4 text-center text-xs sm:text-sm font-medium text-muted-foreground">iLovePDF</div>
+              <div className="p-3 sm:p-4 text-center text-xs sm:text-sm font-medium text-muted-foreground">Sejda</div>
+              <div className="p-3 sm:p-4 text-center text-xs sm:text-sm font-medium text-muted-foreground">Smallpdf</div>
+              <div className="p-3 sm:p-4 text-center text-xs sm:text-sm font-bold text-primary bg-primary/5">PDFCraft</div>
+            </div>
+            {COMPARE_ROWS.map((row, i) => (
+              <div
+                key={i}
+                className="grid grid-cols-5 border-b border-border/40 last:border-0 hover:bg-accent/20 transition-colors"
+              >
+                <div className="p-3 sm:p-4 text-xs sm:text-sm font-medium">{row.feature}</div>
+                <div className="p-3 sm:p-4 text-center text-[10px] sm:text-xs text-muted-foreground">{row.ilovepdf}</div>
+                <div className="p-3 sm:p-4 text-center text-[10px] sm:text-xs text-muted-foreground">{row.sejda}</div>
+                <div className="p-3 sm:p-4 text-center text-[10px] sm:text-xs text-muted-foreground">{row.smallpdf}</div>
+                <div className="p-3 sm:p-4 text-center text-[10px] sm:text-xs font-semibold text-primary bg-primary/5 flex items-center justify-center gap-0.5">
+                  <Check className="h-2.5 w-2.5 sm:h-3 sm:w-3 shrink-0" />
+                  {row.us}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <p className="text-[10px] text-muted-foreground mt-3 text-center">
+            Based on each competitor&apos;s publicly listed free-tier restrictions. Verify on their site.
+          </p>
+        </div>
+      </section>
+
       {/* TOOLS SLIDER */}
       <section id="tools" className="py-16 md:py-24 bg-background">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
@@ -473,53 +520,6 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
               <ArrowRight className="h-4 w-4" />
             </Button>
           </div>
-        </div>
-      </section>
-
-      {/* COMPARE */}
-      <section id="compare" className="py-16 md:py-20 bg-secondary/5 border-y border-border">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6">
-          <div className="text-center mb-8">
-            <p className="text-xs font-semibold text-primary uppercase tracking-wider mb-2">
-              Why switch
-            </p>
-            <h2 className="font-display text-3xl md:text-4xl font-bold tracking-tight mb-3">
-              Better than the rest.{" "}
-              <span className="italic">No daily limits.</span>
-            </h2>
-            <p className="text-sm text-muted-foreground max-w-xl mx-auto">
-              How PDFCraft Studio compares to iLovePDF, Sejda and Smallpdf.
-            </p>
-          </div>
-
-          <div className="rounded-xl border border-border bg-card overflow-hidden shadow-sm">
-            <div className="grid grid-cols-5 bg-muted/40 border-b border-border">
-              <div className="p-3 sm:p-4 text-xs sm:text-sm font-medium text-muted-foreground">Feature</div>
-              <div className="p-3 sm:p-4 text-center text-xs sm:text-sm font-medium text-muted-foreground">iLovePDF</div>
-              <div className="p-3 sm:p-4 text-center text-xs sm:text-sm font-medium text-muted-foreground">Sejda</div>
-              <div className="p-3 sm:p-4 text-center text-xs sm:text-sm font-medium text-muted-foreground">Smallpdf</div>
-              <div className="p-3 sm:p-4 text-center text-xs sm:text-sm font-bold text-primary bg-primary/5">PDFCraft</div>
-            </div>
-            {COMPARE_ROWS.map((row, i) => (
-              <div
-                key={i}
-                className="grid grid-cols-5 border-b border-border/40 last:border-0 hover:bg-accent/20 transition-colors"
-              >
-                <div className="p-3 sm:p-4 text-xs sm:text-sm font-medium">{row.feature}</div>
-                <div className="p-3 sm:p-4 text-center text-[10px] sm:text-xs text-muted-foreground">{row.ilovepdf}</div>
-                <div className="p-3 sm:p-4 text-center text-[10px] sm:text-xs text-muted-foreground">{row.sejda}</div>
-                <div className="p-3 sm:p-4 text-center text-[10px] sm:text-xs text-muted-foreground">{row.smallpdf}</div>
-                <div className="p-3 sm:p-4 text-center text-[10px] sm:text-xs font-semibold text-primary bg-primary/5 flex items-center justify-center gap-0.5">
-                  <Check className="h-2.5 w-2.5 sm:h-3 sm:w-3 shrink-0" />
-                  {row.us}
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <p className="text-[10px] text-muted-foreground mt-3 text-center">
-            Based on each competitor&apos;s publicly listed free-tier restrictions. Verify on their site.
-          </p>
         </div>
       </section>
 

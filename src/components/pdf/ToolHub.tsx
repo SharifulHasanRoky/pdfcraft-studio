@@ -436,51 +436,6 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
 
           {/* Infinite slider with 2 rows */}
           <ToolsSlider tools={TOOLS} onToolClick={handleToolClick} />
-
-          <div className="mb-8 mt-16">
-            <p className="text-xs font-semibold text-primary uppercase tracking-wider mb-2">
-              All tools
-            </p>
-            <h2 className="font-display text-3xl md:text-4xl font-bold tracking-tight mb-2">
-              Browse by category
-            </h2>
-            <p className="text-sm text-muted-foreground">
-              {TOOLS.length} free tools organized by what you want to do.
-            </p>
-          </div>
-
-          {/* All tools by category */}
-          <div className="space-y-10">
-            {(Object.keys(TOOL_CATEGORIES) as ToolCategory[]).map((cat) => {
-              const catInfo = TOOL_CATEGORIES[cat];
-              const catTools = TOOLS.filter((t) => t.category === cat);
-              if (catTools.length === 0) return null;
-              const CatIcon = catInfo.icon;
-              return (
-                <div key={cat}>
-                  <div className="flex items-center gap-2 mb-4">
-                    <div className="h-7 w-7 rounded-md bg-secondary/10 flex items-center justify-center">
-                      <CatIcon className="h-3.5 w-3.5 text-secondary" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-sm">{catInfo.label}</h3>
-                      <p className="text-xs text-muted-foreground hidden sm:block">{catInfo.description}</p>
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                    {catTools.map((tool, i) => (
-                      <ToolCard
-                        key={tool.id}
-                        tool={tool}
-                        onClick={() => handleToolClick(tool.slug)}
-                        delay={i * 0.03}
-                      />
-                    ))}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
         </div>
       </section>
 

@@ -230,14 +230,14 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
         </div>
       </header>
 
-      {/* HERO */}
-      <section className="bg-noise relative overflow-hidden">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-20 md:py-32 text-center relative z-10">
+      {/* HERO — premium, optimized, highlighted CTA */}
+      <section className="bg-noise relative overflow-hidden border-b border-border">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-16 md:py-24 text-center relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
-            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full glass text-xs font-medium mb-8"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-semibold mb-6"
           >
             <Sparkles className="h-3 w-3" />
             Free forever • No daily limits • Browser-based
@@ -247,29 +247,55 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.05 }}
-            className="font-display text-5xl sm:text-6xl md:text-7xl font-bold tracking-tight leading-[1.05] mb-6"
+            className="font-display text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight leading-[1.1] mb-5"
           >
             Every PDF tool
             <br />
-            <span className="italic">you&apos;ll ever need.</span>
+            <span className="italic text-primary">you&apos;ll ever need.</span>
           </motion.h1>
 
           <motion.p
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.1 }}
-            className="text-lg text-muted-foreground mb-10 max-w-2xl mx-auto leading-relaxed"
+            className="text-base sm:text-lg text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed"
           >
             {TOOLS.length} tools to merge, split, compress, convert and edit your PDFs.
-            No signup. No watermark. Better than iLovePDF, Sejda and Smallpdf.
+            No signup. No watermark. Better than iLovePDF.
           </motion.p>
 
-          {/* Search */}
+          {/* Highlighted CTA buttons */}
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.15 }}
-            className="relative max-w-xl mx-auto mb-4"
+            className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-6"
+          >
+            {/* Primary highlighted button */}
+            <button
+              onClick={() => document.getElementById("hero-upload-input")?.click()}
+              className="group relative inline-flex items-center gap-2 h-12 px-7 rounded-xl bg-primary text-primary-foreground font-semibold text-sm shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 hover:-translate-y-0.5 transition-all"
+            >
+              <Upload className="h-4 w-4" />
+              Upload your PDF
+              <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
+            </button>
+            {/* Secondary button */}
+            <a
+              href="#tools"
+              className="inline-flex items-center gap-2 h-12 px-6 rounded-xl border border-border bg-card text-foreground font-medium text-sm hover:bg-accent hover:border-primary/40 transition-all"
+            >
+              <Search className="h-4 w-4" />
+              Browse all tools
+            </a>
+          </motion.div>
+
+          {/* Search bar */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.2 }}
+            className="relative max-w-xl mx-auto mb-3"
           >
             <div className="relative">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground pointer-events-none" />
@@ -277,8 +303,8 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
                 type="text"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search tools — merge, compress, convert…"
-                className="w-full h-12 pl-12 pr-10 rounded-xl glass border-0 text-sm shadow-lg focus:outline-none focus:ring-2 focus:ring-ring transition-all"
+                placeholder="Or search tools — merge, compress, convert…"
+                className="w-full h-12 pl-12 pr-10 rounded-xl border border-border bg-card text-sm shadow-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
               />
               {query && (
                 <button
@@ -327,11 +353,11 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
             </AnimatePresence>
           </motion.div>
 
-          {/* Upload */}
+          {/* Drag & drop zone — subtle, smaller */}
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.2 }}
+            transition={{ duration: 0.4, delay: 0.25 }}
             onDragOver={(e) => {
               e.preventDefault();
               setIsDragging(true);
@@ -339,10 +365,10 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
             onDragLeave={() => setIsDragging(false)}
             onDrop={handleDrop}
             onClick={() => !isLoading && document.getElementById("hero-upload-input")?.click()}
-            className={`relative cursor-pointer rounded-xl glass border-2 border-dashed transition-all p-5 max-w-xl mx-auto ${
+            className={`relative cursor-pointer rounded-xl border-2 border-dashed transition-all p-4 max-w-xl mx-auto ${
               isDragging
-                ? "border-primary bg-primary/10"
-                : "border-border hover:border-primary/60"
+                ? "border-primary bg-primary/5"
+                : "border-border hover:border-primary/40 hover:bg-accent/30"
             }`}
           >
             <input
@@ -362,40 +388,37 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
                 <p className="text-sm font-medium">Loading PDF…</p>
               </div>
             ) : (
-              <div className="flex items-center justify-center gap-3">
-                <div className="h-10 w-10 rounded-lg bg-primary flex items-center justify-center">
-                  <Upload className="h-4 w-4 text-primary-foreground" />
-                </div>
-                <div className="text-left">
-                  <p className="text-sm font-medium">Open a PDF to edit visually</p>
-                  <p className="text-xs text-muted-foreground">Drag &amp; drop or click to browse</p>
-                </div>
+              <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
+                <Upload className="h-4 w-4" />
+                <span>
+                  or drag &amp; drop your PDF here
+                </span>
               </div>
             )}
           </motion.div>
 
           {error && <p className="mt-3 text-sm text-destructive">{error}</p>}
 
-          {/* Trust line */}
+          {/* Trust line — compact, inline */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.4, delay: 0.3 }}
-            className="mt-12 flex items-center justify-center gap-6 text-sm"
+            className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm"
           >
             <span className="flex items-center gap-1.5 text-muted-foreground">
               <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
               <span className="font-semibold text-foreground">4.9</span>
-              <span>· 1,200 reviews</span>
+              <span className="text-xs">· 1,200 reviews</span>
             </span>
-            <span className="text-muted-foreground">·</span>
+            <span className="text-muted-foreground hidden sm:inline">·</span>
             <span className="text-muted-foreground">
               <span className="font-semibold text-foreground">50K+</span> users
             </span>
-            <span className="text-muted-foreground">·</span>
+            <span className="text-muted-foreground hidden sm:inline">·</span>
             <span className="flex items-center gap-1.5 text-muted-foreground">
               <Shield className="h-3.5 w-3.5 text-emerald-500" />
-              Browser-only
+              <span className="text-xs">Browser-only</span>
             </span>
           </motion.div>
         </div>

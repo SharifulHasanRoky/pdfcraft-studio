@@ -249,9 +249,9 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
             transition={{ duration: 0.4, delay: 0.05 }}
             className="font-display text-5xl sm:text-6xl md:text-7xl font-bold tracking-tight leading-[1.05] mb-6"
           >
-            Every PDF tool.
+            Edit PDFs
             <br />
-            <span className="italic">Free. Forever.</span>
+            <span className="italic">like never before.</span>
           </motion.h1>
 
           <motion.p
@@ -601,7 +601,7 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
         <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
           <Layers className="h-10 w-10 mx-auto mb-4 text-primary" />
           <h2 className="font-display text-3xl md:text-4xl font-bold tracking-tight mb-3">
-            Ready to edit your PDF?
+            Ready to ship?
           </h2>
           <p className="text-base opacity-80 mb-8">
             No sign-up. No watermark. No upload. Just open and edit.

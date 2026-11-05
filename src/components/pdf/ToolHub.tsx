@@ -269,17 +269,49 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.15 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-6"
+            className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-4"
           >
-            {/* Primary highlighted button */}
-            <button
-              onClick={() => document.getElementById("hero-upload-input")?.click()}
-              className="group relative inline-flex items-center gap-2 h-12 px-7 rounded-xl bg-primary text-primary-foreground font-semibold text-sm shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 hover:-translate-y-0.5 transition-all"
+            {/* Primary highlighted button — also supports drag & drop */}
+            <div
+              onDragOver={(e) => {
+                e.preventDefault();
+                setIsDragging(true);
+              }}
+              onDragLeave={() => setIsDragging(false)}
+              onDrop={handleDrop}
+              className="relative"
             >
-              <Upload className="h-4 w-4" />
-              Upload your PDF
-              <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
-            </button>
+              <input
+                id="hero-upload-input"
+                type="file"
+                accept="application/pdf"
+                className="hidden"
+                onChange={(e) => {
+                  const f = e.target.files?.[0];
+                  if (f) handleFile(f);
+                  e.target.value = "";
+                }}
+              />
+              <button
+                onClick={() => !isLoading && document.getElementById("hero-upload-input")?.click()}
+                className={`group relative inline-flex items-center gap-2 h-12 px-7 rounded-xl bg-primary text-primary-foreground font-semibold text-sm shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 hover:-translate-y-0.5 transition-all ${
+                  isDragging ? "ring-4 ring-primary/30 scale-105" : ""
+                } ${isLoading ? "opacity-80 pointer-events-none" : ""}`}
+              >
+                {isLoading ? (
+                  <>
+                    <div className="h-4 w-4 rounded-full border-2 border-primary-foreground border-t-transparent animate-spin" />
+                    Loading…
+                  </>
+                ) : (
+                  <>
+                    <Upload className="h-4 w-4" />
+                    Upload your PDF
+                    <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
+                  </>
+                )}
+              </button>
+            </div>
             {/* Secondary button */}
             <a
               href="#tools"
@@ -290,112 +322,15 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
             </a>
           </motion.div>
 
-          {/* Search bar */}
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.2 }}
-            className="relative max-w-xl mx-auto mb-3"
-          >
-            <div className="relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground pointer-events-none" />
-              <input
-                type="text"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Or search tools — merge, compress, convert…"
-                className="w-full h-12 pl-12 pr-10 rounded-xl border border-border bg-card text-sm shadow-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
-              />
-              {query && (
-                <button
-                  onClick={() => setQuery("")}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 h-7 w-7 rounded-full hover:bg-accent flex items-center justify-center"
-                >
-                  <X className="h-4 w-4" />
-                </button>
-              )}
-            </div>
-
-            <AnimatePresence>
-              {searchResults.length > 0 && (
-                <motion.div
-                  initial={{ opacity: 0, y: -8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -8 }}
-                  className="absolute top-full mt-2 left-0 right-0 rounded-xl border border-border bg-popover shadow-xl overflow-hidden z-10 text-left"
-                >
-                  {searchResults.map((tool) => {
-                    const Icon = tool.icon;
-                    return (
-                      <button
-                        key={tool.id}
-                        onClick={() => {
-                          handleToolClick(tool.slug);
-                          setQuery("");
-                        }}
-                        className="w-full flex items-center gap-3 p-3 hover:bg-accent text-left transition-colors"
-                      >
-                        <div
-                          className="h-8 w-8 rounded-lg flex items-center justify-center shrink-0"
-                          style={{ backgroundColor: tool.color }}
-                        >
-                          <Icon className="h-4 w-4 text-white" />
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <p className="text-sm font-medium">{tool.title}</p>
-                          <p className="text-xs text-muted-foreground truncate">{tool.description}</p>
-                        </div>
-                      </button>
-                    );
-                  })}
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </motion.div>
-
-          {/* Drag & drop zone — subtle, smaller */}
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
+          {/* Helper text */}
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             transition={{ duration: 0.4, delay: 0.25 }}
-            onDragOver={(e) => {
-              e.preventDefault();
-              setIsDragging(true);
-            }}
-            onDragLeave={() => setIsDragging(false)}
-            onDrop={handleDrop}
-            onClick={() => !isLoading && document.getElementById("hero-upload-input")?.click()}
-            className={`relative cursor-pointer rounded-xl border-2 border-dashed transition-all p-4 max-w-xl mx-auto ${
-              isDragging
-                ? "border-primary bg-primary/5"
-                : "border-border hover:border-primary/40 hover:bg-accent/30"
-            }`}
+            className="text-xs text-muted-foreground mb-2"
           >
-            <input
-              id="hero-upload-input"
-              type="file"
-              accept="application/pdf"
-              className="hidden"
-              onChange={(e) => {
-                const f = e.target.files?.[0];
-                if (f) handleFile(f);
-                e.target.value = "";
-              }}
-            />
-            {isLoading ? (
-              <div className="flex items-center justify-center gap-2.5">
-                <div className="h-5 w-5 rounded-full border-2 border-primary border-t-transparent animate-spin" />
-                <p className="text-sm font-medium">Loading PDF…</p>
-              </div>
-            ) : (
-              <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
-                <Upload className="h-4 w-4" />
-                <span>
-                  or drag &amp; drop your PDF here
-                </span>
-              </div>
-            )}
-          </motion.div>
+            or drag &amp; drop your PDF anywhere on the button
+          </motion.p>
 
           {error && <p className="mt-3 text-sm text-destructive">{error}</p>}
 

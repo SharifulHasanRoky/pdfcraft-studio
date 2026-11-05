@@ -41,9 +41,6 @@ interface ToolHubProps {
 
 const RECENT_TOOLS_KEY = "pdfcraft:recent-tools";
 
-/**
- * Multi-competitor comparison table.
- */
 const COMPARE_ROWS: {
   feature: string;
   ilovepdf: string;
@@ -124,7 +121,6 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
     return searchTools(query);
   }, [query]);
 
-  const popularTools = useMemo(() => TOOLS.filter((t) => t.popular), []);
   const recentTools = useMemo(
     () =>
       recentSlugs
@@ -191,7 +187,7 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground">
       {/* NAV */}
-      <header className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur-md">
+      <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-2xl border-b border-border/50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <button
             onClick={() => {
@@ -225,7 +221,7 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
             <Button
               size="sm"
               onClick={() => document.getElementById("hero-upload-input")?.click()}
-              className="gap-1.5 bg-primary text-primary-foreground hover:bg-primary/90 h-8"
+              className="gap-1.5 bg-primary text-primary-foreground hover:bg-primary/90 h-8 font-semibold"
             >
               <Upload className="h-3.5 w-3.5" />
               <span className="hidden sm:inline">Edit a PDF</span>
@@ -235,13 +231,13 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
       </header>
 
       {/* HERO */}
-      <section className="bg-hero-solid border-b border-border relative overflow-hidden">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-20 md:py-28 text-center relative z-10">
+      <section className="bg-noise relative overflow-hidden">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-20 md:py-32 text-center relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
-            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium mb-7"
+            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full glass text-xs font-medium mb-8"
           >
             <Sparkles className="h-3 w-3" />
             Free forever • No daily limits • Browser-based
@@ -255,7 +251,7 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
           >
             Every PDF tool.
             <br />
-            <span className="text-primary italic">Free. Forever.</span>
+            <span className="italic">Free. Forever.</span>
           </motion.h1>
 
           <motion.p
@@ -282,7 +278,7 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search tools — merge, compress, convert…"
-                className="w-full h-12 pl-12 pr-10 rounded-lg border border-border bg-card text-sm shadow-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
+                className="w-full h-12 pl-12 pr-10 rounded-xl glass border-0 text-sm shadow-lg focus:outline-none focus:ring-2 focus:ring-ring transition-all"
               />
               {query && (
                 <button
@@ -300,7 +296,7 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
                   initial={{ opacity: 0, y: -8 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -8 }}
-                  className="absolute top-full mt-2 left-0 right-0 rounded-lg border bg-popover shadow-xl overflow-hidden z-10 text-left"
+                  className="absolute top-full mt-2 left-0 right-0 rounded-xl border border-border bg-popover shadow-xl overflow-hidden z-10 text-left"
                 >
                   {searchResults.map((tool) => {
                     const Icon = tool.icon;
@@ -343,10 +339,10 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
             onDragLeave={() => setIsDragging(false)}
             onDrop={handleDrop}
             onClick={() => !isLoading && document.getElementById("hero-upload-input")?.click()}
-            className={`relative cursor-pointer rounded-lg border-2 border-dashed transition-all p-5 max-w-xl mx-auto ${
+            className={`relative cursor-pointer rounded-xl glass border-2 border-dashed transition-all p-5 max-w-xl mx-auto ${
               isDragging
-                ? "border-primary bg-primary/5"
-                : "border-border hover:border-primary/60 hover:bg-accent/30"
+                ? "border-primary bg-primary/10"
+                : "border-border hover:border-primary/60"
             }`}
           >
             <input
@@ -405,24 +401,10 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
         </div>
       </section>
 
-      {/* TOOLS */}
-      <section id="tools" className="py-16 md:py-20 bg-background">
+      {/* TOOLS SLIDER */}
+      <section id="tools" className="py-16 md:py-24 bg-background">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          {recentTools.length > 0 && (
-            <div className="mb-10">
-              <h2 className="text-xs font-semibold mb-3 flex items-center gap-2 text-muted-foreground uppercase tracking-wider">
-                <Sparkles className="h-3 w-3" />
-                Recently used
-              </h2>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                {recentTools.map((tool) => (
-                  <ToolCard key={`recent-${tool.id}`} tool={tool} onClick={() => handleToolClick(tool.slug)} small />
-                ))}
-              </div>
-            </div>
-          )}
-
-          <div className="mb-8">
+          <div className="mb-8 text-center">
             <p className="text-xs font-semibold text-primary uppercase tracking-wider mb-2">
               Explore tools
             </p>
@@ -433,6 +415,20 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
               Hover to pause, click to use any tool.
             </p>
           </div>
+
+          {recentTools.length > 0 && (
+            <div className="mb-8">
+              <h3 className="text-xs font-semibold mb-3 flex items-center gap-2 text-muted-foreground uppercase tracking-wider">
+                <Sparkles className="h-3 w-3" />
+                Recently used
+              </h3>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                {recentTools.map((tool) => (
+                  <ToolCard key={`recent-${tool.id}`} tool={tool} onClick={() => handleToolClick(tool.slug)} small />
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Infinite slider with 2 rows */}
           <ToolsSlider tools={TOOLS} onToolClick={handleToolClick} />
@@ -465,7 +461,7 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: "-30px" }}
                   transition={{ duration: 0.3, delay: i * 0.05 }}
-                  className="group rounded-xl border border-border bg-card p-6 hover:border-primary/40 hover:shadow-md transition-all"
+                  className="group rounded-xl border border-border bg-card p-6 hover:border-primary/40 hover:shadow-lg transition-all"
                 >
                   <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
                     <Icon className="h-5 w-5 text-primary" />
@@ -512,7 +508,7 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
             <Button
               size="lg"
               onClick={() => document.getElementById("hero-upload-input")?.click()}
-              className="gap-2 bg-primary text-primary-foreground hover:bg-primary/90 h-12 px-8"
+              className="gap-2 bg-primary text-primary-foreground hover:bg-primary/90 h-12 px-8 font-semibold"
             >
               <Upload className="h-4 w-4" />
               Open a PDF — it&apos;s free
@@ -531,14 +527,14 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
             </p>
             <h2 className="font-display text-3xl md:text-4xl font-bold tracking-tight mb-3">
               Better than the rest.{" "}
-              <span className="text-primary italic">No daily limits.</span>
+              <span className="italic">No daily limits.</span>
             </h2>
             <p className="text-sm text-muted-foreground max-w-xl mx-auto">
               How PDFCraft Studio compares to iLovePDF, Sejda and Smallpdf.
             </p>
           </div>
 
-          <div className="rounded-lg border bg-card overflow-hidden">
+          <div className="rounded-xl border border-border bg-card overflow-hidden shadow-sm">
             <div className="grid grid-cols-5 bg-muted/40 border-b border-border">
               <div className="p-3 sm:p-4 text-xs sm:text-sm font-medium text-muted-foreground">Feature</div>
               <div className="p-3 sm:p-4 text-center text-xs sm:text-sm font-medium text-muted-foreground">iLovePDF</div>
@@ -588,7 +584,7 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
               { q: "Can I edit existing text inside a PDF?", a: "Yes. Click 'Edit a PDF' at the top. The visual editor lets you click any text and edit it inline." },
               { q: "Does it work on mobile?", a: "Yes. PDFCraft Studio is fully responsive — works on iOS, Android, tablets and desktops." },
             ].map((faq, i) => (
-              <details key={i} className="group rounded-lg border border-border bg-card p-4 hover:border-primary/40 transition-colors">
+              <details key={i} className="group rounded-xl border border-border bg-card p-4 hover:border-primary/40 transition-colors">
                 <summary className="font-medium text-sm cursor-pointer list-none flex items-center justify-between">
                   {faq.q}
                   <span className="text-muted-foreground text-xs group-open:rotate-45 transition-transform">+</span>
@@ -613,7 +609,7 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
           <Button
             size="lg"
             onClick={() => document.getElementById("hero-upload-input")?.click()}
-            className="gap-2 bg-primary text-primary-foreground hover:bg-primary/90 h-12 px-8"
+            className="gap-2 bg-primary text-primary-foreground hover:bg-primary/90 h-12 px-8 font-semibold"
           >
             <Upload className="h-4 w-4" />
             Open a PDF — it&apos;s free
@@ -722,21 +718,16 @@ interface ToolsSliderProps {
 }
 
 function ToolsSlider({ tools, onToolClick }: ToolsSliderProps) {
-  // Split tools into 2 rows (interleaved for variety)
   const row1 = tools.filter((_, i) => i % 2 === 0);
   const row2 = tools.filter((_, i) => i % 2 === 1);
-  // Duplicate the arrays so the scroll can loop seamlessly
   const row1Loop = [...row1, ...row1];
   const row2Loop = [...row2, ...row2];
 
   return (
     <div className="scroll-pause relative mb-14 -mx-4 sm:-mx-6">
-      {/* Edge fade left */}
       <div className="absolute left-0 top-0 bottom-0 w-16 z-10 bg-gradient-to-r from-background to-transparent pointer-events-none" />
-      {/* Edge fade right */}
       <div className="absolute right-0 top-0 bottom-0 w-16 z-10 bg-gradient-to-l from-background to-transparent pointer-events-none" />
 
-      {/* Row 1 — scrolls left */}
       <div className="flex gap-3 mb-3 px-4 sm:px-6 overflow-hidden">
         <div className="flex gap-3 scroll-left" style={{ width: "max-content" }}>
           {row1Loop.map((tool, i) => (
@@ -749,7 +740,6 @@ function ToolsSlider({ tools, onToolClick }: ToolsSliderProps) {
         </div>
       </div>
 
-      {/* Row 2 — scrolls right (opposite direction) */}
       <div className="flex gap-3 px-4 sm:px-6 overflow-hidden">
         <div className="flex gap-3 scroll-right" style={{ width: "max-content" }}>
           {row2Loop.map((tool, i) => (
@@ -765,7 +755,6 @@ function ToolsSlider({ tools, onToolClick }: ToolsSliderProps) {
   );
 }
 
-/* Compact card for slider — fixed width */
 function SliderCard({ tool, onClick }: { tool: ToolMeta; onClick: () => void }) {
   const Icon = tool.icon;
   return (

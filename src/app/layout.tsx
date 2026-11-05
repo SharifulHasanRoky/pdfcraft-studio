@@ -37,8 +37,81 @@ export const metadata: Metadata = {
   },
   description: SITE_DESC,
   keywords: [
+    // CORE KEYWORDS
+    "pdf editor",
     "free pdf editor",
-    "pdf tools online",
+    "pdf editor online",
+    "best pdf editor",
+    "best free pdf editor",
+    "pdf editor no watermark",
+    "pdf text editor",
+    "pdf edit free",
+    "modify pdf",
+    "edit pdf file",
+    "edit pdf online",
+    "pdf modifier online",
+    "modify pdf online free",
+
+    // FREE AND NO-SIGNUP KEYWORDS
+    "pdf editor free no sign up",
+    "edit pdf online free no sign up",
+    "edit pdf file online free",
+    "free pdf editing tool",
+    "free pdf editor and download",
+    "edit pdf document free",
+    "pdf modifier online free",
+
+    // TEXT EDITING KEYWORDS
+    "edit pdf text online",
+    "modify pdf text online",
+    "edit pdf document online",
+    "edit pdf pages",
+    "pdf to editable pdf",
+
+    // PDF FILLER KEYWORDS
+    "pdf filler free",
+    "pdf filler free online",
+    "edit document online",
+    "edit document online free",
+
+    // CONVERSION KEYWORDS
+    "pdf to word editable free",
+    "pdf to editable word",
+    "pdf to word",
+    "pdf to excel",
+    "word to pdf",
+
+    // SOFTWARE KEYWORDS
+    "pdf editor software",
+    "pdf editor free download",
+    "free pdf editor windows",
+    "pdf file editor free download",
+
+    // COMPETITOR BRAND KEYWORDS
+    "ilovepdf editor",
+    "ilovepdf edit",
+    "ilovepdf pdf editor",
+    "ilovepdf alternative",
+    "sejda pdf editor",
+    "sejda pdf alternative",
+    "pdfescape alternative",
+    "pdf-xchange alternative",
+    "adobe acrobat pdf editor",
+    "adobe acrobat alternative",
+    "adobe reader edit pdf",
+    "smallpdf alternative",
+    "pdfgear alternative",
+    "canva pdf editor alternative",
+    "google pdf editor",
+
+    // AI PDF KEYWORDS
+    "ai pdf editor",
+    "chat with pdf",
+    "ai pdf summarizer",
+    "translate pdf",
+    "extract data from pdf",
+
+    // TOOL KEYWORDS
     "merge pdf",
     "split pdf",
     "compress pdf",
@@ -49,19 +122,8 @@ export const metadata: Metadata = {
     "watermark pdf",
     "unlock pdf",
     "organize pdf",
-    "edit pdf online",
-    "edit pdf text",
-    "pdf editor no watermark",
-    "pdf editor no signup",
-    "pdf editor free no sign up",
-    "pdf editor no daily limit",
-    "ilovepdf alternative",
-    "smallpdf alternative",
-    "sejda alternative",
-    "pdfescape alternative",
-    "adobe acrobat alternative",
-    "best free pdf editor",
-    "best pdf editor 2026",
+
+    // GEO / REGIONAL
     "pdf editor bangladesh",
     "pdf editor dhaka",
     "বাংলা pdf এডিটর",

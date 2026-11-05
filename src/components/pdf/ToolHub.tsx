@@ -576,6 +576,84 @@ export function ToolHub({ onOpenTool, onOpenEditor }: ToolHubProps) {
         </div>
       </section>
 
+      {/* SEO CONTENT — natural reading, covers all keywords */}
+      <section className="py-12 md:py-16 bg-background border-t border-border">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6">
+          <h2 className="font-display text-2xl font-bold tracking-tight mb-4">
+            The best free PDF editor online
+          </h2>
+          <div className="prose prose-sm text-muted-foreground max-w-none space-y-3 leading-relaxed">
+            <p>
+              PDFCraft Studio is a <strong className="text-foreground">free PDF editor</strong> that lets you{" "}
+              <strong className="text-foreground">edit PDF online</strong> without any signup or watermark.
+              Whether you need to <strong className="text-foreground">modify PDF</strong> files,{" "}
+              <strong className="text-foreground">edit PDF text</strong>, or{" "}
+              <strong className="text-foreground">edit PDF file</strong> contents, our tools work entirely
+              in your browser — no software download required.
+            </p>
+            <p>
+              Looking for a <strong className="text-foreground">PDF editor free no sign up</strong>?
+              You&apos;re in the right place. <strong className="text-foreground">Edit PDF online free no sign up</strong>{" "}
+              is exactly what we offer. <strong className="text-foreground">Edit PDF document free</strong>{" "}
+              with 14 tools covering merge, split, compress, convert, and more.{" "}
+              <strong className="text-foreground">Modify PDF online free</strong> has never been easier.
+            </p>
+            <p>
+              Need to <strong className="text-foreground">edit PDF text online</strong> or{" "}
+              <strong className="text-foreground">modify PDF text online</strong>? Our visual editor lets
+              you click any text in your PDF and edit it inline — a feature most competitors charge for.
+              You can also <strong className="text-foreground">edit PDF pages</strong>, rotate, reorder,
+              and organize your document visually.
+            </p>
+            <p>
+              Convert your documents with ease: <strong className="text-foreground">PDF to Word</strong>{" "}
+              (editable), <strong className="text-foreground">PDF to Excel</strong>,{" "}
+              <strong className="text-foreground">PDF to JPG</strong>, and{" "}
+              <strong className="text-foreground">Word to PDF</strong>. Need{" "}
+              <strong className="text-foreground">PDF to word editable free</strong>? We&apos;ve got you covered.
+              <strong className="text-foreground">PDF to editable word</strong> conversion is free and instant.
+            </p>
+            <p>
+              If you&apos;re searching for an <strong className="text-foreground">iLovePDF alternative</strong>,
+              <strong className="text-foreground">Sejda alternative</strong>,{" "}
+              <strong className="text-foreground">Smallpdf alternative</strong>,{" "}
+              <strong className="text-foreground">Adobe Acrobat alternative</strong>, or even a{" "}
+              <strong className="text-foreground">Canva PDF editor alternative</strong> — PDFCraft Studio
+              gives you all the tools free, with no daily limits, no signup, and no watermark.
+              We&apos;re the <strong className="text-foreground">best free PDF editor</strong> in 2026.
+            </p>
+            <p>
+              Our tools also serve as a <strong className="text-foreground">PDF filler free</strong> solution.
+              <strong className="text-foreground">Edit document online free</strong> — fill forms, add text,
+              sign documents, and download instantly. <strong className="text-foreground">PDF filler free online</strong>{" "}
+              with no restrictions.
+            </p>
+            <p>
+              Looking for <strong className="text-foreground">AI PDF editor</strong> features? We&apos;re
+              building <strong className="text-foreground">chat with PDF</strong>,{" "}
+              <strong className="text-foreground">AI PDF summarizer</strong>, and{" "}
+              <strong className="text-foreground">translate PDF</strong> tools.{" "}
+              <strong className="text-foreground">Extract data from PDF</strong> is coming soon.
+            </p>
+            <p>
+              <strong className="text-foreground">PDF editor Bangladesh</strong> users love — also popular
+              in <strong className="text-foreground">বাংলা PDF এডিটর</strong> searches.{" "}
+              <strong className="text-foreground">Browser PDF editor</strong> that works on any device,
+              anywhere in the world. No <strong className="text-foreground">PDF editor software</strong>{" "}
+              or <strong className="text-foreground">PDF editor free download</strong> needed — just open
+              and edit.
+            </p>
+            <p>
+              <strong className="text-foreground">Adobe Reader edit PDF</strong> is limited — but PDFCraft
+              Studio lets you actually edit. Better than <strong className="text-foreground">PDFgear</strong>,
+              <strong className="text-foreground">PDFescape</strong>, and{" "}
+              <strong className="text-foreground">PDF-XChange</strong>. Even serves as a{" "}
+              <strong className="text-foreground">Google PDF editor</strong> alternative.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* FOOTER */}
       <footer className="border-t bg-card py-10">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">

@@ -122,6 +122,17 @@ export function ToolLayout({ tool, onBack, children }: ToolLayoutProps) {
             Ad slot
           </div>
         </section>
+
+        {/* SEO Content — keyword-rich paragraphs for search engines */}
+        {tool.seoContent && tool.seoContent.length > 0 && (
+          <section className="mt-12">
+            <div className="space-y-4 text-sm text-muted-foreground leading-relaxed">
+              {tool.seoContent.map((para, i) => (
+                <p key={i}>{para}</p>
+              ))}
+            </div>
+          </section>
+        )}
       </main>
     </div>
   );

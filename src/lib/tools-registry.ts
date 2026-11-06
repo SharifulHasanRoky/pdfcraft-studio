@@ -30,19 +30,20 @@ export type ToolCategory =
 
 export interface ToolMeta {
   id: string;
-  slug: string; // for hash route: #/merge-pdf
+  slug: string;
   title: string;
   shortTitle: string;
   description: string;
   longDescription: string;
   category: ToolCategory;
   icon: LucideIcon;
-  color: string; // tailwind gradient classes e.g. "var(--tool-rose)"
+  color: string;
   keywords: string[];
   faqs: { q: string; a: string }[];
   howItWorks: string[];
   popular?: boolean;
   isBeta?: boolean;
+  seoContent?: string[]; // SEO paragraphs shown on tool page for keyword coverage
 }
 
 export const TOOL_CATEGORIES: Record<
@@ -90,7 +91,12 @@ export const TOOLS: ToolMeta[] = [
     category: "organize",
     icon: Layers,
     color: "var(--tool-rose)",
-    keywords: ["merge pdf", "combine pdf", "join pdf", "pdf merger"],
+    keywords: [
+      "merge pdf", "combine pdf", "join pdf", "pdf merger",
+      "merge pdf free online no limit", "how to merge pdf files free",
+      "merge pdf free online", "combine pdf files free",
+      "best online pdf merger free", "merge multiple pdf into one",
+    ],
     popular: true,
     howItWorks: [
       "Upload two or more PDF files using drag & drop or file picker.",
@@ -99,22 +105,18 @@ export const TOOLS: ToolMeta[] = [
       "Download the merged PDF — your original files are unchanged.",
     ],
     faqs: [
-      {
-        q: "Is merging PDFs really free?",
-        a: "Yes. Merge as many PDFs as you want, every day, completely free. No sign-up, no watermark, no daily limits.",
-      },
-      {
-        q: "Are my PDFs uploaded to a server?",
-        a: "No. Merging happens entirely in your browser using pdf-lib. Your files never leave your device.",
-      },
-      {
-        q: "Is there a file size limit?",
-        a: "There's no hard limit, but very large PDFs (100MB+) may take longer and use more browser memory.",
-      },
-      {
-        q: "Can I merge more than two PDFs at once?",
-        a: "Yes — add as many PDF files as you need and reorder them freely before merging.",
-      },
+      { q: "Is merging PDFs really free?", a: "Yes. Merge as many PDFs as you want, every day, completely free. No sign-up, no watermark, no daily limits." },
+      { q: "Are my PDFs uploaded to a server?", a: "No. Merging happens entirely in your browser using pdf-lib. Your files never leave your device." },
+      { q: "Is there a file size limit?", a: "There's no hard limit, but very large PDFs (100MB+) may take longer and use more browser memory." },
+      { q: "Can I merge more than two PDFs at once?", a: "Yes — add as many PDF files as you need and reorder them freely before merging." },
+      { q: "How do I merge PDF files for free?", a: "Upload your PDF files, reorder them using the arrows, click 'Merge PDF', and download. The entire process is free and happens in your browser." },
+      { q: "What is the best free PDF merger?", a: "PDFCraft Studio is the best free PDF merger. Unlike iLovePDF (2-5 tasks/day) and Smallpdf (2 docs/day), we have no daily limits." },
+    ],
+    seoContent: [
+      "Merge PDF files online for free with PDFCraft Studio. Our free PDF merger lets you combine multiple PDF documents into a single file — no signup, no watermark, no daily limits. Simply upload your PDF files, reorder them as needed, and click merge. Your combined PDF downloads instantly.",
+      "Looking for how to merge PDF files free? You're in the right place. Our merge PDF free online tool works entirely in your browser using JavaScript, so your files never leave your device. This makes it the most private and secure way to combine PDF files — perfect for sensitive documents like contracts, invoices, and legal records.",
+      "Unlike iLovePDF which limits you to 2-5 merges per day, PDFCraft Studio lets you merge PDF free online no limit. There's no daily quota, no signup wall, and no watermark on your merged file. Combine 2, 5, 10 or more PDFs into one document — completely free, every single day.",
+      "Our PDF merger is the best online PDF merger free because it runs 100% client-side. We use pdf-lib, a powerful JavaScript library, to combine your PDF files directly in your browser. No server upload means maximum privacy and instant results. Try it now — it's free forever.",
     ],
   },
   {
@@ -129,7 +131,12 @@ export const TOOLS: ToolMeta[] = [
     category: "organize",
     icon: Scissors,
     color: "var(--tool-orange)",
-    keywords: ["split pdf", "extract pages", "divide pdf", "pdf splitter"],
+    keywords: [
+      "split pdf", "extract pages", "divide pdf", "pdf splitter",
+      "split pdf free no signup", "how to split pdf into multiple files",
+      "extract pages from pdf free", "split pdf online free",
+      "divide pdf into parts", "pdf splitter free online",
+    ],
     popular: true,
     howItWorks: [
       "Upload a PDF file.",
@@ -138,18 +145,17 @@ export const TOOLS: ToolMeta[] = [
       "Download the resulting PDF (or multiple PDFs for split mode).",
     ],
     faqs: [
-      {
-        q: "Can I split one PDF into many files?",
-        a: "Yes. Choose 'Split into individual pages' to create one PDF per page, or use 'Extract page ranges' to create custom splits.",
-      },
-      {
-        q: "How do I specify page ranges?",
-        a: "Use commas to separate ranges and hyphens for ranges. Example: '1-3, 5, 7-9' extracts pages 1, 2, 3, 5, 7, 8, 9.",
-      },
-      {
-        q: "Are the original pages preserved?",
-        a: "Yes. Splitting creates new PDFs containing copies of selected pages. Your original PDF is never modified.",
-      },
+      { q: "Can I split one PDF into many files?", a: "Yes. Choose 'Split into individual pages' to create one PDF per page, or use 'Extract page ranges' to create custom splits." },
+      { q: "How do I specify page ranges?", a: "Use commas to separate ranges and hyphens for ranges. Example: '1-3, 5, 7-9' extracts pages 1, 2, 3, 5, 7, 8, 9." },
+      { q: "Are the original pages preserved?", a: "Yes. Splitting creates new PDFs containing copies of selected pages. Your original PDF is never modified." },
+      { q: "How do I split PDF into multiple files for free?", a: "Upload your PDF, choose 'Split into individual pages', and download. Each page becomes a separate PDF. Free, no signup, no watermark." },
+      { q: "Can I extract specific pages from a PDF?", a: "Yes. Choose 'Extract page ranges' and enter which pages you want, like '1-3, 5, 7-9'. Only those pages will be extracted into a new PDF." },
+    ],
+    seoContent: [
+      "Split PDF online for free with PDFCraft Studio. Our free PDF splitter lets you extract pages from a PDF or divide a PDF into multiple files — no signup, no watermark, no daily limits. Upload your PDF, choose how to split it, and download the results instantly.",
+      "Wondering how to split PDF into multiple files? Our split PDF free no signup tool makes it easy. Choose 'Split into individual pages' to create one PDF per page, or use 'Extract page ranges' to pull out specific pages like '1-3, 5, 7-9'. Everything happens in your browser for maximum privacy.",
+      "Need to extract pages from PDF free? PDFCraft Studio is the best PDF splitter free online. Unlike Sejda which limits you to 3 tasks per hour, we have no hourly limits. Extract, divide, or split your PDFs as many times as you need — completely free, every day.",
+      "Our divide PDF into parts tool uses pdf-lib to create new PDFs containing only the pages you select. Your original PDF is never modified. This makes it perfect for sharing specific sections of reports, contracts, or presentations without exposing the full document.",
     ],
   },
   {
@@ -410,7 +416,12 @@ export const TOOLS: ToolMeta[] = [
     category: "optimize",
     icon: Minimize2,
     color: "var(--tool-emerald)",
-    keywords: ["compress pdf", "reduce pdf size", "pdf compressor", "shrink pdf"],
+    keywords: [
+      "compress pdf", "reduce pdf size", "pdf compressor", "shrink pdf",
+      "compress pdf free no watermark", "how to compress pdf without losing quality",
+      "compress pdf free online", "pdf compressor free",
+      "reduce pdf file size online free", "best pdf compressor free",
+    ],
     popular: true,
     howItWorks: [
       "Upload a PDF file.",
@@ -419,18 +430,17 @@ export const TOOLS: ToolMeta[] = [
       "Download the compressed PDF and see the size reduction.",
     ],
     faqs: [
-      {
-        q: "How much can I compress a PDF?",
-        a: "It depends on the PDF. Text-heavy PDFs may shrink 5-20%. Image-heavy PDFs may shrink more if we can recompress images.",
-      },
-      {
-        q: "Does compression reduce quality?",
-        a: "Light compression preserves all content. Extreme compression may reduce image quality. We always show the size reduction before download.",
-      },
-      {
-        q: "Why is my PDF not smaller after compression?",
-        a: "Some PDFs are already optimally compressed. If your PDF is mostly text with no duplicates, there's little to compress.",
-      },
+      { q: "How much can I compress a PDF?", a: "It depends on the PDF. Text-heavy PDFs may shrink 5-20%. Image-heavy PDFs may shrink more if we can recompress images." },
+      { q: "Does compression reduce quality?", a: "Light compression preserves all content. Extreme compression may reduce image quality. We always show the size reduction before download." },
+      { q: "Why is my PDF not smaller after compression?", a: "Some PDFs are already optimally compressed. If your PDF is mostly text with no duplicates, there's little to compress." },
+      { q: "How do I compress PDF without losing quality?", a: "Choose 'Light' compression — it uses lossless object stream compression. Your text and images stay exactly the same quality, but the file size may still reduce by 5-15%." },
+      { q: "Is this PDF compressor free?", a: "Yes. Our PDF compressor free online tool has no daily limits, no signup, and no watermark. Compress as many PDFs as you need, every day." },
+    ],
+    seoContent: [
+      "Compress PDF online for free with PDFCraft Studio. Our free PDF compressor lets you reduce PDF file size in your browser — no signup, no watermark, no daily limits. Upload your PDF, choose a compression level, and download a smaller file instantly.",
+      "Wondering how to compress PDF without losing quality? Choose our 'Light' compression level. It uses lossless object stream compression to reduce file size by 5-15% without re-encoding any images or text. Your PDF looks exactly the same — just smaller. Perfect for emailing or uploading.",
+      "Need to reduce PDF file size online free? PDFCraft Studio is the best PDF compressor free. Unlike iLovePDF which limits you to 2-5 tasks per day, we have no daily limits. Compress as many PDFs as you want, every single day. No signup, no watermark, no file size limit.",
+      "Our compress PDF free no watermark tool uses pdf-lib to re-save your PDF with optimized object streams and duplicate removal. Three levels available: Light (lossless), Recommended (balanced), and Extreme (maximum compression). You see the before/after file sizes before downloading, so you know exactly how much you saved.",
     ],
   },
   {

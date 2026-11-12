@@ -216,6 +216,33 @@ export function CanvasEditor() {
     };
   }, [doc, currentPageIndex, page?.rotation, zoom]);
 
+  // Keyboard shortcuts: Undo (Ctrl+Z), Redo (Ctrl+Y / Ctrl+Shift+Z), Delete
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      // Don't trigger when typing in input/textarea
+      const target = e.target as HTMLElement;
+      if (target.tagName === "INPUT" || target.tagName === "TEXTAREA") return;
+
+      if ((e.ctrlKey || e.metaKey) && e.key === "z" && !e.shiftKey) {
+        e.preventDefault();
+        usePdfStore.getState().undo();
+      } else if ((e.ctrlKey || e.metaKey) && (e.key === "y" || (e.shiftKey && e.key === "Z"))) {
+        e.preventDefault();
+        usePdfStore.getState().redo();
+      } else if (e.key === "Delete" || e.key === "Backspace") {
+        const sel = usePdfStore.getState().selectedAnnotationId;
+        if (sel) {
+          e.preventDefault();
+          usePdfStore.getState().removeAnnotation(sel);
+        }
+      } else if (e.key === "Escape") {
+        usePdfStore.getState().selectAnnotation(null);
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, []);
+
   // Pointer handlers
   const getRelPos = useCallback((e: React.PointerEvent) => {
     const rect = overlayRef.current!.getBoundingClientRect();

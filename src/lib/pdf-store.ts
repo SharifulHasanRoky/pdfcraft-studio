@@ -70,12 +70,33 @@ interface PdfEditorState {
   rotatePage: (id: string, direction: 1 | -1) => void;
   movePage: (id: string, direction: -1 | 1) => void;
   reset: () => void;
+  // Undo / Redo
+  undo: () => void;
+  redo: () => void;
+  canUndo: () => boolean;
+  canRedo: () => boolean;
 }
 
 const DEFAULT_COLOR = "#EF4444";
 const DEFAULT_STROKE = 3;
 const DEFAULT_FONT_SIZE = 16;
 const DEFAULT_FONT_FAMILY = "Inter";
+const MAX_HISTORY = 50;
+
+// History for undo/redo
+let history: Annotation[][] = [];
+let historyIndex = -1;
+
+function pushHistory(annotations: Annotation[]) {
+  // Truncate any redo entries
+  history = history.slice(0, historyIndex + 1);
+  history.push([...annotations]);
+  if (history.length > MAX_HISTORY) {
+    history.shift();
+  } else {
+    historyIndex++;
+  }
+}
 
 export const usePdfStore = create<PdfEditorState>((set, get) => ({
   document: null,
@@ -114,19 +135,27 @@ export const usePdfStore = create<PdfEditorState>((set, get) => ({
   setActiveBold: (activeBold) => set({ activeBold }),
   setActiveItalic: (activeItalic) => set({ activeItalic }),
   setActiveUnderline: (activeUnderline) => set({ activeUnderline }),
-  addAnnotation: (ann) => set({ annotations: [...get().annotations, ann] }),
-  updateAnnotation: (id, patch) =>
+  addAnnotation: (ann) => {
+    const annotations = [...get().annotations, ann];
+    pushHistory(annotations);
+    set({ annotations });
+  },
+  updateAnnotation: (id, patch) => {
+    const annotations = get().annotations.map((a) =>
+      a.id === id ? ({ ...a, ...patch } as Annotation) : a
+    );
+    // Don't push history for every move/resize — only for discrete changes
+    set({ annotations });
+  },
+  removeAnnotation: (id) => {
+    const annotations = get().annotations.filter((a) => a.id !== id);
+    pushHistory(annotations);
     set({
-      annotations: get().annotations.map((a) =>
-        a.id === id ? ({ ...a, ...patch } as Annotation) : a
-      ),
-    }),
-  removeAnnotation: (id) =>
-    set({
-      annotations: get().annotations.filter((a) => a.id !== id),
+      annotations,
       selectedAnnotationId:
         get().selectedAnnotationId === id ? null : get().selectedAnnotationId,
-    }),
+    });
+  },
   selectAnnotation: (selectedAnnotationId) => set({ selectedAnnotationId }),
   setZoom: (zoom) => set({ zoom: Math.max(0.25, Math.min(3, zoom)) }),
   setShowThumbnails: (showThumbnails) => set({ showThumbnails }),
@@ -157,7 +186,23 @@ export const usePdfStore = create<PdfEditorState>((set, get) => ({
     [pages[idx], pages[newIdx]] = [pages[newIdx], pages[idx]];
     set({ pages });
   },
-  reset: () =>
+  undo: () => {
+    if (historyIndex > 0) {
+      historyIndex--;
+      set({ annotations: [...history[historyIndex]] });
+    }
+  },
+  redo: () => {
+    if (historyIndex < history.length - 1) {
+      historyIndex++;
+      set({ annotations: [...history[historyIndex]] });
+    }
+  },
+  canUndo: () => historyIndex > 0,
+  canRedo: () => historyIndex < history.length - 1,
+  reset: () => {
+    history = [];
+    historyIndex = -1;
     set({
       document: null,
       pages: [],
@@ -169,5 +214,6 @@ export const usePdfStore = create<PdfEditorState>((set, get) => ({
       activeTool: "edit-text",
       zoom: 1,
       activeView: "editor",
-    }),
+    });
+  },
 }));

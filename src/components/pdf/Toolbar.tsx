@@ -35,6 +35,8 @@ import {
   Bold,
   Italic,
   Underline,
+  Undo2,
+  Redo2,
 } from "lucide-react";
 import { exportAnnotatedPdf } from "@/lib/pdf-utils";
 import { useState, useRef } from "react";
@@ -199,6 +201,38 @@ export function Toolbar() {
             <Box className="h-3.5 w-3.5" />
             <span className="hidden sm:inline">3D View</span>
           </Button>
+          <Separator orientation="vertical" className="h-6 mx-1" />
+          {/* Undo / Redo */}
+          <TooltipProvider delayDuration={200}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => usePdfStore.getState().undo()}
+                  disabled={!usePdfStore.getState().canUndo()}
+                  className="h-8 w-8"
+                >
+                  <Undo2 className="h-3.5 w-3.5" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom">Undo (Ctrl+Z)</TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => usePdfStore.getState().redo()}
+                  disabled={!usePdfStore.getState().canRedo()}
+                  className="h-8 w-8"
+                >
+                  <Redo2 className="h-3.5 w-3.5" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom">Redo (Ctrl+Y)</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
           <Separator orientation="vertical" className="h-6 mx-1" />
           <Button
             variant="ghost"
